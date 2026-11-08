@@ -120,11 +120,12 @@ class RAGEngine:
         base = {"status": "retrieval_only", "answer": None, "source_documents": [{k: r.get(k) for k in ("document_id", "pokemon_id", "pokemon_name", "section", "score")} for r in used], "supporting_excerpts": [], "spelling_corrections": corrections, "timestamp_utc": datetime.now(timezone.utc).isoformat()}
         if not generate:
             return {**base, "answer": self.retrieval_answer(used, question)}
-        if not self.generator: return {**base, "status": "provider_unavailable", "answer": REFUSAL}
+        if not self.generator:
+            return {**base, "status": "provider_unavailable", "answer": self.retrieval_answer(used, question)}
         try:
             payload = self.generator(question, self.build_context(rows)[0])
         except Exception:
-            return {**base, "status": "provider_unavailable", "answer": REFUSAL}
+            return {**base, "status": "provider_unavailable", "answer": self.retrieval_answer(used, question)}
         if not self.verify(payload, used): return {**base, "status": "insufficient_evidence", "answer": REFUSAL}
         answer = re.sub(r"\s*\[[0-9]{3}_[a-z0-9_]+\]", "", payload["answer"]).strip()
         return {**base, "status": "answered", "answer": answer, "supporting_excerpts": payload["evidence"]}
