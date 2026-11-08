@@ -6,6 +6,7 @@ __pycache__/
 data/raw/
 data/processed/
 data/artifacts/
+data/executed_notebooks/
 *.log
 dist/
 node_modules/
