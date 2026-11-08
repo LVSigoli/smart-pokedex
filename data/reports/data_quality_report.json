@@ -1,0 +1,39 @@
+{
+  "title": "Pokédex Inteligente — preparação de documentos RAG",
+  "run_utc": "2026-11-08T20:07:27.628838+00:00",
+  "source_raw_dir": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\raw",
+  "output_dir": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data",
+  "coverage": {
+    "pokemon_expected": 151,
+    "pokemon_loaded": 151,
+    "documents": 1732,
+    "exact_firered_descriptions": 151,
+    "fallback_descriptions": 0,
+    "with_full_six_base_stats": 151,
+    "with_abilities_gen3": 151,
+    "with_type_matchups_gen3": 151,
+    "with_evolution_edges_unversioned": 126,
+    "with_moves_frlg": 151,
+    "with_wild_encounters_firered": 104,
+    "total_moves_with_missing_metadata": 0,
+    "total_unresolved_tm_hm_entries": 0
+  },
+  "documents_by_section": {
+    "profile": 151,
+    "species_traits": 151,
+    "stats": 151,
+    "abilities": 151,
+    "type_matchups": 151,
+    "evolution": 151,
+    "moves": 492,
+    "encounters": 183,
+    "obtainment": 151
+  },
+  "enrichment_schema_version": "1.0",
+  "limitations": [
+    "Condições de evolução não são específicas da versão FireRed.",
+    "Ausência de encontro selvagem não significa indisponibilidade no jogo.",
+    "A reconstrução histórica foi realizada no notebook do corpus.",
+    "Aliases PT-BR são equivalências experimentais."
+  ]
+}

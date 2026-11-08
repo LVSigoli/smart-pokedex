@@ -1,0 +1,33 @@
+query_id,question,language,category,target_pokemon_id,target_section,label_provenance,review_status
+Q01,Quais são os tipos do Charizard?,pt,perfil,6,profile,proxy_pokemon_section_unreviewed,pending_manual_review
+Q02,What type is Venusaur?,en,perfil,3,profile,proxy_pokemon_section_unreviewed,pending_manual_review
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,25,stats,proxy_pokemon_section_unreviewed,pending_manual_review
+Q04,How much base defense does Onix have?,en,estatisticas,95,stats,proxy_pokemon_section_unreviewed,pending_manual_review
+Q05,Como o Eevee evolui?,pt,evolucao,133,evolution,proxy_pokemon_section_unreviewed,pending_manual_review
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,4,evolution,proxy_pokemon_section_unreviewed,pending_manual_review
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,130,type_matchups,proxy_pokemon_section_unreviewed,pending_manual_review
+Q08,Which types are strong against Charizard?,en,tipos,6,type_matchups,proxy_pokemon_section_unreviewed,pending_manual_review
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,94,abilities,proxy_pokemon_section_unreviewed,pending_manual_review
+Q10,What abilities does Snorlax have?,en,habilidades,143,abilities,proxy_pokemon_section_unreviewed,pending_manual_review
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,1,moves,proxy_pokemon_section_unreviewed,pending_manual_review
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,25,moves,proxy_pokemon_section_unreviewed,pending_manual_review
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,25,encounters,proxy_pokemon_section_unreviewed,pending_manual_review
+Q14,Where can I find Zubat in FireRed?,en,encontros,41,encounters,proxy_pokemon_section_unreviewed,pending_manual_review
+Q15,Qual o habitat do Dratini?,pt,perfil,147,profile,proxy_pokemon_section_unreviewed,pending_manual_review
+Q16,How tall is Onix?,en,perfil,95,profile,proxy_pokemon_section_unreviewed,pending_manual_review
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,4,obtainment,proxy_pokemon_section_unreviewed,pending_manual_review
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,150,obtainment,proxy_pokemon_section_unreviewed,pending_manual_review
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,133,species_traits,proxy_pokemon_section_unreviewed,pending_manual_review
+Q20,Which egg group is Growlithe in?,en,especie,58,species_traits,proxy_pokemon_section_unreviewed,pending_manual_review
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,1,type_matchups,proxy_pokemon_section_unreviewed,pending_manual_review
+Q22,How does Kadabra evolve?,en,evolucao,64,evolution,proxy_pokemon_section_unreviewed,pending_manual_review
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,65,stats,proxy_pokemon_section_unreviewed,pending_manual_review
+Q24,What are the base stats of Dragonite?,en,estatisticas,149,stats,proxy_pokemon_section_unreviewed,pending_manual_review
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,4,evolution,proxy_pokemon_section_unreviewed,pending_manual_review
+Q26,Charmeleon evolui de quem?,pt,evolucao,5,evolution,proxy_pokemon_section_unreviewed,pending_manual_review
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,6,evolution,proxy_pokemon_section_unreviewed,pending_manual_review
+Q28,Charmander é uma forma inicial?,pt,evolucao,4,evolution,proxy_pokemon_section_unreviewed,pending_manual_review
+Q29,Onde encontro Eevee?,pt,encontros,133,encounters,proxy_pokemon_section_unreviewed,pending_manual_review
+Q30,Como conseguir Eevee?,pt,obtencao,133,obtainment,proxy_pokemon_section_unreviewed,pending_manual_review
+Q31,Is Charmander an evolved form?,en,evolucao,4,evolution,proxy_pokemon_section_unreviewed,pending_manual_review
+Q32,What does Charmeleon evolve from?,en,evolucao,5,evolution,proxy_pokemon_section_unreviewed,pending_manual_review

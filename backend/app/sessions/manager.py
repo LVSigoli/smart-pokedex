@@ -40,7 +40,7 @@ class SessionManager:
 
     def ask(self, sid, message, generate=False):
         session = self.get(sid)
-        explicit = session.engine.mentioned_ids(message)
+        explicit = session.engine.mentioned_ids(message) if hasattr(session.engine, "mentioned_ids") else []
         normalized = str(message).casefold()
         followup = not explicit and any(token in normalized.split() for token in ("ele", "ela", "dele", "dela", "qual", "quais", "evolução", "evolucao", "evolution", "tipo", "type"))
         if followup and session.active_ids:

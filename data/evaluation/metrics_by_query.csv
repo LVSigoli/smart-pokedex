@@ -1,0 +1,385 @@
+query_id,question,language,category,method,k,n_relevant_labeled,precision_at_k,recall_at_k,hit_at_k,mrr_at_k,ndcg_at_k,retrieved_count
+Q01,Quais são os tipos do Charizard?,pt,perfil,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q01,Quais são os tipos do Charizard?,pt,perfil,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q01,Quais são os tipos do Charizard?,pt,perfil,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q01,Quais são os tipos do Charizard?,pt,perfil,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q01,Quais são os tipos do Charizard?,pt,perfil,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q01,Quais são os tipos do Charizard?,pt,perfil,bow,3,1,0.3333333333333333,1.0,1.0,0.5,0.6309297535714575,3
+Q01,Quais são os tipos do Charizard?,pt,perfil,bow,5,1,0.2,1.0,1.0,0.5,0.6309297535714575,5
+Q01,Quais são os tipos do Charizard?,pt,perfil,bow,10,1,0.1,1.0,1.0,0.5,0.6309297535714575,10
+Q01,Quais são os tipos do Charizard?,pt,perfil,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q01,Quais são os tipos do Charizard?,pt,perfil,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q01,Quais são os tipos do Charizard?,pt,perfil,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q01,Quais são os tipos do Charizard?,pt,perfil,tfidf,10,1,0.1,1.0,1.0,0.14285714285714285,0.3333333333333333,10
+Q02,What type is Venusaur?,en,perfil,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q02,What type is Venusaur?,en,perfil,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q02,What type is Venusaur?,en,perfil,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q02,What type is Venusaur?,en,perfil,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q02,What type is Venusaur?,en,perfil,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q02,What type is Venusaur?,en,perfil,bow,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q02,What type is Venusaur?,en,perfil,bow,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q02,What type is Venusaur?,en,perfil,bow,10,1,0.0,0.0,0.0,0.0,0.0,10
+Q02,What type is Venusaur?,en,perfil,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q02,What type is Venusaur?,en,perfil,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q02,What type is Venusaur?,en,perfil,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q02,What type is Venusaur?,en,perfil,tfidf,10,1,0.1,1.0,1.0,0.125,0.31546487678572877,10
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,bow,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,bow,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,bow,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,bow,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,tfidf,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,tfidf,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,tfidf,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,tfidf,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q04,How much base defense does Onix have?,en,estatisticas,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q04,How much base defense does Onix have?,en,estatisticas,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q04,How much base defense does Onix have?,en,estatisticas,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q04,How much base defense does Onix have?,en,estatisticas,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q04,How much base defense does Onix have?,en,estatisticas,bow,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q04,How much base defense does Onix have?,en,estatisticas,bow,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q04,How much base defense does Onix have?,en,estatisticas,bow,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q04,How much base defense does Onix have?,en,estatisticas,bow,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q04,How much base defense does Onix have?,en,estatisticas,tfidf,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q04,How much base defense does Onix have?,en,estatisticas,tfidf,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q04,How much base defense does Onix have?,en,estatisticas,tfidf,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q04,How much base defense does Onix have?,en,estatisticas,tfidf,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q05,Como o Eevee evolui?,pt,evolucao,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q05,Como o Eevee evolui?,pt,evolucao,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q05,Como o Eevee evolui?,pt,evolucao,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q05,Como o Eevee evolui?,pt,evolucao,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q05,Como o Eevee evolui?,pt,evolucao,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q05,Como o Eevee evolui?,pt,evolucao,bow,3,1,0.3333333333333333,1.0,1.0,0.3333333333333333,0.5,3
+Q05,Como o Eevee evolui?,pt,evolucao,bow,5,1,0.2,1.0,1.0,0.3333333333333333,0.5,5
+Q05,Como o Eevee evolui?,pt,evolucao,bow,10,1,0.1,1.0,1.0,0.3333333333333333,0.5,10
+Q05,Como o Eevee evolui?,pt,evolucao,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q05,Como o Eevee evolui?,pt,evolucao,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q05,Como o Eevee evolui?,pt,evolucao,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q05,Como o Eevee evolui?,pt,evolucao,tfidf,10,1,0.1,1.0,1.0,0.1111111111111111,0.3010299956639812,10
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,bow,3,1,0.3333333333333333,1.0,1.0,0.3333333333333333,0.5,3
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,bow,5,1,0.2,1.0,1.0,0.3333333333333333,0.5,5
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,bow,10,1,0.1,1.0,1.0,0.3333333333333333,0.5,10
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q06,Which Pokemon evolves from Charmander?,en,evolucao,tfidf,10,1,0.1,1.0,1.0,0.125,0.31546487678572877,10
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,bow,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,bow,5,1,0.2,1.0,1.0,0.25,0.43067655807339306,5
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,bow,10,1,0.1,1.0,1.0,0.25,0.43067655807339306,10
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,tfidf,10,1,0.1,1.0,1.0,0.16666666666666666,0.3562071871080222,10
+Q08,Which types are strong against Charizard?,en,tipos,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q08,Which types are strong against Charizard?,en,tipos,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q08,Which types are strong against Charizard?,en,tipos,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q08,Which types are strong against Charizard?,en,tipos,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q08,Which types are strong against Charizard?,en,tipos,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q08,Which types are strong against Charizard?,en,tipos,bow,3,1,0.3333333333333333,1.0,1.0,0.5,0.6309297535714575,3
+Q08,Which types are strong against Charizard?,en,tipos,bow,5,1,0.2,1.0,1.0,0.5,0.6309297535714575,5
+Q08,Which types are strong against Charizard?,en,tipos,bow,10,1,0.1,1.0,1.0,0.5,0.6309297535714575,10
+Q08,Which types are strong against Charizard?,en,tipos,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q08,Which types are strong against Charizard?,en,tipos,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q08,Which types are strong against Charizard?,en,tipos,tfidf,5,1,0.2,1.0,1.0,0.2,0.38685280723454163,5
+Q08,Which types are strong against Charizard?,en,tipos,tfidf,10,1,0.1,1.0,1.0,0.2,0.38685280723454163,10
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,bow,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,bow,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,bow,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,bow,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,tfidf,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,tfidf,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,tfidf,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q09,Quais habilidades o Gengar possui?,pt,habilidades,tfidf,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q10,What abilities does Snorlax have?,en,habilidades,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q10,What abilities does Snorlax have?,en,habilidades,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q10,What abilities does Snorlax have?,en,habilidades,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q10,What abilities does Snorlax have?,en,habilidades,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q10,What abilities does Snorlax have?,en,habilidades,bow,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q10,What abilities does Snorlax have?,en,habilidades,bow,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q10,What abilities does Snorlax have?,en,habilidades,bow,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q10,What abilities does Snorlax have?,en,habilidades,bow,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q10,What abilities does Snorlax have?,en,habilidades,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q10,What abilities does Snorlax have?,en,habilidades,tfidf,3,1,0.3333333333333333,1.0,1.0,0.5,0.6309297535714575,3
+Q10,What abilities does Snorlax have?,en,habilidades,tfidf,5,1,0.2,1.0,1.0,0.5,0.6309297535714575,5
+Q10,What abilities does Snorlax have?,en,habilidades,tfidf,10,1,0.1,1.0,1.0,0.5,0.6309297535714575,10
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,literal,1,3,0.0,0.0,0.0,0.0,0.0,0
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,literal,3,3,0.0,0.0,0.0,0.0,0.0,0
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,literal,5,3,0.0,0.0,0.0,0.0,0.0,0
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,literal,10,3,0.0,0.0,0.0,0.0,0.0,0
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,bow,1,3,0.0,0.0,0.0,0.0,0.0,1
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,bow,3,3,0.0,0.0,0.0,0.0,0.0,3
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,bow,5,3,0.0,0.0,0.0,0.0,0.0,5
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,bow,10,3,0.0,0.0,0.0,0.0,0.0,10
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,tfidf,1,3,0.0,0.0,0.0,0.0,0.0,1
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,tfidf,3,3,0.0,0.0,0.0,0.0,0.0,3
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,tfidf,5,3,0.0,0.0,0.0,0.0,0.0,5
+Q11,Quais golpes o Bulbasaur pode aprender?,pt,golpes,tfidf,10,3,0.0,0.0,0.0,0.0,0.0,10
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,literal,1,3,0.0,0.0,0.0,0.0,0.0,0
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,literal,3,3,0.0,0.0,0.0,0.0,0.0,0
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,literal,5,3,0.0,0.0,0.0,0.0,0.0,0
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,literal,10,3,0.0,0.0,0.0,0.0,0.0,0
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,bow,1,3,0.0,0.0,0.0,0.0,0.0,1
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,bow,3,3,0.0,0.0,0.0,0.0,0.0,3
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,bow,5,3,0.0,0.0,0.0,0.0,0.0,5
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,bow,10,3,0.0,0.0,0.0,0.0,0.0,10
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,tfidf,1,3,0.0,0.0,0.0,0.0,0.0,1
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,tfidf,3,3,0.0,0.0,0.0,0.0,0.0,3
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,tfidf,5,3,0.0,0.0,0.0,0.0,0.0,5
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,tfidf,10,3,0.2,0.6666666666666666,1.0,0.1111111111111111,0.2769189462922768,10
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,bow,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,bow,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,bow,10,1,0.0,0.0,0.0,0.0,0.0,10
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q13,Onde encontro Pikachu no FireRed?,pt,encontros,tfidf,10,1,0.0,0.0,0.0,0.0,0.0,10
+Q14,Where can I find Zubat in FireRed?,en,encontros,literal,1,4,0.0,0.0,0.0,0.0,0.0,0
+Q14,Where can I find Zubat in FireRed?,en,encontros,literal,3,4,0.0,0.0,0.0,0.0,0.0,0
+Q14,Where can I find Zubat in FireRed?,en,encontros,literal,5,4,0.0,0.0,0.0,0.0,0.0,0
+Q14,Where can I find Zubat in FireRed?,en,encontros,literal,10,4,0.0,0.0,0.0,0.0,0.0,0
+Q14,Where can I find Zubat in FireRed?,en,encontros,bow,1,4,0.0,0.0,0.0,0.0,0.0,1
+Q14,Where can I find Zubat in FireRed?,en,encontros,bow,3,4,0.0,0.0,0.0,0.0,0.0,3
+Q14,Where can I find Zubat in FireRed?,en,encontros,bow,5,4,0.0,0.0,0.0,0.0,0.0,5
+Q14,Where can I find Zubat in FireRed?,en,encontros,bow,10,4,0.0,0.0,0.0,0.0,0.0,10
+Q14,Where can I find Zubat in FireRed?,en,encontros,tfidf,1,4,0.0,0.0,0.0,0.0,0.0,1
+Q14,Where can I find Zubat in FireRed?,en,encontros,tfidf,3,4,0.0,0.0,0.0,0.0,0.0,3
+Q14,Where can I find Zubat in FireRed?,en,encontros,tfidf,5,4,0.0,0.0,0.0,0.0,0.0,5
+Q14,Where can I find Zubat in FireRed?,en,encontros,tfidf,10,4,0.0,0.0,0.0,0.0,0.0,10
+Q15,Qual o habitat do Dratini?,pt,perfil,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q15,Qual o habitat do Dratini?,pt,perfil,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q15,Qual o habitat do Dratini?,pt,perfil,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q15,Qual o habitat do Dratini?,pt,perfil,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q15,Qual o habitat do Dratini?,pt,perfil,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q15,Qual o habitat do Dratini?,pt,perfil,bow,3,1,0.3333333333333333,1.0,1.0,0.3333333333333333,0.5,3
+Q15,Qual o habitat do Dratini?,pt,perfil,bow,5,1,0.2,1.0,1.0,0.3333333333333333,0.5,5
+Q15,Qual o habitat do Dratini?,pt,perfil,bow,10,1,0.1,1.0,1.0,0.3333333333333333,0.5,10
+Q15,Qual o habitat do Dratini?,pt,perfil,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q15,Qual o habitat do Dratini?,pt,perfil,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q15,Qual o habitat do Dratini?,pt,perfil,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q15,Qual o habitat do Dratini?,pt,perfil,tfidf,10,1,0.1,1.0,1.0,0.1111111111111111,0.3010299956639812,10
+Q16,How tall is Onix?,en,perfil,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q16,How tall is Onix?,en,perfil,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q16,How tall is Onix?,en,perfil,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q16,How tall is Onix?,en,perfil,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q16,How tall is Onix?,en,perfil,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q16,How tall is Onix?,en,perfil,bow,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q16,How tall is Onix?,en,perfil,bow,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q16,How tall is Onix?,en,perfil,bow,10,1,0.1,1.0,1.0,0.125,0.31546487678572877,10
+Q16,How tall is Onix?,en,perfil,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q16,How tall is Onix?,en,perfil,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q16,How tall is Onix?,en,perfil,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q16,How tall is Onix?,en,perfil,tfidf,10,1,0.1,1.0,1.0,0.125,0.31546487678572877,10
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,bow,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,bow,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,bow,10,1,0.1,1.0,1.0,0.16666666666666666,0.3562071871080222,10
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,tfidf,5,1,0.2,1.0,1.0,0.25,0.43067655807339306,5
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,tfidf,10,1,0.1,1.0,1.0,0.25,0.43067655807339306,10
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,bow,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,bow,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,bow,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,bow,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,tfidf,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,tfidf,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,tfidf,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q18,What acquisition evidence is available for Mewtwo?,en,obtencao,tfidf,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,bow,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,bow,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,bow,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,bow,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,tfidf,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,tfidf,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,tfidf,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q19,Qual o grupo de ovos do Eevee?,pt,especie,tfidf,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q20,Which egg group is Growlithe in?,en,especie,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q20,Which egg group is Growlithe in?,en,especie,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q20,Which egg group is Growlithe in?,en,especie,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q20,Which egg group is Growlithe in?,en,especie,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q20,Which egg group is Growlithe in?,en,especie,bow,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q20,Which egg group is Growlithe in?,en,especie,bow,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q20,Which egg group is Growlithe in?,en,especie,bow,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q20,Which egg group is Growlithe in?,en,especie,bow,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q20,Which egg group is Growlithe in?,en,especie,tfidf,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q20,Which egg group is Growlithe in?,en,especie,tfidf,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q20,Which egg group is Growlithe in?,en,especie,tfidf,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q20,Which egg group is Growlithe in?,en,especie,tfidf,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,bow,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,bow,5,1,0.2,1.0,1.0,0.25,0.43067655807339306,5
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,bow,10,1,0.1,1.0,1.0,0.25,0.43067655807339306,10
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,tfidf,5,1,0.2,1.0,1.0,0.2,0.38685280723454163,5
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,tfidf,10,1,0.1,1.0,1.0,0.2,0.38685280723454163,10
+Q22,How does Kadabra evolve?,en,evolucao,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q22,How does Kadabra evolve?,en,evolucao,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q22,How does Kadabra evolve?,en,evolucao,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q22,How does Kadabra evolve?,en,evolucao,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q22,How does Kadabra evolve?,en,evolucao,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q22,How does Kadabra evolve?,en,evolucao,bow,3,1,0.3333333333333333,1.0,1.0,0.3333333333333333,0.5,3
+Q22,How does Kadabra evolve?,en,evolucao,bow,5,1,0.2,1.0,1.0,0.3333333333333333,0.5,5
+Q22,How does Kadabra evolve?,en,evolucao,bow,10,1,0.1,1.0,1.0,0.3333333333333333,0.5,10
+Q22,How does Kadabra evolve?,en,evolucao,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q22,How does Kadabra evolve?,en,evolucao,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q22,How does Kadabra evolve?,en,evolucao,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q22,How does Kadabra evolve?,en,evolucao,tfidf,10,1,0.1,1.0,1.0,0.14285714285714285,0.3333333333333333,10
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,bow,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,bow,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,bow,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,bow,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,tfidf,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,tfidf,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,tfidf,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q23,Qual o ataque especial do Alakazam?,pt,estatisticas,tfidf,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q24,What are the base stats of Dragonite?,en,estatisticas,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q24,What are the base stats of Dragonite?,en,estatisticas,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q24,What are the base stats of Dragonite?,en,estatisticas,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q24,What are the base stats of Dragonite?,en,estatisticas,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q24,What are the base stats of Dragonite?,en,estatisticas,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q24,What are the base stats of Dragonite?,en,estatisticas,bow,3,1,0.3333333333333333,1.0,1.0,0.5,0.6309297535714575,3
+Q24,What are the base stats of Dragonite?,en,estatisticas,bow,5,1,0.2,1.0,1.0,0.5,0.6309297535714575,5
+Q24,What are the base stats of Dragonite?,en,estatisticas,bow,10,1,0.1,1.0,1.0,0.5,0.6309297535714575,10
+Q24,What are the base stats of Dragonite?,en,estatisticas,tfidf,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q24,What are the base stats of Dragonite?,en,estatisticas,tfidf,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q24,What are the base stats of Dragonite?,en,estatisticas,tfidf,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q24,What are the base stats of Dragonite?,en,estatisticas,tfidf,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,bow,3,1,0.3333333333333333,1.0,1.0,0.5,0.6309297535714575,3
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,bow,5,1,0.2,1.0,1.0,0.5,0.6309297535714575,5
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,bow,10,1,0.1,1.0,1.0,0.5,0.6309297535714575,10
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,tfidf,10,1,0.1,1.0,1.0,0.16666666666666666,0.3562071871080222,10
+Q26,Charmeleon evolui de quem?,pt,evolucao,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q26,Charmeleon evolui de quem?,pt,evolucao,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q26,Charmeleon evolui de quem?,pt,evolucao,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q26,Charmeleon evolui de quem?,pt,evolucao,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q26,Charmeleon evolui de quem?,pt,evolucao,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q26,Charmeleon evolui de quem?,pt,evolucao,bow,3,1,0.3333333333333333,1.0,1.0,0.5,0.6309297535714575,3
+Q26,Charmeleon evolui de quem?,pt,evolucao,bow,5,1,0.2,1.0,1.0,0.5,0.6309297535714575,5
+Q26,Charmeleon evolui de quem?,pt,evolucao,bow,10,1,0.1,1.0,1.0,0.5,0.6309297535714575,10
+Q26,Charmeleon evolui de quem?,pt,evolucao,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q26,Charmeleon evolui de quem?,pt,evolucao,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q26,Charmeleon evolui de quem?,pt,evolucao,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q26,Charmeleon evolui de quem?,pt,evolucao,tfidf,10,1,0.1,1.0,1.0,0.16666666666666666,0.3562071871080222,10
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,bow,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,bow,5,1,0.2,1.0,1.0,0.25,0.43067655807339306,5
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,bow,10,1,0.1,1.0,1.0,0.25,0.43067655807339306,10
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,tfidf,10,1,0.1,1.0,1.0,0.14285714285714285,0.3333333333333333,10
+Q28,Charmander é uma forma inicial?,pt,evolucao,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q28,Charmander é uma forma inicial?,pt,evolucao,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q28,Charmander é uma forma inicial?,pt,evolucao,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q28,Charmander é uma forma inicial?,pt,evolucao,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q28,Charmander é uma forma inicial?,pt,evolucao,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q28,Charmander é uma forma inicial?,pt,evolucao,bow,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q28,Charmander é uma forma inicial?,pt,evolucao,bow,5,1,0.2,1.0,1.0,0.2,0.38685280723454163,5
+Q28,Charmander é uma forma inicial?,pt,evolucao,bow,10,1,0.1,1.0,1.0,0.2,0.38685280723454163,10
+Q28,Charmander é uma forma inicial?,pt,evolucao,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q28,Charmander é uma forma inicial?,pt,evolucao,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q28,Charmander é uma forma inicial?,pt,evolucao,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q28,Charmander é uma forma inicial?,pt,evolucao,tfidf,10,1,0.1,1.0,1.0,0.14285714285714285,0.3333333333333333,10
+Q29,Onde encontro Eevee?,pt,encontros,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q29,Onde encontro Eevee?,pt,encontros,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q29,Onde encontro Eevee?,pt,encontros,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q29,Onde encontro Eevee?,pt,encontros,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q29,Onde encontro Eevee?,pt,encontros,bow,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q29,Onde encontro Eevee?,pt,encontros,bow,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q29,Onde encontro Eevee?,pt,encontros,bow,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q29,Onde encontro Eevee?,pt,encontros,bow,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q29,Onde encontro Eevee?,pt,encontros,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q29,Onde encontro Eevee?,pt,encontros,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q29,Onde encontro Eevee?,pt,encontros,tfidf,5,1,0.2,1.0,1.0,0.2,0.38685280723454163,5
+Q29,Onde encontro Eevee?,pt,encontros,tfidf,10,1,0.1,1.0,1.0,0.2,0.38685280723454163,10
+Q30,Como conseguir Eevee?,pt,obtencao,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q30,Como conseguir Eevee?,pt,obtencao,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q30,Como conseguir Eevee?,pt,obtencao,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q30,Como conseguir Eevee?,pt,obtencao,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q30,Como conseguir Eevee?,pt,obtencao,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q30,Como conseguir Eevee?,pt,obtencao,bow,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q30,Como conseguir Eevee?,pt,obtencao,bow,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q30,Como conseguir Eevee?,pt,obtencao,bow,10,1,0.1,1.0,1.0,0.16666666666666666,0.3562071871080222,10
+Q30,Como conseguir Eevee?,pt,obtencao,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q30,Como conseguir Eevee?,pt,obtencao,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q30,Como conseguir Eevee?,pt,obtencao,tfidf,5,1,0.2,1.0,1.0,0.25,0.43067655807339306,5
+Q30,Como conseguir Eevee?,pt,obtencao,tfidf,10,1,0.1,1.0,1.0,0.25,0.43067655807339306,10
+Q31,Is Charmander an evolved form?,en,evolucao,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q31,Is Charmander an evolved form?,en,evolucao,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q31,Is Charmander an evolved form?,en,evolucao,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q31,Is Charmander an evolved form?,en,evolucao,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q31,Is Charmander an evolved form?,en,evolucao,bow,1,1,1.0,1.0,1.0,1.0,1.0,1
+Q31,Is Charmander an evolved form?,en,evolucao,bow,3,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q31,Is Charmander an evolved form?,en,evolucao,bow,5,1,0.2,1.0,1.0,1.0,1.0,5
+Q31,Is Charmander an evolved form?,en,evolucao,bow,10,1,0.1,1.0,1.0,1.0,1.0,10
+Q31,Is Charmander an evolved form?,en,evolucao,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q31,Is Charmander an evolved form?,en,evolucao,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q31,Is Charmander an evolved form?,en,evolucao,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q31,Is Charmander an evolved form?,en,evolucao,tfidf,10,1,0.1,1.0,1.0,0.14285714285714285,0.3333333333333333,10
+Q32,What does Charmeleon evolve from?,en,evolucao,literal,1,1,0.0,0.0,0.0,0.0,0.0,0
+Q32,What does Charmeleon evolve from?,en,evolucao,literal,3,1,0.0,0.0,0.0,0.0,0.0,0
+Q32,What does Charmeleon evolve from?,en,evolucao,literal,5,1,0.0,0.0,0.0,0.0,0.0,0
+Q32,What does Charmeleon evolve from?,en,evolucao,literal,10,1,0.0,0.0,0.0,0.0,0.0,0
+Q32,What does Charmeleon evolve from?,en,evolucao,bow,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q32,What does Charmeleon evolve from?,en,evolucao,bow,3,1,0.3333333333333333,1.0,1.0,0.5,0.6309297535714575,3
+Q32,What does Charmeleon evolve from?,en,evolucao,bow,5,1,0.2,1.0,1.0,0.5,0.6309297535714575,5
+Q32,What does Charmeleon evolve from?,en,evolucao,bow,10,1,0.1,1.0,1.0,0.5,0.6309297535714575,10
+Q32,What does Charmeleon evolve from?,en,evolucao,tfidf,1,1,0.0,0.0,0.0,0.0,0.0,1
+Q32,What does Charmeleon evolve from?,en,evolucao,tfidf,3,1,0.0,0.0,0.0,0.0,0.0,3
+Q32,What does Charmeleon evolve from?,en,evolucao,tfidf,5,1,0.0,0.0,0.0,0.0,0.0,5
+Q32,What does Charmeleon evolve from?,en,evolucao,tfidf,10,1,0.1,1.0,1.0,0.14285714285714285,0.3333333333333333,10

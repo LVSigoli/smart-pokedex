@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 from pathlib import Path
 
 import nbformat
@@ -26,20 +27,22 @@ def adapt(notebook, name: str):
     for cell in code_cells(notebook):
         source = "".join(cell.source)
 
-        source = source.replace(
-            "from google.colab import drive",
-            "try:\n    from google.colab import drive\nexcept ImportError:\n    class _Drive:\n        @staticmethod\n        def mount(*args, **kwargs):\n            return None\n    drive = _Drive()",
+        source = re.sub(
+            r"try:\s*from google\.colab import drive\s*IN_COLAB\s*=\s*True\s*except ImportError:\s*IN_COLAB\s*=\s*False",
+            "IN_COLAB = False",
+            source,
         )
-        source = source.replace("drive.mount('/content/drive')", "drive.mount('/content/drive') if IN_COLAB else None")
-        source = source.replace('drive.mount("/content/drive")', 'drive.mount("/content/drive") if IN_COLAB else None')
+        source = source.replace("from google.colab import drive", "IN_COLAB = False")
+        source = re.sub(
+            r"^\s*if\s+IN_COLAB\s*:\s*\n\s*drive\.mount\([^\n]*\)\s*$",
+            "# Colab drive desativado no ambiente local",
+            source,
+            flags=re.MULTILINE,
+        )
+        source = re.sub(r"^\s*drive\.mount\([^\n]*\)\s*$", "# Colab drive desativado no ambiente local", source, flags=re.MULTILINE)
 
         if name == "00_CORPUS_POKEMON.ipynb":
             source = "IN_COLAB = False\n" + source
-            source = source.replace(
-                'from google.colab import drive\n\n',
-                'try:\n    from google.colab import drive\nexcept ImportError:\n    class _Drive:\n        @staticmethod\n        def mount(*args, **kwargs):\n            return None\n    drive = _Drive()\n\n',
-            )
-            source = source.replace('drive.mount("/content/drive")', 'drive.mount("/content/drive") if "google.colab" in str(drive.__class__) else None')
             source = source.replace(
                 'base_path = Path(\n    "/content/drive/MyDrive/IFSP-ADS/ultimo_periodo/tc_2/avaliacao/corpus"\n)',
                 f'base_path = Path(r"{(ROOT / "data").as_posix()}")',
@@ -62,6 +65,11 @@ def adapt(notebook, name: str):
             source = source.replace("APPLICATION_DIR = AVALIACAO_DIR / 'application'", "APPLICATION_DIR = AVALIACAO_DIR")
             source = source.replace("RAG_DIR = APPLICATION_DIR / 'data' / 'rag'", "RAG_DIR = APPLICATION_DIR / 'data'")
             source = source.replace("DOC_DIR = RAG_DIR / 'documents'", "DOC_DIR = RAG_DIR / 'processed'")
+            source = re.sub(
+                r"DOC_DIR\s*=\s*APPLICATION_DIR\s*/\s*'data'\s*/\s*'rag'\s*/\s*'documents'",
+                "DOC_DIR = APPLICATION_DIR / 'data' / 'processed'",
+                source,
+            )
             source = source.replace("REFERENCE_DIR = RAG_DIR / 'reference'", "REFERENCE_DIR = RAG_DIR / 'processed' / 'reference'")
             source = source.replace("REPORT_DIR = APPLICATION_DIR / 'reports'", "REPORT_DIR = APPLICATION_DIR / 'data' / 'reports'")
             source = source.replace("LOG_DIR = APPLICATION_DIR / 'logs'", "LOG_DIR = APPLICATION_DIR / 'data' / 'logs'")
@@ -71,6 +79,11 @@ def adapt(notebook, name: str):
             source = source.replace("APPLICATION_DIR = AVALIACAO_DIR / 'application'", "APPLICATION_DIR = AVALIACAO_DIR")
             source = source.replace("RAG_DIR = APPLICATION_DIR / 'data' / 'rag'", "RAG_DIR = APPLICATION_DIR / 'data'")
             source = source.replace("DOC_DIR = RAG_DIR / 'documents'", "DOC_DIR = RAG_DIR / 'processed'")
+            source = re.sub(
+                r"DOC_DIR\s*=\s*APPLICATION_DIR\s*/\s*'data'\s*/\s*'rag'\s*/\s*'documents'",
+                "DOC_DIR = APPLICATION_DIR / 'data' / 'processed'",
+                source,
+            )
             source = source.replace("REFERENCE_DIR = RAG_DIR / 'reference'", "REFERENCE_DIR = RAG_DIR / 'processed' / 'reference'")
             source = source.replace("EVAL_DIR = APPLICATION_DIR / 'data' / 'evaluation'", "EVAL_DIR = APPLICATION_DIR / 'data' / 'evaluation'")
             source = source.replace("ARTIFACTS_DIR = APPLICATION_DIR / 'artifacts' / 'retrieval'", "ARTIFACTS_DIR = APPLICATION_DIR / 'data' / 'artifacts' / 'retrieval'")

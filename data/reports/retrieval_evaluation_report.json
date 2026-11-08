@@ -1,0 +1,151 @@
+{
+  "project": "Pokédex Inteligente — Trabalho 2",
+  "notebook": "02_RETRIEVAL_AND_EVALUATION_ADAPTADO",
+  "run_utc": "2026-11-08T20:07:41.242172+00:00",
+  "source_document_file": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\processed\\pokemon_rag_documents.jsonl",
+  "source_document_sha256": "bfabdaf0354eb3d9c6a7f171e190903abac63a35848c10b54d37458d46712f14",
+  "document_count": 1732,
+  "pokemon_count": 151,
+  "model_index_dimensions": {
+    "bow": [
+      1732,
+      2211
+    ],
+    "tfidf": [
+      1732,
+      13842
+    ]
+  },
+  "queries": 32,
+  "qrels": 39,
+  "label_status": {
+    "pending_manual_review": 32
+  },
+  "metric_k_values": [
+    1,
+    3,
+    5,
+    10
+  ],
+  "metrics_macro_provisional": [
+    {
+      "method": "bow",
+      "k": 1,
+      "precision_at_k": 0.3125,
+      "recall_at_k": 0.3125,
+      "hit_at_k": 0.3125,
+      "mrr_at_k": 0.3125,
+      "ndcg_at_k": 0.3125
+    },
+    {
+      "method": "bow",
+      "k": 3,
+      "precision_at_k": 0.20833333333333331,
+      "recall_at_k": 0.625,
+      "hit_at_k": 0.625,
+      "mrr_at_k": 0.44791666666666663,
+      "ndcg_at_k": 0.4932993287946483
+    },
+    {
+      "method": "bow",
+      "k": 5,
+      "precision_at_k": 0.15000000000000002,
+      "recall_at_k": 0.75,
+      "hit_at_k": 0.75,
+      "mrr_at_k": 0.47760416666666666,
+      "ndcg_at_k": 0.5457644063401084
+    },
+    {
+      "method": "bow",
+      "k": 10,
+      "precision_at_k": 0.084375,
+      "recall_at_k": 0.84375,
+      "hit_at_k": 0.84375,
+      "mrr_at_k": 0.49192708333333335,
+      "ndcg_at_k": 0.5778856329339137
+    },
+    {
+      "method": "literal",
+      "k": 1,
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "hit_at_k": 0.0,
+      "mrr_at_k": 0.0,
+      "ndcg_at_k": 0.0
+    },
+    {
+      "method": "literal",
+      "k": 3,
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "hit_at_k": 0.0,
+      "mrr_at_k": 0.0,
+      "ndcg_at_k": 0.0
+    },
+    {
+      "method": "literal",
+      "k": 5,
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "hit_at_k": 0.0,
+      "mrr_at_k": 0.0,
+      "ndcg_at_k": 0.0
+    },
+    {
+      "method": "literal",
+      "k": 10,
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "hit_at_k": 0.0,
+      "mrr_at_k": 0.0,
+      "ndcg_at_k": 0.0
+    },
+    {
+      "method": "tfidf",
+      "k": 1,
+      "precision_at_k": 0.25,
+      "recall_at_k": 0.25,
+      "hit_at_k": 0.25,
+      "mrr_at_k": 0.25,
+      "ndcg_at_k": 0.25
+    },
+    {
+      "method": "tfidf",
+      "k": 3,
+      "precision_at_k": 0.09375,
+      "recall_at_k": 0.28125,
+      "hit_at_k": 0.28125,
+      "mrr_at_k": 0.265625,
+      "ndcg_at_k": 0.26971655479910805
+    },
+    {
+      "method": "tfidf",
+      "k": 5,
+      "precision_at_k": 0.08750000000000001,
+      "recall_at_k": 0.4375,
+      "hit_at_k": 0.4375,
+      "mrr_at_k": 0.3,
+      "ndcg_at_k": 0.3329012903569334
+    },
+    {
+      "method": "tfidf",
+      "k": 10,
+      "precision_at_k": 0.09375,
+      "recall_at_k": 0.8958333333333334,
+      "hit_at_k": 0.90625,
+      "mrr_at_k": 0.3645461309523809,
+      "ndcg_at_k": 0.48583863814760503
+    }
+  ],
+  "primary_observations": "Somente recuperação textual; resultados provisórios dependentes dos qrels.",
+  "limitations": [
+    "Relevância inicial por pokemon_id + section; não substitui revisão humana.",
+    "Precisão e recall podem ficar distorcidos pela falta de rótulos positivos completos.",
+    "Não existe treinamento supervisionado, fine-tuning nem avaliação do LLM nesta etapa.",
+    "Consultas PT-BR/EN usam equivalências lexicais limitadas.",
+    "Múltiplos chunks do mesmo Pokémon podem preencher várias posições no Top-K.",
+    "Dados históricos do FireRed precisam da validação de origem realizada no corpus."
+  ],
+  "retrieval_manifest": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\artifacts\\retrieval\\retrieval_manifest.json",
+  "error_report": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\reports\\retrieval_error_analysis.csv"
+}

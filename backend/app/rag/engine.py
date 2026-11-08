@@ -85,6 +85,30 @@ class RAGEngine:
             verified.add(doc)
         return cited.issubset(verified)
 
+    @staticmethod
+    def retrieval_answer(rows, question):
+        """Fallback factual para permitir uso sem Gemini; só usa o conteúdo recuperado."""
+        if not rows:
+            return None
+        if rows[0].get("section") == "evolution":
+            transitions = []
+            for line in str(rows[0].get("content", "")).splitlines():
+                match = re.search(r"-\s*([a-z0-9-]+)\s*->\s*([a-z0-9-]+).*?item:\s*([^;.)]+)", line, re.I)
+                if match:
+                    origin, target, item = (part.replace("-", " ").title() for part in match.groups())
+                    transitions.append(f"{target} usando {item}")
+            if transitions:
+                subject = rows[0].get("pokemon_name", "O Pokémon")
+                if re.search(r"\b(como|quais|qual|evolu)\b", normalize_plain(question)):
+                    return f"{subject} pode evoluir para " + ", ".join(transitions[:-1]) + (f" e {transitions[-1]}." if len(transitions) > 1 else ".")
+                return f"{subject} can evolve into " + ", ".join(transitions[:-1]) + (f" and {transitions[-1]}." if len(transitions) > 1 else ".")
+        excerpts = []
+        for row in rows[:3]:
+            content = str(row.get("content", "")).strip()
+            if content:
+                excerpts.append(content)
+        return "\n\n".join(excerpts)[:9000] if excerpts else None
+
     def answer(self, question, generate=False):
         if not isinstance(question, str) or not question.strip(): raise ValueError("Pergunta vazia")
         canonical, corrections = self.canonicalize(question)
@@ -94,7 +118,8 @@ class RAGEngine:
             status = "out_of_scope" if gate in {"out_of_scope", "outside_kanto_dex", "needs_comparison_criterion"} else "insufficient_evidence"
             return {"status": status, "answer": REFUSAL, "source_documents": [], "supporting_excerpts": [], "spelling_corrections": corrections}
         base = {"status": "retrieval_only", "answer": None, "source_documents": [{k: r.get(k) for k in ("document_id", "pokemon_id", "pokemon_name", "section", "score")} for r in used], "supporting_excerpts": [], "spelling_corrections": corrections, "timestamp_utc": datetime.now(timezone.utc).isoformat()}
-        if not generate: return base
+        if not generate:
+            return {**base, "answer": self.retrieval_answer(used, question)}
         if not self.generator: return {**base, "status": "provider_unavailable", "answer": REFUSAL}
         try:
             payload = self.generator(question, self.build_context(rows)[0])
