@@ -4,6 +4,13 @@ from threading import RLock
 from uuid import UUID, uuid4
 from app.core.exceptions import SessionNotFound
 
+FOLLOWUP_TERMS = {
+    "ele", "ela", "eles", "elas", "dele", "dela", "deles", "delas",
+    "qual", "quais", "evolucao", "evolution", "tipo", "type",
+    "onde", "encontro", "encontrar", "capturo", "capturar", "localizacao",
+    "localizar", "where", "find", "catch", "get", "obter", "conseguir", "ganhar",
+}
+
 @dataclass
 class ChatSession:
     session_id: UUID
@@ -42,7 +49,9 @@ class SessionManager:
         session = self.get(sid)
         explicit = session.engine.mentioned_ids(message) if hasattr(session.engine, "mentioned_ids") else []
         normalized = str(message).casefold()
+        tokens = set(normalized.split())
         followup = not explicit and any(token in normalized.split() for token in ("ele", "ela", "dele", "dela", "qual", "quais", "evolução", "evolucao", "evolution", "tipo", "type"))
+        followup = not explicit and bool(tokens & FOLLOWUP_TERMS)
         if followup and session.active_ids:
             if len(session.active_ids) > 1 and any(token in normalized.split() for token in ("ele", "ela", "dele", "dela")):
                 names = [session.engine.retriever.by_id[i].get("name", str(i)) for i in session.active_ids]

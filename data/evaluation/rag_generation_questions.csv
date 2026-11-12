@@ -1,0 +1,6 @@
+query_id,question,expected_case,expected_section
+R01,Quais são os tipos do Charizard?,answerable,profile
+R02,Qual é a velocidade-base do Pikachu?,answerable,stats
+R03,Compare a velocidade-base de Charizard e Blastoise.,comparison,stats
+R04,Quais ginásios preciso vencer?,out_of_scope,none
+R05,Qual é o número do sapato do Pikachu?,missing_evidence,profile

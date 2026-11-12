@@ -55,7 +55,8 @@ class RAGEngine:
         targets, section = self.mentioned_ids(question), self.requested_section(question)
         ranked = self.retriever.search(question, top_k=len(self.retriever.documents))
         if targets: ranked = [r for r in ranked if r["pokemon_id"] in targets]
-        if section == "obtainment": ranked = [r for r in ranked if r["section"] in ("obtainment", "encounters", "evolution")]
+        if section in {"obtainment", "encounters"}:
+            ranked = [r for r in ranked if r["section"] in ("obtainment", "encounters", "evolution")]
         elif section: ranked = [r for r in ranked if r["section"] == section]
         if not ranked: return [], "no_relevant_documents"
         if targets: ranked.sort(key=lambda r: (targets.index(r["pokemon_id"]) if r["pokemon_id"] in targets else len(targets), -r["score"]))

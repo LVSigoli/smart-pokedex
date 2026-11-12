@@ -59,6 +59,10 @@ def adapt(notebook, name: str):
             source = source.replace('LOG_DIR = root / "logs" / "trabalho_1"', 'LOG_DIR = root / "logs" / "corpus"')
 
         elif name == "01_RAG_DATA_PREPARATION.ipynb":
+            source = source.replace(
+                "AVALIACAO_DIR = resolve_workspace_root()",
+                f"AVALIACAO_DIR = Path(r'{ROOT.as_posix()}')",
+            )
             source = source.replace("AVALIACAO_DIR = (Path('/content/drive/MyDrive/IFSP-ADS/ultimo_periodo/tc_2/avaliacao')\n                 if IN_COLAB else Path.cwd())", f"AVALIACAO_DIR = Path(r'{ROOT.as_posix()}')")
             source = source.replace("SOURCE_DIR = AVALIACAO_DIR / 'corpus'", "SOURCE_DIR = AVALIACAO_DIR / 'data'")
             source = source.replace("RAW_DIR = SOURCE_DIR / 'corpus_data_firered' / 'raw_data'", "RAW_DIR = SOURCE_DIR / 'raw'")
@@ -75,6 +79,10 @@ def adapt(notebook, name: str):
             source = source.replace("LOG_DIR = APPLICATION_DIR / 'logs'", "LOG_DIR = APPLICATION_DIR / 'data' / 'logs'")
 
         elif name in {"02_RETRIEVAL_AND_EVALUATION.ipynb", "03_RAG_CHATBOT.ipynb"}:
+            source = source.replace(
+                "AVALIACAO_DIR = resolve_workspace_root()",
+                f"AVALIACAO_DIR = Path(r'{ROOT.as_posix()}')",
+            )
             source = source.replace("DEFAULT_AVALIACAO_DIR = (\n    '/content/drive/MyDrive/IFSP-ADS/ultimo_periodo/tc_2/avaliacao'\n    if IN_COLAB else str(Path.cwd())\n)", f"DEFAULT_AVALIACAO_DIR = r'{ROOT.as_posix()}'")
             source = source.replace("APPLICATION_DIR = AVALIACAO_DIR / 'application'", "APPLICATION_DIR = AVALIACAO_DIR")
             source = source.replace("RAG_DIR = APPLICATION_DIR / 'data' / 'rag'", "RAG_DIR = APPLICATION_DIR / 'data'")

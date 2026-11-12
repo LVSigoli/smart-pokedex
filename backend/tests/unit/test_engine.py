@@ -25,3 +25,15 @@ def test_grounding_requires_literal_quote():
     payload = {"can_answer":True,"answer":"Charmander evolui [004_evolution].","evidence":[{"document_id":"004_evolution","quote":"Charmander evolves into Charmeleon at level 16."}]}
     assert RAGEngine.verify(payload, used)
 
+def test_location_question_accepts_obtainment_evidence():
+    class EeveeRetriever:
+        documents = [{"pokemon_id": 133}]
+        records = [{"id": 133, "api_name": "eevee", "name": "Eevee"}]
+        def search(self, question, top_k=5):
+            return [{"rank": 1, "document_id": "133_obtainment", "pokemon_id": 133, "pokemon_name": "Eevee", "section": "obtainment", "score": .9, "content": "Eevee is available as a documented gift."}]
+
+    rag = RAGEngine(EeveeRetriever(), SimpleNamespace(gemini_api_key=None, gemini_model="test", rag_top_k=5))
+    rows, reason = rag.select_evidence("Onde encontro o Eevee?")
+    assert reason == "ready"
+    assert [row["document_id"] for row in rows] == ["133_obtainment"]
+

@@ -1,0 +1,21 @@
+{
+  "project": "Pokédex Inteligente — Trabalho 2",
+  "notebook": "03_RAG_CHATBOT",
+  "run_utc": "2026-11-12T23:24:28.660877+00:00",
+  "document_count": 1732,
+  "pokemon_count": 151,
+  "retriever": "TF-IDF + cosseno persistido no Notebook 02; sem novo fit",
+  "index_checksum_sha256": "bfabdaf0354eb3d9c6a7f171e190903abac63a35848c10b54d37458d46712f14",
+  "gemini_model_configured": "gemini-3.5-flash-lite",
+  "key_available": false,
+  "live_demo_executed": false,
+  "generation_evaluation_executed": false,
+  "ablation_without_context_executed": false,
+  "evidence_policy": "Recusar sem documentos, cobertura das entidades ou citações literais válidas.",
+  "limitations": [
+    "A busca lexical pode falhar em paráfrases.",
+    "Qrels provisórios não constituem avaliação definitiva.",
+    "A revisão humana é necessária para suporte semântico.",
+    "Condições históricas não verificadas para FireRed são comunicadas, não ocultadas."
+  ]
+}

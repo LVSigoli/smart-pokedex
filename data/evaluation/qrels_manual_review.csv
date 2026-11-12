@@ -1,0 +1,312 @@
+query_id,document_id,relevance,question,label_provenance,review_status,pokemon_name,section,content,reviewer_decision,reviewer_notes,reviewed_by,review_date
+Q01,006_profile,1,Quais são os tipos do Charizard?,proxy_pokemon_section_unreviewed,pending_manual_review,Charizard,profile,"Pokémon Charizard (National Pokédex #006).
+Types in Generation III: fire, flying.
+Types PT-BR: fogo, voador.
+Pokédex description (firered): Its wings can carry this POKéMON close to an altitude of 4,600 feet. It blows out fire at very high temperatures..
+Habitat: mountain.
+Height: 1.7 m; weight: 90.5 kg.
+Capture rate (API): 45.",,,,
+Q02,003_profile,1,What type is Venusaur?,proxy_pokemon_section_unreviewed,pending_manual_review,Venusaur,profile,"Pokémon Venusaur (National Pokédex #003).
+Types in Generation III: grass, poison.
+Types PT-BR: planta, venenoso.
+Pokédex description (firered): A bewitching aroma wafts from its flower. The fragrance becalms those engaged in a battle..
+Habitat: grassland.
+Height: 2.0 m; weight: 100.0 kg.
+Capture rate (API): 45.",,,,
+Q03,025_stats,1,Qual a velocidade base do Pikachu?,proxy_pokemon_section_unreviewed,pending_manual_review,Pikachu,stats,"Base stats for Pikachu (Generation III reconstructed from PokéAPI):
+- attack: 55.
+- defense: 30.
+- hp: 35.
+- special attack: 50.
+- special defense: 40.
+- speed: 90.",,,,
+Q04,095_stats,1,How much base defense does Onix have?,proxy_pokemon_section_unreviewed,pending_manual_review,Onix,stats,"Base stats for Onix (Generation III reconstructed from PokéAPI):
+- attack: 45.
+- defense: 160.
+- hp: 35.
+- special attack: 30.
+- special defense: 45.
+- speed: 70.",,,,
+Q05,133_evolution,1,Como o Eevee evolui?,proxy_pokemon_section_unreviewed,pending_manual_review,Eevee,evolution,"Evolution family of Eevee (only species 1–151): eevee, vaporeon, jolteon, flareon.
+- eevee -> vaporeon. Conditions: (version_group: red blue; is_default: True; item: water stone; trigger: use item; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False; required_pokemon_form: eevee). Not specifically verified for FireRed.
+- eevee -> jolteon. Conditions: (version_group: red blue; is_default: True; item: thunder stone; trigger: use item; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False; required_pokemon_form: eevee). Not specifically verified for FireRed.
+- eevee -> flareon. Conditions: (version_group: red blue; is_default: True; item: fire stone; trigger: use item; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False; required_pokemon_form: eevee). Not specifically verified for FireRed.
+Evolution of later-generation species is intentionally outside the Kanto scope.",,,,
+Q06,004_evolution,1,Which Pokemon evolves from Charmander?,proxy_pokemon_section_unreviewed,pending_manual_review,Charmander,evolution,"Evolution family of Charmander (only species 1–151): charmander, charmeleon, charizard.
+Charmander is the first stage of its evolution family and does not evolve from another Pokémon.
+- charmander -> charmeleon. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 16; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+- charmeleon -> charizard. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 36; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+Evolution of later-generation species is intentionally outside the Kanto scope.",,,,
+Q07,130_type_matchups,1,Quais são as fraquezas do Gyarados?,proxy_pokemon_section_unreviewed,pending_manual_review,Gyarados,type_matchups,"Defensive effectiveness against Gyarados (Generation III type chart):
+- 4x weak: electric.
+- 2x weak: rock.
+- 0.5x resistant: bug, fighting, fire, steel, water.
+- immune (0x): ground.
+Type chart only: abilities and battle conditions may modify damage.",,,,
+Q08,006_type_matchups,1,Which types are strong against Charizard?,proxy_pokemon_section_unreviewed,pending_manual_review,Charizard,type_matchups,"Defensive effectiveness against Charizard (Generation III type chart):
+- 4x weak: rock.
+- 2x weak: electric, water.
+- 0.5x resistant: fighting, fire, steel.
+- 0.25x resistant: bug, grass.
+- immune (0x): ground.
+Type chart only: abilities and battle conditions may modify damage.",,,,
+Q09,094_abilities,1,Quais habilidades o Gengar possui?,proxy_pokemon_section_unreviewed,pending_manual_review,Gengar,abilities,"Abilities of Gengar reconstructed for Generation III:
+- levitate (slot 1; generation_iii_reconstructed).",,,,
+Q10,143_abilities,1,What abilities does Snorlax have?,proxy_pokemon_section_unreviewed,pending_manual_review,Snorlax,abilities,"Abilities of Snorlax reconstructed for Generation III:
+- immunity (slot 1; generation_iii_reconstructed).
+- thick fat (slot 2; generation_iii_reconstructed).",,,,
+Q11,001_moves_01,1,Quais golpes o Bulbasaur pode aprender?,proxy_pokemon_section_unreviewed,pending_manual_review,Bulbasaur,moves,"Moves learnable by Bulbasaur (FireRed/LeafGreen version group):
+- attract: machine; machines: TM45; type: normal; power: None; accuracy: 100; PP: 15; gen3 category: status.
+- body slam: tutor; type: normal; power: 85; accuracy: 100; PP: 15; gen3 category: physical.
+- bullet seed: machine; machines: TM09; type: grass; power: 10; accuracy: 100; PP: 30; gen3 category: special.
+- charm: egg; type: normal; power: None; accuracy: 100; PP: 20; gen3 category: status.
+- curse: egg; type: unknown; power: None; accuracy: None; PP: 10; gen3 category: status.
+- cut: machine; machines: HM01; type: normal; power: 50; accuracy: 95; PP: 30; gen3 category: physical.
+- double edge: tutor; type: normal; power: 120; accuracy: 100; PP: 15; gen3 category: physical.
+- double team: machine; machines: TM32; type: normal; power: None; accuracy: None; PP: 15; gen3 category: status.
+- facade: machine; machines: TM42; type: normal; power: 70; accuracy: 100; PP: 20; gen3 category: physical.
+- flash: machine; machines: HM05; type: normal; power: None; accuracy: 70; PP: 20; gen3 category: status.
+- frustration: machine; machines: TM21; type: normal; power: None; accuracy: 100; PP: 20; gen3 category: physical.
+- giga drain: machine; machines: TM19; type: grass; power: 75; accuracy: 100; PP: 5; gen3 category: special.
+- grass whistle: egg; type: grass; power: None; accuracy: 55; PP: 15; gen3 category: status.
+- growl: level up; level 4; type: normal; power: None; accuracy: 100; PP: 40; gen3 category: status.
+- growth: level up; level 32; type: normal; power: None; accuracy: None; PP: 20; gen3 category: status.",,,,
+Q11,001_moves_02,1,Quais golpes o Bulbasaur pode aprender?,proxy_pokemon_section_unreviewed,pending_manual_review,Bulbasaur,moves,"Moves learnable by Bulbasaur (FireRed/LeafGreen version group):
+- hidden power: machine; machines: TM10; type: normal; power: 1; accuracy: 100; PP: 15; gen3 category: physical.
+- leech seed: level up; level 7; type: grass; power: None; accuracy: 90; PP: 10; gen3 category: status.
+- light screen: egg; type: psychic; power: None; accuracy: None; PP: 30; gen3 category: status.
+- magical leaf: egg; type: grass; power: 60; accuracy: None; PP: 20; gen3 category: special.
+- mimic: tutor; type: normal; power: None; accuracy: None; PP: 10; gen3 category: status.
+- petal dance: egg; type: grass; power: 70; accuracy: 100; PP: 10; gen3 category: special.
+- poison powder: level up; level 15; type: poison; power: None; accuracy: 75; PP: 35; gen3 category: status.
+- protect: machine; machines: TM17; type: normal; power: None; accuracy: None; PP: 10; gen3 category: status.
+- razor leaf: level up; level 20; type: grass; power: 55; accuracy: 95; PP: 25; gen3 category: special.
+- rest: machine; machines: TM44; type: psychic; power: None; accuracy: None; PP: 5; gen3 category: status.
+- return: machine; machines: TM27; type: normal; power: None; accuracy: 100; PP: 20; gen3 category: physical.
+- rock smash: machine; machines: HM06; type: fighting; power: 20; accuracy: 100; PP: 15; gen3 category: physical.
+- safeguard: egg; type: normal; power: None; accuracy: None; PP: 25; gen3 category: status.
+- secret power: machine; machines: TM43; type: normal; power: 70; accuracy: 100; PP: 20; gen3 category: physical.
+- skull bash: egg; type: normal; power: 100; accuracy: 100; PP: 15; gen3 category: physical.",,,,
+Q11,001_moves_03,1,Quais golpes o Bulbasaur pode aprender?,proxy_pokemon_section_unreviewed,pending_manual_review,Bulbasaur,moves,"Moves learnable by Bulbasaur (FireRed/LeafGreen version group):
+- sleep powder: level up; level 15; type: grass; power: None; accuracy: 75; PP: 15; gen3 category: status.
+- sludge bomb: machine; machines: TM36; type: poison; power: 90; accuracy: 100; PP: 10; gen3 category: physical.
+- solar beam: level up; level 46; type: grass; power: 120; accuracy: 100; PP: 10; gen3 category: special.
+- solar beam: machine; machines: TM22; type: grass; power: 120; accuracy: 100; PP: 10; gen3 category: special.
+- strength: machine; machines: HM04; type: normal; power: 80; accuracy: 100; PP: 15; gen3 category: physical.
+- substitute: tutor; type: normal; power: None; accuracy: None; PP: 10; gen3 category: status.
+- sunny day: machine; machines: TM11; type: fire; power: None; accuracy: None; PP: 5; gen3 category: status.
+- sweet scent: level up; level 25; type: normal; power: None; accuracy: 100; PP: 20; gen3 category: status.
+- swords dance: tutor; type: normal; power: None; accuracy: None; PP: 30; gen3 category: status.
+- synthesis: level up; level 39; type: grass; power: None; accuracy: None; PP: 5; gen3 category: status.
+- tackle: level up; level 1; type: normal; power: 35; accuracy: 95; PP: 35; gen3 category: physical.
+- toxic: machine; machines: TM06; type: poison; power: None; accuracy: 85; PP: 10; gen3 category: status.
+- vine whip: level up; level 10; type: grass; power: 45; accuracy: 100; PP: 10; gen3 category: special.",,,,
+Q12,025_moves_01,1,What moves does Pikachu learn in FireRed?,proxy_pokemon_section_unreviewed,pending_manual_review,Pikachu,moves,"Moves learnable by Pikachu (FireRed/LeafGreen version group):
+- agility: level up; level 33; type: psychic; power: None; accuracy: None; PP: 30; gen3 category: status.
+- attract: machine; machines: TM45; type: normal; power: None; accuracy: 100; PP: 15; gen3 category: status.
+- body slam: tutor; type: normal; power: 85; accuracy: 100; PP: 15; gen3 category: physical.
+- brick break: machine; machines: TM31; type: fighting; power: 75; accuracy: 100; PP: 15; gen3 category: physical.
+- counter: tutor; type: fighting; power: None; accuracy: 100; PP: 20; gen3 category: physical.
+- dig: machine; machines: TM28; type: ground; power: 60; accuracy: 100; PP: 10; gen3 category: physical.
+- double edge: tutor; type: normal; power: 120; accuracy: 100; PP: 15; gen3 category: physical.
+- double team: level up; level 15; type: normal; power: None; accuracy: None; PP: 15; gen3 category: status.
+- double team: machine; machines: TM32; type: normal; power: None; accuracy: None; PP: 15; gen3 category: status.
+- facade: machine; machines: TM42; type: normal; power: 70; accuracy: 100; PP: 20; gen3 category: physical.
+- flash: machine; machines: HM05; type: normal; power: None; accuracy: 70; PP: 20; gen3 category: status.
+- focus punch: machine; machines: TM01; type: fighting; power: 150; accuracy: 100; PP: 20; gen3 category: physical.
+- frustration: machine; machines: TM21; type: normal; power: None; accuracy: 100; PP: 20; gen3 category: physical.
+- growl: level up; level 1; type: normal; power: None; accuracy: 100; PP: 40; gen3 category: status.
+- hidden power: machine; machines: TM10; type: normal; power: 1; accuracy: 100; PP: 15; gen3 category: physical.",,,,
+Q12,025_moves_02,1,What moves does Pikachu learn in FireRed?,proxy_pokemon_section_unreviewed,pending_manual_review,Pikachu,moves,"Moves learnable by Pikachu (FireRed/LeafGreen version group):
+- iron tail: machine; machines: TM23; type: steel; power: 100; accuracy: 75; PP: 15; gen3 category: physical.
+- light screen: level up; level 50; type: psychic; power: None; accuracy: None; PP: 30; gen3 category: status.
+- light screen: machine; machines: TM16; type: psychic; power: None; accuracy: None; PP: 30; gen3 category: status.
+- mega kick: tutor; type: normal; power: 120; accuracy: 75; PP: 5; gen3 category: physical.
+- mega punch: tutor; type: normal; power: 80; accuracy: 85; PP: 20; gen3 category: physical.
+- mimic: tutor; type: normal; power: None; accuracy: None; PP: 10; gen3 category: status.
+- protect: machine; machines: TM17; type: normal; power: None; accuracy: None; PP: 10; gen3 category: status.
+- quick attack: level up; level 11; type: normal; power: 40; accuracy: 100; PP: 30; gen3 category: physical.
+- rain dance: machine; machines: TM18; type: water; power: None; accuracy: None; PP: 5; gen3 category: status.
+- rest: machine; machines: TM44; type: psychic; power: None; accuracy: None; PP: 5; gen3 category: status.
+- return: machine; machines: TM27; type: normal; power: None; accuracy: 100; PP: 20; gen3 category: physical.
+- rock smash: machine; machines: HM06; type: fighting; power: 20; accuracy: 100; PP: 15; gen3 category: physical.
+- secret power: machine; machines: TM43; type: normal; power: 70; accuracy: 100; PP: 20; gen3 category: physical.
+- seismic toss: tutor; type: fighting; power: None; accuracy: 100; PP: 20; gen3 category: physical.
+- shock wave: machine; machines: TM34; type: electric; power: 60; accuracy: None; PP: 20; gen3 category: special.",,,,
+Q12,025_moves_03,1,What moves does Pikachu learn in FireRed?,proxy_pokemon_section_unreviewed,pending_manual_review,Pikachu,moves,"Moves learnable by Pikachu (FireRed/LeafGreen version group):
+- slam: level up; level 20; type: normal; power: 80; accuracy: 75; PP: 20; gen3 category: physical.
+- strength: machine; machines: HM04; type: normal; power: 80; accuracy: 100; PP: 15; gen3 category: physical.
+- substitute: tutor; type: normal; power: None; accuracy: None; PP: 10; gen3 category: status.
+- tail whip: level up; level 6; type: normal; power: None; accuracy: 100; PP: 30; gen3 category: status.
+- thunder: level up; level 41; type: electric; power: 120; accuracy: 70; PP: 10; gen3 category: special.
+- thunder: machine; machines: TM25; type: electric; power: 120; accuracy: 70; PP: 10; gen3 category: special.
+- thunder shock: level up; level 1; type: electric; power: 40; accuracy: 100; PP: 30; gen3 category: special.
+- thunder wave: level up; level 8; type: electric; power: None; accuracy: 100; PP: 20; gen3 category: status.
+- thunder wave: tutor; type: electric; power: None; accuracy: 100; PP: 20; gen3 category: status.
+- thunderbolt: level up; level 26; type: electric; power: 95; accuracy: 100; PP: 15; gen3 category: special.
+- thunderbolt: machine; machines: TM24; type: electric; power: 95; accuracy: 100; PP: 15; gen3 category: special.
+- toxic: machine; machines: TM06; type: poison; power: None; accuracy: 85; PP: 10; gen3 category: status.",,,,
+Q13,025_encounters_01,1,Onde encontro Pikachu no FireRed?,proxy_pokemon_section_unreviewed,pending_manual_review,Pikachu,encounters,"Documented wild encounters for Pikachu in Pokémon FireRed:
+- kanto pokecenter area; method: colosseum bonus disc jpn; levels: 10-10; API encounter chance weight: 100; conditions: not specified.
+- kanto power plant area; method: walk; levels: 22-22; API encounter chance weight: 10; conditions: not specified.
+- kanto power plant area; method: walk; levels: 24-24; API encounter chance weight: 10; conditions: not specified.
+- kanto power plant area; method: walk; levels: 26-26; API encounter chance weight: 4; conditions: not specified.
+- kanto power plant area; method: walk; levels: 26-26; API encounter chance weight: 1; conditions: not specified.
+- viridian forest area; method: walk; levels: 3-3; API encounter chance weight: 4; conditions: not specified.
+- viridian forest area; method: walk; levels: 5-5; API encounter chance weight: 1; conditions: not specified.
+This list does not cover gifts, trades, evolution or fossils.",,,,
+Q14,041_encounters_01,1,Where can I find Zubat in FireRed?,proxy_pokemon_section_unreviewed,pending_manual_review,Zubat,encounters,"Documented wild encounters for Zubat in Pokémon FireRed:
+- icefall cave 1f; method: walk; levels: 40-40; API encounter chance weight: 10; conditions: not specified.
+- icefall cave b1f; method: walk; levels: 40-40; API encounter chance weight: 10; conditions: not specified.
+- icefall cave entrance; method: walk; levels: 40-40; API encounter chance weight: 10; conditions: not specified.
+- icefall cave waterfall; method: walk; levels: 40-40; API encounter chance weight: 10; conditions: not specified.
+- kanto altering cave a; method: walk; levels: 6-6; API encounter chance weight: 5; conditions: not specified.
+- kanto altering cave a; method: walk; levels: 8-8; API encounter chance weight: 10; conditions: not specified.
+- kanto altering cave a; method: walk; levels: 8-8; API encounter chance weight: 4; conditions: not specified.
+- kanto altering cave a; method: walk; levels: 8-8; API encounter chance weight: 1; conditions: not specified.
+- kanto altering cave a; method: walk; levels: 10-10; API encounter chance weight: 20; conditions: not specified.
+- kanto altering cave a; method: walk; levels: 10-10; API encounter chance weight: 10; conditions: not specified.
+- kanto altering cave a; method: walk; levels: 12-12; API encounter chance weight: 20; conditions: not specified.
+- kanto altering cave a; method: walk; levels: 12-12; API encounter chance weight: 10; conditions: not specified.
+- kanto altering cave a; method: walk; levels: 14-14; API encounter chance weight: 10; conditions: not specified.
+- kanto altering cave a; method: walk; levels: 14-14; API encounter chance weight: 4; conditions: not specified.
+- kanto altering cave a; method: walk; levels: 14-14; API encounter chance weight: 1; conditions: not specified.
+This list does not cover gifts, trades, evolution or fossils.",,,,
+Q14,041_encounters_02,1,Where can I find Zubat in FireRed?,proxy_pokemon_section_unreviewed,pending_manual_review,Zubat,encounters,"Documented wild encounters for Zubat in Pokémon FireRed:
+- kanto altering cave a; method: walk; levels: 16-16; API encounter chance weight: 5; conditions: not specified.
+- kanto victory road 2 1f; method: walk; levels: 32-32; API encounter chance weight: 10; conditions: not specified.
+- kanto victory road 2 2f; method: walk; levels: 34-34; API encounter chance weight: 10; conditions: not specified.
+- kanto victory road 2 3f; method: walk; levels: 32-32; API encounter chance weight: 10; conditions: not specified.
+- lost cave item rooms; method: walk; levels: 37-37; API encounter chance weight: 20; conditions: not specified.
+- lost cave room 1; method: walk; levels: 37-37; API encounter chance weight: 20; conditions: not specified.
+- lost cave room 10; method: walk; levels: 37-37; API encounter chance weight: 20; conditions: not specified.
+- lost cave room 2; method: walk; levels: 37-37; API encounter chance weight: 20; conditions: not specified.
+- lost cave room 3; method: walk; levels: 37-37; API encounter chance weight: 20; conditions: not specified.
+- lost cave room 4; method: walk; levels: 37-37; API encounter chance weight: 20; conditions: not specified.
+- lost cave room 5; method: walk; levels: 37-37; API encounter chance weight: 20; conditions: not specified.
+- lost cave room 6; method: walk; levels: 37-37; API encounter chance weight: 20; conditions: not specified.
+- lost cave room 7; method: walk; levels: 37-37; API encounter chance weight: 20; conditions: not specified.
+- lost cave room 8; method: walk; levels: 37-37; API encounter chance weight: 20; conditions: not specified.
+- lost cave room 9; method: walk; levels: 37-37; API encounter chance weight: 20; conditions: not specified.
+This list does not cover gifts, trades, evolution or fossils.",,,,
+Q14,041_encounters_03,1,Where can I find Zubat in FireRed?,proxy_pokemon_section_unreviewed,pending_manual_review,Zubat,encounters,"Documented wild encounters for Zubat in Pokémon FireRed:
+- mt moon 1f; method: walk; levels: 7-7; API encounter chance weight: 20; conditions: not specified.
+- mt moon 1f; method: walk; levels: 7-7; API encounter chance weight: 4; conditions: not specified.
+- mt moon 1f; method: walk; levels: 7-7; API encounter chance weight: 1; conditions: not specified.
+- mt moon 1f; method: walk; levels: 8-8; API encounter chance weight: 20; conditions: not specified.
+- mt moon 1f; method: walk; levels: 9-9; API encounter chance weight: 10; conditions: not specified.
+- mt moon 1f; method: walk; levels: 10-10; API encounter chance weight: 10; conditions: not specified.
+- mt moon b2f; method: walk; levels: 8-8; API encounter chance weight: 20; conditions: not specified.
+- mt moon b2f; method: walk; levels: 9-9; API encounter chance weight: 10; conditions: not specified.
+- mt moon b2f; method: walk; levels: 10-10; API encounter chance weight: 10; conditions: not specified.
+- mt moon b2f; method: walk; levels: 11-11; API encounter chance weight: 4; conditions: not specified.
+- mt moon b2f; method: walk; levels: 11-11; API encounter chance weight: 1; conditions: not specified.
+- rock tunnel 1f; method: walk; levels: 15-15; API encounter chance weight: 20; conditions: not specified.
+- rock tunnel 1f; method: walk; levels: 16-16; API encounter chance weight: 10; conditions: not specified.
+- rock tunnel b1f; method: walk; levels: 15-15; API encounter chance weight: 10; conditions: not specified.
+- rock tunnel b1f; method: walk; levels: 16-16; API encounter chance weight: 20; conditions: not specified.
+This list does not cover gifts, trades, evolution or fossils.",,,,
+Q14,041_encounters_04,1,Where can I find Zubat in FireRed?,proxy_pokemon_section_unreviewed,pending_manual_review,Zubat,encounters,"Documented wild encounters for Zubat in Pokémon FireRed:
+- seafoam islands 1f; method: walk; levels: 22-22; API encounter chance weight: 10; conditions: not specified.
+- seafoam islands 1f; method: walk; levels: 24-24; API encounter chance weight: 10; conditions: not specified.
+- seafoam islands 1f; method: walk; levels: 26-26; API encounter chance weight: 4; conditions: not specified.
+- seafoam islands b1f; method: walk; levels: 22-22; API encounter chance weight: 10; conditions: not specified.
+- seafoam islands b1f; method: walk; levels: 24-24; API encounter chance weight: 10; conditions: not specified.
+- seafoam islands b1f; method: walk; levels: 26-26; API encounter chance weight: 4; conditions: not specified.
+- seafoam islands b2f; method: walk; levels: 22-22; API encounter chance weight: 10; conditions: not specified.
+- seafoam islands b2f; method: walk; levels: 24-24; API encounter chance weight: 10; conditions: not specified.
+- seafoam islands b3f; method: walk; levels: 24-24; API encounter chance weight: 10; conditions: not specified.
+This list does not cover gifts, trades, evolution or fossils.",,,,
+Q15,147_profile,1,Qual o habitat do Dratini?,proxy_pokemon_section_unreviewed,pending_manual_review,Dratini,profile,"Pokémon Dratini (National Pokédex #147).
+Types in Generation III: dragon.
+Types PT-BR: dragão.
+Pokédex description (firered): Even the young can exceed 6.5 feet in length. It grows larger by repeatedly shedding skin..
+Habitat: waters-edge.
+Height: 1.8 m; weight: 3.3 kg.
+Capture rate (API): 45.",,,,
+Q16,095_profile,1,How tall is Onix?,proxy_pokemon_section_unreviewed,pending_manual_review,Onix,profile,"Pokémon Onix (National Pokédex #095).
+Types in Generation III: rock, ground.
+Types PT-BR: pedra, terrestre.
+Pokédex description (firered): It usually lives underground. It searches for food while boring its way through the ground at 50 miles per hour..
+Habitat: cave.
+Height: 8.8 m; weight: 210.0 kg.
+Capture rate (API): 45.",,,,
+Q17,004_obtainment,1,Quais dados de obtenção existem para Charmander?,proxy_pokemon_section_unreviewed,pending_manual_review,Charmander,obtainment,"Acquisition evidence for Charmander in FireRed:
+Documented mechanisms: wild_encounter, starter.
+Complete game availability is NOT established from this dataset.
+No wild encounter entry does not imply unavailable; gifts, fossils, NPC trades and external trades need independently verified sources.",,,,
+Q18,150_obtainment,1,What acquisition evidence is available for Mewtwo?,proxy_pokemon_section_unreviewed,pending_manual_review,Mewtwo,obtainment,"Acquisition evidence for Mewtwo in FireRed:
+Documented mechanisms: wild_encounter.
+Complete game availability is NOT established from this dataset.
+No wild encounter entry does not imply unavailable; gifts, fossils, NPC trades and external trades need independently verified sources.",,,,
+Q19,133_species_traits,1,Qual o grupo de ovos do Eevee?,proxy_pokemon_section_unreviewed,pending_manual_review,Eevee,species_traits,"Species/breeding attributes of Eevee (PokéAPI species metadata):
+Egg groups: ground.
+Gender rate code: 1 (-1 means genderless).
+Growth rate: medium.
+Color: brown.",,,,
+Q20,058_species_traits,1,Which egg group is Growlithe in?,proxy_pokemon_section_unreviewed,pending_manual_review,Growlithe,species_traits,"Species/breeding attributes of Growlithe (PokéAPI species metadata):
+Egg groups: ground.
+Gender rate code: 2 (-1 means genderless).
+Growth rate: slow.
+Color: brown.",,,,
+Q21,001_type_matchups,1,Quais as resistências do Bulbasaur?,proxy_pokemon_section_unreviewed,pending_manual_review,Bulbasaur,type_matchups,"Defensive effectiveness against Bulbasaur (Generation III type chart):
+- 2x weak: fire, flying, ice, psychic.
+- 0.5x resistant: electric, fighting, water.
+- 0.25x resistant: grass.
+Type chart only: abilities and battle conditions may modify damage.",,,,
+Q22,064_evolution,1,How does Kadabra evolve?,proxy_pokemon_section_unreviewed,pending_manual_review,Kadabra,evolution,"Evolution family of Kadabra (only species 1–151): abra, kadabra, alakazam.
+Kadabra evolves from Abra.
+- abra -> kadabra. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 16; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+- kadabra -> alakazam. Conditions: (version_group: red blue; is_default: True; trigger: trade; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+Evolution of later-generation species is intentionally outside the Kanto scope.",,,,
+Q23,065_stats,1,Qual o ataque especial do Alakazam?,proxy_pokemon_section_unreviewed,pending_manual_review,Alakazam,stats,"Base stats for Alakazam (Generation III reconstructed from PokéAPI):
+- attack: 50.
+- defense: 45.
+- hp: 55.
+- special attack: 135.
+- special defense: 85.
+- speed: 120.",,,,
+Q24,149_stats,1,What are the base stats of Dragonite?,proxy_pokemon_section_unreviewed,pending_manual_review,Dragonite,stats,"Base stats for Dragonite (Generation III reconstructed from PokéAPI):
+- attack: 134.
+- defense: 95.
+- hp: 91.
+- special attack: 100.
+- special defense: 100.
+- speed: 80.",,,,
+Q25,004_evolution,1,Charmander é a evolução de algum Pokémon?,proxy_pokemon_section_unreviewed,pending_manual_review,Charmander,evolution,"Evolution family of Charmander (only species 1–151): charmander, charmeleon, charizard.
+Charmander is the first stage of its evolution family and does not evolve from another Pokémon.
+- charmander -> charmeleon. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 16; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+- charmeleon -> charizard. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 36; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+Evolution of later-generation species is intentionally outside the Kanto scope.",,,,
+Q26,005_evolution,1,Charmeleon evolui de quem?,proxy_pokemon_section_unreviewed,pending_manual_review,Charmeleon,evolution,"Evolution family of Charmeleon (only species 1–151): charmander, charmeleon, charizard.
+Charmeleon evolves from Charmander.
+- charmander -> charmeleon. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 16; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+- charmeleon -> charizard. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 36; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+Evolution of later-generation species is intentionally outside the Kanto scope.",,,,
+Q27,006_evolution,1,Qual Pokémon evolui para Charizard?,proxy_pokemon_section_unreviewed,pending_manual_review,Charizard,evolution,"Evolution family of Charizard (only species 1–151): charmander, charmeleon, charizard.
+Charizard evolves from Charmeleon.
+- charmander -> charmeleon. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 16; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+- charmeleon -> charizard. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 36; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+Evolution of later-generation species is intentionally outside the Kanto scope.",,,,
+Q28,004_evolution,1,Charmander é uma forma inicial?,proxy_pokemon_section_unreviewed,pending_manual_review,Charmander,evolution,"Evolution family of Charmander (only species 1–151): charmander, charmeleon, charizard.
+Charmander is the first stage of its evolution family and does not evolve from another Pokémon.
+- charmander -> charmeleon. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 16; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+- charmeleon -> charizard. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 36; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+Evolution of later-generation species is intentionally outside the Kanto scope.",,,,
+Q29,133_encounters_01,1,Onde encontro Eevee?,proxy_pokemon_section_unreviewed,pending_manual_review,Eevee,encounters,"Documented wild encounters for Eevee in Pokémon FireRed:
+- celadon city celadon mansion; method: gift; levels: 25-25; API encounter chance weight: 100; conditions: not specified.
+This list does not cover gifts, trades, evolution or fossils.",,,,
+Q30,133_obtainment,1,Como conseguir Eevee?,proxy_pokemon_section_unreviewed,pending_manual_review,Eevee,obtainment,"Acquisition evidence for Eevee in FireRed:
+Documented mechanisms: wild_encounter.
+Complete game availability is NOT established from this dataset.
+No wild encounter entry does not imply unavailable; gifts, fossils, NPC trades and external trades need independently verified sources.",,,,
+Q31,004_evolution,1,Is Charmander an evolved form?,proxy_pokemon_section_unreviewed,pending_manual_review,Charmander,evolution,"Evolution family of Charmander (only species 1–151): charmander, charmeleon, charizard.
+Charmander is the first stage of its evolution family and does not evolve from another Pokémon.
+- charmander -> charmeleon. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 16; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+- charmeleon -> charizard. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 36; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+Evolution of later-generation species is intentionally outside the Kanto scope.",,,,
+Q32,005_evolution,1,What does Charmeleon evolve from?,proxy_pokemon_section_unreviewed,pending_manual_review,Charmeleon,evolution,"Evolution family of Charmeleon (only species 1–151): charmander, charmeleon, charizard.
+Charmeleon evolves from Charmander.
+- charmander -> charmeleon. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 16; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+- charmeleon -> charizard. Conditions: (version_group: red blue; is_default: True; trigger: level up; minimum level: 36; near_special_rock: False; needs_multiplayer: False; needs_overworld_rain: False; turn_upside_down: False). Not specifically verified for FireRed.
+Evolution of later-generation species is intentionally outside the Kanto scope.",,,,
