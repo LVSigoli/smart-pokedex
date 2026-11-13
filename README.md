@@ -43,5 +43,5 @@ Se o comando `python` não for reconhecido, feche e reabra o PowerShell para car
 
 ## API
 
-`POST /api/v1/sessions`, `POST /api/v1/chat`, `DELETE /api/v1/sessions/{id}`, `GET /api/v1/pokemon`, `GET /api/v1/pokemon/{id}`. A chave Gemini fica exclusivamente no backend em `GEMINI_API_KEY`.
+`POST /api/v1/sessions`, `POST /api/v1/chat`, `DELETE /api/v1/sessions/{id}`, `GET /api/v1/pokemon`, `GET /api/v1/pokemon/{id}`. A geração de texto usa localmente `google/flan-t5-small`; não é necessária chave de API. Na primeira geração, os pesos podem ser baixados do Hugging Face.
 

@@ -24,3 +24,4 @@ smart_pokedex_backend.egg-info/SOURCES.txt
 smart_pokedex_backend.egg-info/dependency_links.txt
 smart_pokedex_backend.egg-info/requires.txt
 smart_pokedex_backend.egg-info/top_level.txt
+tests/test_notebook_academic_contracts.py

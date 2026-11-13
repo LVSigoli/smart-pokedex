@@ -3,8 +3,7 @@ from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    gemini_api_key: str | None = None
-    gemini_model: str = "gemini-3.8-flash"
+    flan_model: str = "google/flan-t5-small"
     rag_data_dir: Path = Path("../data")
     allowed_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     session_ttl_seconds: int = 1800

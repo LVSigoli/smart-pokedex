@@ -7,7 +7,7 @@ dependencies = ["fastapi>=0.115,<1", "uvicorn[standard]>=0.30,<1", "pydantic-set
 
 [project.optional-dependencies]
 test = ["pytest>=8", "pytest-asyncio>=0.24", "respx>=0.21"]
-gemini = ["google-genai>=1.0,<2"]
+flan = ["transformers>=4.44,<5", "sentencepiece>=0.2", "torch>=2.2"]
 notebooks = ["jupyter>=1.0", "nbformat>=5.10", "nbclient>=0.10", "ipykernel>=6.29", "pandas>=2.2", "matplotlib>=3.9", "nltk>=3.9", "requests>=2.32"]
 
 [tool.pytest.ini_options]

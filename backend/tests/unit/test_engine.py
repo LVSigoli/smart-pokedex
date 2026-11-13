@@ -80,3 +80,26 @@ def test_same_type_query_recovers_matching_profile_documents():
     assert reason == "ready"
     assert {row["pokemon_id"] for row in rows} == {6, 146}
 
+def test_generation_failure_keeps_retrieved_sources():
+    rag = engine()
+    class BrokenGenerator:
+        max_input_tokens = 384
+        def count_prompt_tokens(self, question, context):
+            raise RuntimeError("model unavailable")
+        def __call__(self, question, context):
+            raise RuntimeError("model unavailable")
+    rag.generator = BrokenGenerator()
+    result = rag.answer("Como evoluir Charmander?", generate=True)
+    assert result["status"] == "provider_unavailable"
+    assert result["source_documents"]
+    assert result["source_documents"][0]["pokemon_id"] == 4
+
+def test_evolution_fallback_keeps_targets_without_item():
+    rag = engine()
+    rag.generator = BrokenGenerator() if 'BrokenGenerator' in globals() else rag.generator
+    rows, reason = rag.select_evidence("Como evoluir Charmander?")
+    answer = rag.retrieval_answer(rows, "Como evoluir Charmander?")
+    assert reason == "ready"
+    assert "Charmeleon" in answer
+    assert "para ." not in answer
+

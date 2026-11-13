@@ -2,7 +2,7 @@ import difflib
 import re
 from datetime import datetime, timezone
 from .retrieval import normalize_plain
-from .generation import GeminiGenerator
+from .generation import FlanT5Generator
 
 REFUSAL = "Não encontrei informações suficientes no corpus de Kanto/FireRed para responder com segurança."
 TECHNICAL = re.compile(r"(?i)\b(?:pokeapi|endpoint|schema|jsonl|tf-idf|api)\b")
@@ -13,7 +13,7 @@ class RAGEngine:
         self.settings = settings
         self.name_to_id = {normalize_plain(r.get("api_name") or r.get("name")): int(r["id"]) for r in retriever.records}
         self.known_names = sorted(self.name_to_id, key=len, reverse=True)
-        self.generator = GeminiGenerator(settings.gemini_api_key, settings.gemini_model) if settings.gemini_api_key else None
+        self.generator = FlanT5Generator(getattr(settings, "flan_model", "google/flan-t5-small"))
 
     def canonicalize(self, question):
         result, corrections = [], []
@@ -100,7 +100,17 @@ class RAGEngine:
         if targets: ranked.sort(key=lambda r: (targets.index(r["pokemon_id"]) if r["pokemon_id"] in targets else len(targets), -r["score"]))
         return [dict(r, rank=i + 1) for i, r in enumerate(ranked[:max(top_k, len(targets))])], "ready"
 
-    def build_context(self, rows, max_chars=13500, max_doc_chars=3500):
+    def build_context(self, rows, max_chars=13500, max_doc_chars=3500, *, question=None, token_budget=None):
+        if question is not None and token_budget is not None:
+            parts, used = [], []
+            for row in rows:
+                header = f"FONTE [{row['document_id']}] | Pokémon: {row['pokemon_name']} | seção: {row['section']}\n"
+                candidate = "\n\n".join(parts + [header + str(row["content"])])
+                if self.generator.count_prompt_tokens(question, candidate) > token_budget:
+                    continue
+                parts.append(header + str(row["content"]))
+                used.append(dict(row, content=str(row["content"])))
+            return "\n\n".join(parts), used
         parts, used, total = [], [], 0
         for row in rows:
             header = f"FONTE [{row['document_id']}] | Pokémon: {row['pokemon_name']} | seção: {row['section']}\n"
@@ -126,21 +136,24 @@ class RAGEngine:
 
     @staticmethod
     def retrieval_answer(rows, question):
-        """Fallback factual para permitir uso sem Gemini; só usa o conteúdo recuperado."""
+        """Fallback factual para permitir inspeção sem o gerador local; usa só o conteúdo recuperado."""
         if not rows:
             return None
         if rows[0].get("section") == "evolution":
             transitions = []
             for line in str(rows[0].get("content", "")).splitlines():
-                match = re.search(r"-\s*([a-z0-9-]+)\s*->\s*([a-z0-9-]+).*?item:\s*([^;.)]+)", line, re.I)
+                match = re.search(r"-\s*([a-z0-9-]+)\s*->\s*([a-z0-9-]+)", line, re.I)
                 if match:
-                    origin, target, item = (part.replace("-", " ").title() for part in match.groups())
-                    transitions.append(f"{target} usando {item}")
+                    _origin, target = (part.replace("-", " ").title() for part in match.groups())
+                    item_match = re.search(r"\bitem:\s*([^;.)]+)", line, re.I)
+                    item = item_match.group(1).strip().replace("-", " ").title() if item_match else ""
+                    transitions.append(f"{target} usando {item}" if item else target)
             if transitions:
                 subject = rows[0].get("pokemon_name", "O Pokémon")
+                joined = ", ".join(transitions)
                 if re.search(r"\b(como|quais|qual|evolu)\b", normalize_plain(question)):
-                    return f"{subject} pode evoluir para " + ", ".join(transitions[:-1]) + (f" e {transitions[-1]}." if len(transitions) > 1 else ".")
-                return f"{subject} can evolve into " + ", ".join(transitions[:-1]) + (f" and {transitions[-1]}." if len(transitions) > 1 else ".")
+                    return f"{subject} pode evoluir para {joined}."
+                return f"{subject} can evolve into {joined}."
         excerpts = []
         for row in rows[:3]:
             content = str(row.get("content", "")).strip()
@@ -152,20 +165,38 @@ class RAGEngine:
         if not isinstance(question, str) or not question.strip(): raise ValueError("Pergunta vazia")
         canonical, corrections = self.canonicalize(question)
         rows, gate = self.select_evidence(canonical, self.settings.rag_top_k)
-        _, used = self.build_context(rows)
+        generation_preflight_error = None
+        if generate:
+            try:
+                _, used = self.build_context(rows, question=canonical, token_budget=self.generator.max_input_tokens)
+            except Exception as exc:
+                # A falha ao carregar/tokenizar o modelo não invalida a recuperação.
+                # Mantemos as fontes e deixamos a resposta transparente como indisponível.
+                generation_preflight_error = exc
+                _, used = self.build_context(rows)
+        else:
+            _, used = self.build_context(rows)
         if not used:
             status = "out_of_scope" if gate in {"out_of_scope", "outside_kanto_dex", "needs_comparison_criterion"} else "insufficient_evidence"
             return {"status": status, "answer": REFUSAL, "source_documents": [], "supporting_excerpts": [], "spelling_corrections": corrections}
         base = {"status": "retrieval_only", "answer": None, "source_documents": [{k: r.get(k) for k in ("document_id", "pokemon_id", "pokemon_name", "section", "score")} for r in used], "supporting_excerpts": [], "spelling_corrections": corrections, "timestamp_utc": datetime.now(timezone.utc).isoformat()}
         if not generate:
             return {**base, "answer": self.retrieval_answer(used, question)}
-        if not self.generator:
-            return {**base, "status": "provider_unavailable", "answer": self.retrieval_answer(used, question)}
+        if generation_preflight_error is not None:
+            return {**base, "status": "provider_unavailable", "answer": self.retrieval_answer(used, question),
+                    "generation_error": type(generation_preflight_error).__name__}
         try:
-            payload = self.generator(question, self.build_context(rows)[0])
+            context, used = self.build_context(rows, question=canonical, token_budget=self.generator.max_input_tokens)
+            if not used:
+                return {**base, "status": "insufficient_evidence", "answer": REFUSAL}
+            payload = self.generator(question, context)
         except Exception:
             return {**base, "status": "provider_unavailable", "answer": self.retrieval_answer(used, question)}
-        if not self.verify(payload, used): return {**base, "status": "insufficient_evidence", "answer": REFUSAL}
-        answer = re.sub(r"\s*\[[0-9]{3}_[a-z0-9_]+\]", "", payload["answer"]).strip()
-        return {**base, "status": "answered", "answer": answer, "supporting_excerpts": payload["evidence"]}
+        answer = str(payload.get("answer", "")).strip()
+        if not answer or answer.casefold() == "não sei":
+            return {**base, "status": "insufficient_evidence", "answer": REFUSAL}
+        excerpts = [{"document_id": row["document_id"], "quote": row["content"]} for row in used]
+        return {**base, "status": "answered", "answer": answer,
+                "supporting_excerpts": excerpts,
+                "generation_metadata": {key: value for key, value in payload.items() if key != "answer"}}
 

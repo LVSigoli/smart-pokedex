@@ -100,10 +100,6 @@ def adapt(notebook, name: str):
             source = source.replace("LOG_DIR = APPLICATION_DIR / 'logs'", "LOG_DIR = APPLICATION_DIR / 'data' / 'logs'")
             source = source.replace("LOGS_DIR = APPLICATION_DIR / 'logs'", "LOGS_DIR = APPLICATION_DIR / 'data' / 'logs'")
 
-        if name == "03_RAG_CHATBOT.ipynb":
-            source = source.replace('os.environ["GEMINI_API_KEY"] = getpass(\n    "Digite sua Gemini API Key: "\n)', 'os.environ.setdefault("GEMINI_API_KEY", "")')
-            source = source.replace("GEMINI_MODEL=os.environ.get('GEMINI_MODEL','gemini-3.5-flash-lite')", "GEMINI_MODEL=os.environ.get('GEMINI_MODEL','gemini-2.0-flash')")
-
         cell.source = source
     return notebook
 

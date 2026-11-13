@@ -32,4 +32,10 @@ def test_notebook_03_keeps_generation_opt_in_and_compares_retrievers() -> None:
     assert "RUN_GENERATION_EVALUATION = False" in source
     assert 'getpass(' not in source
     assert "tfidf_raw" in source and "tfidf_filtered" in source
-    assert "não foi confirmada especificamente para FireRed" in source
+    assert "FLAN_MODEL_NAME" in source
+    assert "google/flan-t5-small" in source
+    assert "MAX_INPUT_TOKENS = 384" in source
+    assert "truncation=False" in source
+    assert "model_without_corpus" in source
+    assert "torch.inference_mode" in source
+    assert "GEMINI" not in source.upper()
