@@ -37,3 +37,23 @@ def test_location_question_accepts_obtainment_evidence():
     assert reason == "ready"
     assert [row["document_id"] for row in rows] == ["133_obtainment"]
 
+def test_find_and_catch_phrasings_select_location_or_acquisition_sections():
+    rag = engine()
+    assert rag.requested_section("Como encontrar o Eevee?") == "encounters"
+    assert rag.requested_section("E como eu encontro ele? sobre Eevee") == "encounters"
+    assert rag.requested_section("Como eu pego o Eevee?") in {"obtainment", "encounters"}
+
+def test_question_about_stats_is_restricted_to_named_pokemon():
+    class SpeciesRetriever:
+        documents = [{"pokemon_id": 133}, {"pokemon_id": 25}]
+        records = [{"id": 133, "api_name": "eevee", "name": "Eevee"},
+                   {"id": 25, "api_name": "pikachu", "name": "Pikachu"}]
+        def search(self, question, top_k=5):
+            return [
+                {"rank": 1, "document_id": "025_stats", "pokemon_id": 25, "pokemon_name": "Pikachu", "section": "stats", "score": .9, "content": "Pikachu base attack: 55."},
+                {"rank": 2, "document_id": "133_stats", "pokemon_id": 133, "pokemon_name": "Eevee", "section": "stats", "score": .8, "content": "Eevee base attack: 55."},
+            ][:top_k]
+    rag = RAGEngine(SpeciesRetriever(), SimpleNamespace(gemini_api_key=None, gemini_model="test", rag_top_k=5))
+    rows, _ = rag.select_evidence("Qual seu ataque? sobre Eevee")
+    assert rows and {row["pokemon_id"] for row in rows} == {133}
+

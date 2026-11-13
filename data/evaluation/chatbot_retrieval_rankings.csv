@@ -196,7 +196,9 @@ Q17,tfidf_raw,7,004_evolution,evolution,4,ready,provisional
 Q17,tfidf_raw,8,004_moves_04,moves,4,ready,provisional
 Q17,tfidf_raw,9,005_evolution,evolution,5,ready,provisional
 Q17,tfidf_raw,10,004_profile,profile,4,ready,provisional
-Q17,tfidf_filtered,1,004_profile,profile,4,ready,provisional
+Q17,tfidf_filtered,1,004_encounters_01,encounters,4,ready,provisional
+Q17,tfidf_filtered,2,004_obtainment,obtainment,4,ready,provisional
+Q17,tfidf_filtered,3,004_evolution,evolution,4,ready,provisional
 Q18,tfidf_raw,1,150_obtainment,obtainment,150,ready,provisional
 Q18,tfidf_raw,2,150_abilities,abilities,150,ready,provisional
 Q18,tfidf_raw,3,150_evolution,evolution,150,ready,provisional

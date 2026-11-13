@@ -1,7 +1,7 @@
 {
   "project": "Pokédex Inteligente — Trabalho 2",
   "notebook": "03_RAG_CHATBOT",
-  "run_utc": "2026-11-12T23:24:28.660877+00:00",
+  "run_utc": "2026-11-13T00:32:57.750480+00:00",
   "document_count": 1732,
   "pokemon_count": 151,
   "retriever": "TF-IDF + cosseno persistido no Notebook 02; sem novo fit",

@@ -34,8 +34,11 @@ class RAGEngine:
     def requested_section(self, question):
         q = normalize_plain(question)
         if re.search(r"\b(evolu\w*|evolv\w*|pre[- ]?evolu\w*)\b", q): return "evolution"
-        if re.search(r"\b(como (conseguir|obter|ganhar|receber)|obter|obtain|gift|trade)\b", q): return "obtainment"
-        if re.search(r"\b(onde|localiza|captur|encontr|where|catch|find)\b", q): return "encounters"
+        # Verbos flexionados aparecem em formas como encontrar, encontro, pego e captura.
+        if re.search(r"\b(?:onde|where)\b.*\b(?:encontr\w*|localiz\w*|captur\w*|peg\w*|find|catch)\b", q): return "encounters"
+        if re.search(r"\b(?:como|how)\b.*\b(?:encontr\w*|localiz\w*|captur\w*|peg\w*|find|catch)\b", q): return "encounters"
+        if re.search(r"\b(?:encontr\w*|localiz\w*|captur\w*|peg\w*|find|catch)\b", q): return "encounters"
+        if re.search(r"\b(como (?:conseguir|obter|ganhar|receber)|obter|obten\w*|conseguir|obtain|gift|trade|get)\b", q): return "obtainment"
         if re.search(r"\b(fraquez|resist|imun|weak|effectiveness)\b", q): return "type_matchups"
         if re.search(r"\b(habilidad|ability)\b", q): return "abilities"
         if re.search(r"\b(golpe|movimento|move|tm|hm|aprende|learn)\b", q): return "moves"

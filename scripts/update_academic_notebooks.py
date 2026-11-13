@@ -25,6 +25,12 @@ def replace_cell(notebook: dict, marker: str, replacement: str) -> None:
             cell["outputs"] = []
             cell["execution_count"] = None
             return
+    replacement_marker = next((line.strip() for line in replacement.splitlines() if line.strip()), "")
+    if replacement_marker and any(
+        cell["cell_type"] == "code" and replacement_marker in "".join(cell["source"])
+        for cell in notebook["cells"]
+    ):
+        return
     raise ValueError(f"Célula não encontrada: {marker}")
 
 
@@ -33,10 +39,19 @@ def replace_markdown(notebook: dict, marker: str, replacement: str) -> None:
         if cell["cell_type"] == "markdown" and marker in "".join(cell["source"]):
             cell["source"] = source(replacement)
             return
+    replacement_marker = next((line.strip() for line in replacement.splitlines() if line.strip()), "")
+    if replacement_marker and any(
+        cell["cell_type"] == "markdown" and replacement_marker in "".join(cell["source"])
+        for cell in notebook["cells"]
+    ):
+        return
     raise ValueError(f"Markdown não encontrado: {marker}")
 
 
 def insert_after(notebook: dict, marker: str, *cells: dict) -> None:
+    inserted_markers = [next((line.strip() for line in cell.get("source", []) if line.strip()), "") for cell in cells]
+    if inserted_markers and all(any(value and value in "".join(existing.get("source", [])) for existing in notebook["cells"]) for value in inserted_markers):
+        return
     for index, cell in enumerate(notebook["cells"]):
         if marker in "".join(cell["source"]):
             notebook["cells"][index + 1:index + 1] = list(cells)
@@ -95,7 +110,9 @@ AVALIACAO_DIR = resolve_workspace_root()"""
             cell["execution_count"] = None
             break
     else:
-        raise ValueError("Configuração do Notebook 01 não encontrada")
+        all_source = "\n".join("".join(cell.get("source", [])) for cell in notebook["cells"])
+        if "AVALIACAO_DIR = resolve_workspace_root()" not in all_source:
+            raise ValueError("Configuração do Notebook 01 não encontrada")
 
     replace_cell(notebook, "TYPE_PTBR = {", """TYPE_PTBR = {
     'normal':'normal', 'fighting':'lutador', 'flying':'voador',
@@ -352,6 +369,20 @@ print('Relatório:', report_path)""")
 
 
 def update_notebook_03(notebook: dict) -> None:
+    # Restaura definições que compartilham a célula do classificador de seção,
+    # caso uma edição anterior tenha reduzido a célula à função isolada.
+    section_cell = next((cell for cell in notebook["cells"]
+                         if cell["cell_type"] == "code" and "def requested_section(question):" in "".join(cell["source"])), None)
+    if section_cell and len("".join(section_cell["source"])) < 2000:
+        executed_path = ROOT / "data" / "executed_notebooks" / "03_RAG_CHATBOT.ipynb"
+        if executed_path.is_file():
+            executed = json.loads(executed_path.read_text(encoding="utf-8"))
+            original = next((cell for cell in executed["cells"]
+                             if cell["cell_type"] == "code" and "def requested_section(question):" in "".join(cell["source"])), None)
+            if original:
+                section_cell["source"] = original["source"]
+                section_cell["outputs"] = []
+                section_cell["execution_count"] = None
     text = "".join(notebook["cells"][2]["source"])
     text = text.replace("DEFAULT_AVALIACAO_DIR = (\n    '/content/drive/MyDrive/IFSP-ADS/ultimo_periodo/tc_2/avaliacao'\n    if IN_COLAB else str(Path.cwd())\n)\nAVALIACAO_DIR = Path(os.environ.get('PLN_AVALIACAO_DIR', DEFAULT_AVALIACAO_DIR))", BASE_RESOLVER + "\n\nAVALIACAO_DIR = resolve_workspace_root()")
     notebook["cells"][2]["source"] = source(text)
@@ -377,6 +408,31 @@ assert normalize_query('Pokémon do tipo pedra').endswith('type rock')
 assert normalize_query('Pedra evolutiva para Eevee').startswith('evolution stone')
 assert normalize_query('Rock type Pokémon').endswith('rock type pokemon')
 print('Normalização compartilhada carregada do Notebook 01/02.')""")
+    section_source = """def requested_section(question):
+    q = normalize_plain(question)
+    if re.search(r'\\b(?:evolu\\w*|evolv\\w*|pre[- ]?evolu\\w*)\\b', q):
+        return 'evolution'
+    if re.search(r'\\b(?:onde|where)\\b.*\\b(?:encontr\\w*|captur\\w*|peg\\w*|find|catch)\\b', q):
+        return 'encounters'
+    if re.search(r'\\b(?:como|how)\\b.*\\b(?:encontr\\w*|captur\\w*|peg\\w*|find|catch)\\b', q):
+        return 'encounters'
+    if re.search(r'\\b(?:encontr\\w*|localiz\\w*|captur\\w*|peg\\w*|find|catch)\\b', q):
+        return 'encounters'
+    if re.search(r'\\b(?:obter|obten\\w*|conseguir|receber|ganhar|obtain|gift|trade|get)\\b', q):
+        return 'obtainment'
+    for section, expressions in SECTION_TERMS:
+        if any(re.search(r'(?<!\\w)' + re.escape(expr) + r'(?!\\w)', q) for expr in expressions):
+            return 'encounters' if section == 'encounters_strict' else section
+    return None"""
+    for cell in notebook["cells"]:
+        body = "".join(cell.get("source", []))
+        if cell["cell_type"] == "code" and "def requested_section(question):" in body:
+            start = body.index("def requested_section(question):")
+            end = body.index("\ndef scope_gate(question):", start)
+            cell["source"] = (body[:start] + section_source + body[end:]).splitlines(keepends=True)
+            cell["outputs"] = []
+            cell["execution_count"] = None
+            break
     replace_cell(notebook, "MAX_CONTEXT_CHARS", """MAX_CONTEXT_CHARS = 13500
 MAX_DOC_CHARS = 3500
 
@@ -730,6 +786,44 @@ chatbot_metrics.to_csv(CHATBOT_RETRIEVAL_METRICS, index=False, encoding='utf-8')
 chatbot_rankings.to_csv(CHATBOT_RETRIEVAL_RANKINGS, index=False, encoding='utf-8')
 chatbot_summary.to_csv(CHATBOT_RETRIEVAL_SUMMARY, index=False, encoding='utf-8')
 print('Comparação exploratória tfidf_raw × tfidf_filtered:', CHATBOT_RETRIEVAL_SUMMARY)"""))
+    for cell in notebook["cells"]:
+        if cell["cell_type"] == "code" and "chat_test3 = PokedexChatSession()" in "".join(cell["source"]):
+            body = "".join(cell["source"])
+            marker = "assert requested_section(\"How can I catch Pikachu?\") == \"encounters\""
+            regression = """
+assert requested_section('Como encontrar o Eevee?') == 'encounters'
+assert requested_section('E como eu encontro ele?') == 'encounters'
+assert requested_section('Como eu pego o Eevee?') == 'encounters'
+"""
+            if "Como encontrar o Eevee?') == 'encounters'" not in body:
+                if marker not in body:
+                    raise ValueError("Asserts de localização do Notebook 03 não encontradas")
+                cell["source"] = body.replace(marker, marker + regression).splitlines(keepends=True)
+                cell["outputs"] = []
+                cell["execution_count"] = None
+            body = "".join(cell["source"])
+            selection_marker = "location_selection_cases = ("
+            selection_tests = """
+location_selection_cases = (
+    'Como encontrar o Eevee?',
+    'Como eu pego o Eevee?',
+)
+for location_question in location_selection_cases:
+    location_rows, location_gate = select_evidence(location_question, top_k=5)
+    assert location_gate == 'ready', (location_question, location_gate)
+    assert location_rows and all(int(row['pokemon_id']) == 133 for row in location_rows)
+    assert all(row['section'] in {'encounters', 'obtainment', 'evolution'} for row in location_rows)
+"""
+            if selection_marker not in body:
+                marker = "assert requested_section('Como eu pego o Eevee?') == 'encounters'"
+                if marker not in body:
+                    raise ValueError("Asserts de localização do Notebook 03 não encontradas")
+                cell["source"] = body.replace(marker, marker + selection_tests).splitlines(keepends=True)
+                cell["outputs"] = []
+                cell["execution_count"] = None
+            break
+    else:
+        raise ValueError("Célula de testes do Notebook 03 não encontrada")
 
 
 def update(path: Path, function) -> None:

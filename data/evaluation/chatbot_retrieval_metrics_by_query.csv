@@ -132,9 +132,9 @@ Q17,tfidf_raw,3,provisional,ready,1,0.0,0.0,0.0,0.0
 Q17,tfidf_raw,5,provisional,ready,1,1.0,0.2,1.0,0.25
 Q17,tfidf_raw,10,provisional,ready,2,1.0,0.1,1.0,0.25
 Q17,tfidf_filtered,1,provisional,ready,1,0.0,0.0,0.0,0.0
-Q17,tfidf_filtered,3,provisional,ready,1,0.0,0.0,0.0,0.0
-Q17,tfidf_filtered,5,provisional,ready,1,0.0,0.0,0.0,0.0
-Q17,tfidf_filtered,10,provisional,ready,1,0.0,0.0,0.0,0.0
+Q17,tfidf_filtered,3,provisional,ready,1,1.0,0.3333333333333333,1.0,0.5
+Q17,tfidf_filtered,5,provisional,ready,1,1.0,0.2,1.0,0.5
+Q17,tfidf_filtered,10,provisional,ready,1,1.0,0.1,1.0,0.5
 Q18,tfidf_raw,1,provisional,ready,1,1.0,1.0,1.0,1.0
 Q18,tfidf_raw,3,provisional,ready,1,1.0,0.3333333333333333,1.0,1.0
 Q18,tfidf_raw,5,provisional,ready,1,1.0,0.2,1.0,1.0
