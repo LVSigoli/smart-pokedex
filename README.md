@@ -12,14 +12,16 @@ Migração local do trabalho acadêmico de PLN para um monorepo com FastAPI e cl
    python -m venv .venv
    .\.venv\Scripts\Activate.ps1
    python -m pip install --upgrade pip
-   python -m pip install -e "backend[test,notebooks]"
+   python -m pip install -e "backend[test,notebooks,flan]"
    ```
 
    Para instalar apenas as dependências do backend e dos testes, use `python -m pip install -e "backend[test]"`.
 3. Execute `python scripts/run_notebooks.py`. O executor adapta os caminhos do Colab em memória e salva cópias executadas em `data/executed_notebooks`.
 3. Valide com `cd backend; python -m app.cli verify`.
-4. Instale o backend com `pip install -e ".[test]"` e execute `uvicorn app.main:app --reload`.
+4. Instale o backend com `pip install -e ".[test,flan]"` e execute `uvicorn app.main:app --reload`.
 5. Execute o frontend com `cd frontend; npm install; npm run dev`.
+
+Na interface web, abra a aba `Teste RAG` para executar uma conversa demonstrativa pela API. O laboratório oferece os cenários `Um Pokémon` e `Comparar dois`, troca de Pokémon ativo e perguntas contextuais como `Como evolui ele` e `Onde encontro eles`. A opção `Usar FLAN-T5 local` ativa a geração; desmarcada, a execução fica determinística e mais rápida, usando a recuperação e as respostas extrativas do RAG.
 
 Sem os JSON brutos/artefatos, a aplicação inicia apenas o endpoint `/health` e `/ready=false`; nenhum corpus sintético é criado.
 

@@ -50,7 +50,7 @@ def test_notebook_03_keeps_generation_opt_in_and_compares_retrievers() -> None:
     assert "torch.inference_mode" in source
     assert "GEMINI" not in source.upper()
 
-def test_notebook_03_generation_is_local_and_has_no_legacy_api_contract() -> None:
+def test_notebook_03_generation_uses_preprovisioned_local_model() -> None:
     source = notebook_source("03_RAG_CHATBOT.ipynb")
     normalized = source.casefold()
     assert "api_error" not in normalized
@@ -59,8 +59,8 @@ def test_notebook_03_generation_is_local_and_has_no_legacy_api_contract() -> Non
     assert "chave de api" not in normalized
     assert "api_key" not in normalized
     assert "remote" not in normalized
-    assert "local_files_only=True" not in source
-    assert "primeira execu" in normalized and "cache" in normalized
+    assert source.count("local_files_only=True") >= 2
+    assert "cache local previamente provisionado" in normalized
 
 def test_notebook_03_generation_evaluation_normalizes_csv_columns_and_uses_mappings() -> None:
     source = notebook_source("03_RAG_CHATBOT.ipynb")
@@ -100,6 +100,13 @@ def test_notebook_03_compacts_context_by_complete_passages_and_balances_entities
     assert "rag_documents_in_prompt" in source
     assert "existing_review = pd.read_csv" in source
     assert "human_review_fields" in source
+    assert "stat_passages = [" in source
+    assert "requested_stat_name(question)" in source
+    assert "response_mode='focused_structured'" in source
+    assert "raw_answer=answer" in source
+    assert "uma única frase curta" in source
+    assert "não liste outros atributos" in source
+    assert "'answer_mode': 'extractive', 'generation_error': type(preflight_error).__name__" in source
 
 
 def test_notebook_03_distinguishes_scope_limits_from_missing_evidence() -> None:

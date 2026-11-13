@@ -233,6 +233,53 @@ def test_stat_comparison_falls_back_with_values_for_every_pokemon():
     assert "Squirtle tem velocidade base 43" in result["answer"]
     assert result["answer_mode"] == "extractive_fallback"
 
+
+def test_single_stat_generation_receives_only_the_requested_stat():
+    rag = engine()
+    rows = [{
+        "rank": 1, "document_id": "004_stats", "pokemon_id": 4,
+        "pokemon_name": "Charmander", "section": "stats", "score": .9,
+        "content": (
+            "Base stats for Charmander:\n"
+            "- attack: 52.\n"
+            "- defense: 43.\n"
+            "- hp: 39.\n"
+            "- speed: 65."
+        ),
+    }]
+    rag.select_evidence = lambda question, top_k=5: (rows, "ready")
+
+    class FocusedGenerator:
+        max_input_tokens = 100
+        received_context = ""
+
+        @staticmethod
+        def count_prompt_tokens(question, context):
+            return len((question + " " + context).split()) + 18
+
+        def __call__(self, question, context):
+            self.received_context = context
+            return {
+                "answer": (
+                    "Charmander stats: attack 52, defense 43, hp 39, speed 65."
+                ),
+                "model": "google/flan-t5-small",
+            }
+
+    generator = FocusedGenerator()
+    rag.generator = generator
+
+    result = rag.answer("Qual seu ataque base? sobre Charmander", generate=True)
+
+    assert "- attack: 52." in generator.received_context
+    assert "- defense: 43." not in generator.received_context
+    assert "- hp: 39." not in generator.received_context
+    assert "- speed: 65." not in generator.received_context
+    assert result["answer"] == "Charmander tem ataque base 52."
+    assert result["answer_mode"] == "generative"
+    assert result["generation_metadata"]["response_mode"] == "focused_structured"
+    assert result["generation_metadata"]["raw_answer"].startswith("Charmander stats:")
+
 def test_location_question_accepts_obtainment_evidence():
     class EeveeRetriever:
         documents = [{"pokemon_id": 133}]

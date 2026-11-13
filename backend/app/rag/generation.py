@@ -38,8 +38,10 @@ class FlanT5Generator:
         # O ambiente pode definir um proxy sem saída (por exemplo, no sandbox).
         # Os pesos são provisionados fora do servidor; inferência não tenta baixar
         # arquivos nem fica dependente da rede em uma requisição.
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(device).eval()
+        tokenizer = AutoTokenizer.from_pretrained(model_name, local_files_only=True)
+        model = AutoModelForSeq2SeqLM.from_pretrained(
+            model_name, local_files_only=True
+        ).to(device).eval()
         return tokenizer, model, device
 
     def _ensure_loaded(self):
@@ -77,6 +79,8 @@ class FlanT5Generator:
         return (
             "Responda apenas com base no contexto. Se faltar informação, responda "
             "Não sei. Responda no idioma da pergunta, sem inventar fatos.\n"
+            "Responda em uma única frase curta. Para um único fato, mencione o "
+            "Pokémon, o atributo e o valor; não liste outros atributos.\n"
             f"Contexto:\n{context}\n\nPergunta: {question}\nResposta:"
         )
 

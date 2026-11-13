@@ -197,6 +197,14 @@ class RAGEngine:
     def _rank_passages(question, content):
         terms = {token for token in normalize_plain(question).split() if len(token) > 2}
         passages = RAGEngine.split_passages(content)
+        requested_stat = RAGEngine.requested_stat(question)
+        if requested_stat:
+            stat_passages = [
+                passage for passage in passages
+                if re.match(rf"^-\s*{re.escape(requested_stat)}\s*:", passage, re.I)
+            ]
+            if stat_passages:
+                return stat_passages
         evolution_query = bool(re.search(r"\b(?:evolu\w*|evolv\w*)\b", normalize_plain(question)))
 
         def relevance(item):
@@ -544,6 +552,13 @@ class RAGEngine:
                 return {**base, "status": "answered", "answer": fallback,
                         "answer_mode": "extractive_fallback", "supporting_excerpts": excerpts,
                         "generation_metadata": generation_metadata}
+        if (structured and self.requested_stat(question)
+                and len({int(row["pokemon_id"]) for row in used}) == 1):
+            generation_metadata.update(
+                response_mode="focused_structured",
+                raw_answer=answer,
+            )
+            answer = structured
         if not answer or answer.casefold() == "não sei":
             return {**base, "status": "insufficient_evidence", "answer": REFUSAL}
         excerpts = [{"document_id": row["document_id"], "quote": row["content"]} for row in used]

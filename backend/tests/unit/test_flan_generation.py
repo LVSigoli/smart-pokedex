@@ -39,12 +39,24 @@ def test_flan_loads_lazily_and_generates_deterministically():
 
 
 def test_flan_prompt_reports_input_tokens_without_silent_truncation():
-    generator = FlanT5Generator("google/flan-t5-small", loader=fake_loader, device="cpu", max_input_tokens=40)
+    generator = FlanT5Generator("google/flan-t5-small", loader=fake_loader, device="cpu", max_input_tokens=64)
     prompt, token_count = generator.build_prompt("Qual é o tipo?", "Fonte [006_profile]: fogo e voador.")
-    assert token_count <= 40
+    assert token_count <= 64
     assert "Fonte [006_profile]" in prompt
 
-def test_transformers_allows_initial_hugging_face_download_and_cache_reuse(monkeypatch):
+
+def test_prompt_requires_a_focused_single_fact_answer():
+    prompt = FlanT5Generator.prompt_text(
+        "Qual seu ataque base?",
+        "FONTE [004_stats] | Pokémon: Charmander | seção: stats\n- attack: 52.",
+    )
+
+    assert "uma única frase curta" in prompt
+    assert "Pokémon, o atributo e o valor" in prompt
+    assert "não liste outros atributos" in prompt
+
+
+def test_transformers_loads_only_from_preprovisioned_local_cache(monkeypatch):
     calls = []
     class Auto:
         @classmethod
@@ -60,4 +72,4 @@ def test_transformers_allows_initial_hugging_face_download_and_cache_reuse(monke
         AutoTokenizer=TokenizerAuto, AutoModelForSeq2SeqLM=ModelAuto))
     FlanT5Generator._load_transformers("google/flan-t5-small")
     assert len(calls) == 2
-    assert all("local_files_only" not in kwargs for _, kwargs in calls)
+    assert all(kwargs["local_files_only"] is True for _, kwargs in calls)
