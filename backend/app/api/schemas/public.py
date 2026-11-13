@@ -8,7 +8,7 @@ class SessionResponse(BaseModel):
 class ChatRequest(BaseModel):
     session_id: UUID
     message: str = Field(min_length=1, max_length=1000)
-    generate: bool = False
+    generate: bool = True
 
 class Source(BaseModel):
     document_id: str

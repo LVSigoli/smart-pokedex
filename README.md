@@ -21,7 +21,7 @@ Migração local do trabalho acadêmico de PLN para um monorepo com FastAPI e cl
 4. Instale o backend com `pip install -e ".[test,flan]"` e execute `uvicorn app.main:app --reload`.
 5. Execute o frontend com `cd frontend; npm install; npm run dev`.
 
-Na interface web, abra a aba `Teste RAG` para executar uma conversa demonstrativa pela API. O laboratório oferece os cenários `Um Pokémon` e `Comparar dois`, troca de Pokémon ativo e perguntas contextuais como `Como evolui ele` e `Onde encontro eles`. A opção `Usar FLAN-T5 local` ativa a geração; desmarcada, a execução fica determinística e mais rápida, usando a recuperação e as respostas extrativas do RAG.
+Na interface web, abra a aba `Teste RAG` para executar uma conversa demonstrativa pela API. O laboratório oferece os cenários `Um Pokémon` e `Comparar dois`, troca de Pokémon ativo e perguntas contextuais como `Como evolui ele` e `Onde encontro eles`. O FLAN-T5 local permanece sempre ativo nas conversas da interface; as fontes recuperadas continuam disponíveis para auditoria.
 
 Sem os JSON brutos/artefatos, a aplicação inicia apenas o endpoint `/health` e `/ready=false`; nenhum corpus sintético é criado.
 

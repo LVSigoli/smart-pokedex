@@ -121,7 +121,7 @@ class RAGEngine:
             # alvo e quase nenhuma para o outro. Reaplicamos o mesmo TF-IDF
             # persistido por alvo apenas para completar a cobertura exigida.
             for target_id in targets:
-                if target_id in found_targets:
+                if target_id in found_targets and section not in {"obtainment", "encounters"}:
                     continue
                 record = next((item for item in self.retriever.records if int(item["id"]) == target_id), None)
                 if not record:
@@ -376,33 +376,119 @@ class RAGEngine:
         if not cls.is_acquisition_question(question):
             return None
         facts = cls.acquisition_facts(rows)
-        if not facts:
+        methods_by_pokemon = {}
+        for row in rows:
+            match = re.search(
+                r"Documented mechanisms:\s*([^.]*)\.",
+                str(row.get("content", "")),
+                re.I,
+            )
+            if match:
+                methods_by_pokemon.setdefault(str(row.get("pokemon_name", "Pokémon")), set()).update(
+                    normalize_plain(value)
+                    for value in re.split(r"\s*,\s*|\s+and\s+", match.group(1))
+                    if value.strip()
+                )
+        if not facts and not methods_by_pokemon:
             return None
+        facts_by_pokemon = {}
+        for fact in facts:
+            facts_by_pokemon.setdefault(fact["pokemon"], []).append(fact)
+        pokemon_names = list(dict.fromkeys(
+            [str(row.get("pokemon_name", "Pokémon")) for row in rows]
+            + [fact["pokemon"] for fact in facts]
+        ))
         sentences = []
-        for fact in facts[:6]:
-            name, location, method = fact["pokemon"], fact["location"], fact["method"]
-            minimum, maximum = fact["minimum_level"], fact["maximum_level"]
-            level = f"no nível {minimum}" if minimum == maximum else f"entre os níveis {minimum} e {maximum}"
-            if method == "gift":
-                sentence = f"{name} é obtido como presente em {location}, {level}"
-            else:
-                method_text = {
-                    "walk": "caminhando",
-                    "surf": "usando Surf",
-                    "old rod": "pescando com a Old Rod",
-                    "good rod": "pescando com a Good Rod",
-                    "super rod": "pescando com a Super Rod",
-                    "rock smash": "usando Rock Smash",
-                }.get(method, f"pelo método {method}")
-                sentence = f"{name} pode ser encontrado em {location}, {method_text}, {level}"
-            sentences.append(sentence + ".")
+        for name in pokemon_names:
+            pokemon_facts = facts_by_pokemon.get(name, [])
+            if pokemon_facts:
+                for fact in pokemon_facts[:6]:
+                    location, method = fact["location"], fact["method"]
+                    minimum, maximum = fact["minimum_level"], fact["maximum_level"]
+                    level = f"no nível {minimum}" if minimum == maximum else f"entre os níveis {minimum} e {maximum}"
+                    if method == "gift":
+                        sentence = f"{name} é obtido como presente em {location}, {level}"
+                    else:
+                        method_text = {
+                            "walk": "caminhando",
+                            "surf": "usando Surf",
+                            "old rod": "pescando com a Old Rod",
+                            "good rod": "pescando com a Good Rod",
+                            "super rod": "pescando com a Super Rod",
+                            "rock smash": "usando Rock Smash",
+                        }.get(method, f"pelo método {method}")
+                        sentence = f"{name} pode ser encontrado em {location}, {method_text}, {level}"
+                    sentences.append(sentence + ".")
+                continue
+            methods = methods_by_pokemon.get(name, set())
+            if "evolution" in methods:
+                sentences.append(
+                    f"{name} é registrado no corpus como obtido por evolução e não possui local de encontro selvagem documentado."
+                )
+            elif methods:
+                sentences.append(f"O corpus não informa um local de encontro para {name}.")
+        if not sentences:
+            return None
         return "No Pokémon FireRed, " + " ".join(sentences)
+
+    @staticmethod
+    def is_profile_summary_question(question):
+        return bool(re.search(
+            r"\b(?:fale|conte|descreva|apresente|resuma|quem e|tell me about|who is)\b",
+            normalize_plain(question),
+        ))
+
+    @classmethod
+    def profile_answer(cls, rows, question):
+        if not cls.is_profile_summary_question(question):
+            return None
+        row = next((item for item in rows if item.get("section") == "profile"), None)
+        if not row:
+            return None
+        content = str(row.get("content", ""))
+        name = str(row.get("pokemon_name", "Pokémon"))
+        dex_match = re.search(r"National Pokédex\s*#(\d+)", content, re.I)
+        types = cls.profile_types_pt(row)
+        opening = name
+        if dex_match:
+            opening += f" é o Pokémon #{dex_match.group(1)}"
+        if types:
+            connector = " e, na Geração III, é" if dex_match else " é, na Geração III,"
+            opening += f"{connector} dos tipos {' e '.join(types)}"
+        sentences = [opening + "."]
+        measures = re.search(
+            r"Height:\s*(\d+(?:\.\d+)?)\s*m;\s*weight:\s*(\d+(?:\.\d+)?)\s*kg",
+            content,
+            re.I,
+        )
+        habitat_match = re.search(r"Habitat:\s*([^.]*)\.", content, re.I)
+        details = []
+        if measures:
+            height = f"{float(measures.group(1)):g}".replace(".", ",")
+            weight = f"{float(measures.group(2)):g}".replace(".", ",")
+            details.extend([f"Mede {height} m", f"pesa {weight} kg"])
+        if habitat_match:
+            habitat = normalize_plain(habitat_match.group(1))
+            habitat_text = {
+                "waters edge": "vive próximo à água",
+                "forest": "vive em florestas",
+                "mountain": "vive em regiões montanhosas",
+                "grassland": "vive em campos",
+                "cave": "vive em cavernas",
+            }.get(habitat, f"vive em habitat {habitat.replace('-', ' ')}")
+            details.append(habitat_text)
+        if details:
+            sentences.append(", ".join(details[:-1]) + (" e " if len(details) > 1 else "") + details[-1] + ".")
+        return " ".join(sentences)
 
     @classmethod
     def structured_answer(cls, rows, question):
         acquisition = cls.acquisition_answer(rows, question)
         if acquisition:
             return acquisition
+        profile = cls.profile_answer(rows, question)
+        if profile:
+            return profile
         transitions = cls.evolution_transitions(rows)
         if transitions:
             portuguese = bool(re.search(r"\b(como|quais|qual|evolu)\b", normalize_plain(question)))
@@ -539,7 +625,16 @@ class RAGEngine:
         generation_metadata = {key: value for key, value in payload.items() if key != "answer"}
         generation_metadata["documents_in_prompt"] = [row["document_id"] for row in used]
         structured = self.structured_answer(used, question)
-        if structured and not self.structured_answer_is_complete(answer, used, question):
+        if structured and (
+            self.is_acquisition_question(question)
+            or self.is_profile_summary_question(question)
+        ):
+            generation_metadata.update(
+                response_mode="grounded_structured",
+                raw_answer=answer,
+            )
+            answer = structured
+        elif structured and not self.structured_answer_is_complete(answer, used, question):
             fallback = self.retrieval_answer(used, question)
             if fallback:
                 generation_metadata.update(

@@ -293,6 +293,140 @@ def test_location_question_accepts_obtainment_evidence():
     assert [row["document_id"] for row in rows] == ["133_obtainment"]
 
 
+def test_location_query_complements_obtainment_with_targeted_encounter_evidence():
+    class LocationRetriever:
+        records = [{"id": 25, "api_name": "pikachu", "name": "Pikachu"}]
+        documents = [
+            {"pokemon_id": 25, "document_id": "025_obtainment", "section": "obtainment"},
+            {"pokemon_id": 25, "document_id": "025_encounters_01", "section": "encounters"},
+        ]
+
+        def search(self, question, top_k=5):
+            obtainment = {
+                "rank": 1, "document_id": "025_obtainment", "pokemon_id": 25,
+                "pokemon_name": "Pikachu", "section": "obtainment", "score": .3,
+                "content": "Documented mechanisms: wild_encounter.",
+            }
+            encounter = {
+                "rank": 2, "document_id": "025_encounters_01", "pokemon_id": 25,
+                "pokemon_name": "Pikachu", "section": "encounters", "score": .2,
+                "content": "- viridian forest area; method: walk; levels: 3-5;",
+            }
+            return [obtainment, encounter][:top_k] if question == "pikachu encounters" else [obtainment][:top_k]
+
+    rag = RAGEngine(LocationRetriever(), SimpleNamespace(
+        flan_model="google/flan-t5-small", rag_top_k=5, rag_min_score=.15,
+    ))
+
+    rows, reason = rag.select_evidence("Onde encontro Pikachu?")
+
+    assert reason == "ready"
+    assert [row["document_id"] for row in rows] == ["025_obtainment", "025_encounters_01"]
+
+
+def test_mixed_location_answer_formats_encounter_and_evolution_naturally():
+    rows = [
+        {
+            "document_id": "025_encounters_01", "pokemon_id": 25,
+            "pokemon_name": "Pikachu", "section": "encounters", "score": .8,
+            "content": "- viridian forest area; method: walk; levels: 3-5;",
+        },
+        {
+            "document_id": "149_obtainment", "pokemon_id": 149,
+            "pokemon_name": "Dragonite", "section": "obtainment", "score": .7,
+            "content": "Documented mechanisms: evolution.",
+        },
+    ]
+
+    answer = RAGEngine.retrieval_answer(rows, "Onde encontro Pikachu e Dragonite?")
+
+    assert "Pikachu pode ser encontrado em Viridian Forest Area" in answer
+    assert "Dragonite" in answer and "obtido por evolução" in answer
+    assert "Acquisition evidence" not in answer
+    assert "Documented mechanisms" not in answer
+
+
+def test_generated_location_answer_is_grounded_and_naturally_postprocessed():
+    rag = engine()
+    rows = [
+        {
+            "document_id": "025_encounters_01", "pokemon_id": 25,
+            "pokemon_name": "Pikachu", "section": "encounters", "score": .8,
+            "content": "- viridian forest area; method: walk; levels: 3-5;",
+        },
+        {
+            "document_id": "149_obtainment", "pokemon_id": 149,
+            "pokemon_name": "Dragonite", "section": "obtainment", "score": .7,
+            "content": "Documented mechanisms: evolution.",
+        },
+    ]
+    rag.select_evidence = lambda question, top_k=5: (rows, "ready")
+
+    class WeakLocationGenerator:
+        max_input_tokens = 100
+
+        @staticmethod
+        def count_prompt_tokens(question, context):
+            return 50
+
+        def __call__(self, question, context):
+            return {
+                "answer": "Pikachu e Dragonite.",
+                "model": "google/flan-t5-small",
+            }
+
+    rag.generator = WeakLocationGenerator()
+
+    result = rag.answer("Onde encontro Pikachu e Dragonite?", generate=True)
+
+    assert "Pikachu pode ser encontrado em Viridian Forest Area" in result["answer"]
+    assert "Dragonite" in result["answer"] and "obtido por evolução" in result["answer"]
+    assert result["answer_mode"] == "generative"
+    assert result["generation_metadata"]["response_mode"] == "grounded_structured"
+    assert result["generation_metadata"]["raw_answer"] == "Pikachu e Dragonite."
+
+
+def test_profile_overview_is_generated_then_presented_as_a_natural_summary():
+    rag = engine()
+    rows = [{
+        "document_id": "149_profile", "pokemon_id": 149,
+        "pokemon_name": "Dragonite", "section": "profile", "score": .9,
+        "content": (
+            "Pokémon Dragonite (National Pokédex #149).\n"
+            "Types in Generation III: dragon, flying.\n"
+            "Types PT-BR: dragão, voador.\n"
+            "Habitat: waters-edge.\n"
+            "Height: 2.2 m; weight: 210.0 kg."
+        ),
+    }]
+    rag.select_evidence = lambda question, top_k=5: (rows, "ready")
+
+    class EnglishProfileGenerator:
+        max_input_tokens = 100
+
+        @staticmethod
+        def count_prompt_tokens(question, context):
+            return 50
+
+        def __call__(self, question, context):
+            return {
+                "answer": "Dragonite is a dragon and flying Pokémon.",
+                "model": "google/flan-t5-small",
+            }
+
+    rag.generator = EnglishProfileGenerator()
+
+    result = rag.answer("Fale um pouco sobre Dragonite", generate=True)
+
+    assert result["answer"] == (
+        "Dragonite é o Pokémon #149 e, na Geração III, é dos tipos dragão e voador. "
+        "Mede 2,2 m, pesa 210 kg e vive próximo à água."
+    )
+    assert result["answer_mode"] == "generative"
+    assert result["generation_metadata"]["response_mode"] == "grounded_structured"
+    assert result["generation_metadata"]["raw_answer"].startswith("Dragonite is")
+
+
 def test_location_fallback_turns_eevee_gift_evidence_into_a_natural_answer():
     rows = [
         {

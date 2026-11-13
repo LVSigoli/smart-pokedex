@@ -65,8 +65,10 @@ def test_notebook_03_generation_uses_preprovisioned_local_model() -> None:
 def test_notebook_03_generation_evaluation_normalizes_csv_columns_and_uses_mappings() -> None:
     source = notebook_source("03_RAG_CHATBOT.ipynb")
     assert "def validate_generation_questions(frame, source_name):" in source
+    assert "def load_generation_questions(path, seed_rows):" in source
+    assert "rag_generation_questions_legacy_backup.csv" in source
     assert "questions.columns = [re.sub" in source
-    assert "questions = validate_generation_questions(pd.read_csv(EVAL_QUESTIONS_PATH)" in source
+    assert "questions = load_generation_questions(EVAL_QUESTIONS_PATH, seed_cases)" in source
     assert "Nenhum campo foi convertido automaticamente" in source
     assert "questions.to_dict(orient='records')" in source
     assert "row['expected_case']" in source
@@ -82,9 +84,21 @@ def test_notebooks_resolve_the_monorepo_data_layout_before_legacy_application() 
         assert monorepo_marker in source
         assert legacy_marker in source
         assert source.index(monorepo_marker) < source.index(legacy_marker)
+        assert source.index("candidates = (Path.cwd(), *Path.cwd().parents)") < source.index(
+            "Path('/content/drive/MyDrive/IFSP-ADS/ultimo_periodo/tc_2/avaliacao')"
+        )
         assert "DOC_DIR = DATA_DIR / 'processed'" in source
         if notebook != "01_RAG_DATA_PREPARATION.ipynb":
             assert "ARTIFACTS_DIR = DATA_DIR / 'artifacts' / 'retrieval'" in source
+
+
+def test_notebook_03_colab_prefers_current_repo_and_provisions_generator() -> None:
+    source = notebook_source("03_RAG_CHATBOT.ipynb")
+    candidates = source.index("candidates = (Path.cwd(), *Path.cwd().parents)")
+    drive_fallback = source.index("Path('/content/drive/MyDrive/IFSP-ADS/ultimo_periodo/tc_2/avaliacao')")
+    assert candidates < drive_fallback
+    assert "'1' if IN_COLAB else '0'" in source
+    assert "subprocess.check_call" in source
 
 
 def test_notebook_03_compacts_context_by_complete_passages_and_balances_entities() -> None:
@@ -107,6 +121,12 @@ def test_notebook_03_compacts_context_by_complete_passages_and_balances_entities
     assert "uma única frase curta" in source
     assert "não liste outros atributos" in source
     assert "'answer_mode': 'extractive', 'generation_error': type(preflight_error).__name__" in source
+    assert "if target_id in found_targets and section not in {'obtainment', 'encounters'}:" in source
+    assert "response_mode='grounded_structured'" in source
+    assert "obtido por evolução" in source
+    assert "widgets.Checkbox(value=True, description='Gerar com FLAN-T5 local', disabled=True)" in source
+    assert "def profile_answer(rows, question):" in source
+    assert "vive próximo à água" in source
 
 
 def test_notebook_03_distinguishes_scope_limits_from_missing_evidence() -> None:
