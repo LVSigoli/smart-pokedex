@@ -20,10 +20,189 @@ def test_outside_dex_refuses():
     assert result["status"] == "out_of_scope"
     assert result["answer"] == REFUSAL
 
-def test_grounding_requires_literal_quote():
-    used = [{"document_id":"004_evolution", "content":"Charmander evolves into Charmeleon at level 16."}]
-    payload = {"can_answer":True,"answer":"Charmander evolui [004_evolution].","evidence":[{"document_id":"004_evolution","quote":"Charmander evolves into Charmeleon at level 16."}]}
-    assert RAGEngine.verify(payload, used)
+
+def test_plural_gym_question_is_out_of_scope():
+    result = engine().answer("Quais ginásios preciso vencer?", generate=True)
+    assert result["status"] == "out_of_scope"
+    assert result["answer"] == REFUSAL
+
+def test_token_budget_keeps_complete_passages_for_each_compared_pokemon():
+    rag = engine()
+
+    class WordBudgetGenerator:
+        max_input_tokens = 70
+
+        @staticmethod
+        def count_prompt_tokens(question, context):
+            return len((question + " " + context).split()) + 18
+
+    rag.generator = WordBudgetGenerator()
+    noise = " ".join(["irrelevant"] * 80)
+    rows = [
+        {"document_id": "004_stats", "pokemon_id": 4, "pokemon_name": "Charmander",
+         "section": "stats", "score": .9,
+         "content": f"Charmander base speed is 65.\n{noise}"},
+        {"document_id": "007_stats", "pokemon_id": 7, "pokemon_name": "Squirtle",
+         "section": "stats", "score": .8,
+         "content": f"Squirtle base speed is 43.\n{noise}"},
+    ]
+
+    context, used = rag.build_context(
+        rows, question="Compare a velocidade de Charmander e Squirtle",
+        token_budget=rag.generator.max_input_tokens,
+    )
+
+    assert {row["pokemon_id"] for row in used} == {4, 7}
+    assert "Charmander base speed is 65." in context
+    assert "Squirtle base speed is 43." in context
+    assert rag.generator.count_prompt_tokens("Compare a velocidade de Charmander e Squirtle", context) <= 70
+    assert all(row["content"] in rows[index]["content"] for index, row in enumerate(used))
+
+
+def test_generation_returns_auditable_selected_passages_without_json_contract():
+    rag = engine()
+
+    class GroundedGenerator:
+        max_input_tokens = 80
+
+        @staticmethod
+        def count_prompt_tokens(question, context):
+            return len((question + " " + context).split()) + 18
+
+        def __call__(self, question, context):
+            return {"answer": "Charmander evolui para Charmeleon no nível 16.",
+                    "model": "google/flan-t5-small", "input_tokens": 42}
+
+    rag.generator = GroundedGenerator()
+    result = rag.answer("Como evoluir Charmander?", generate=True)
+
+    assert result["status"] == "answered"
+    assert result["supporting_excerpts"]
+    assert result["supporting_excerpts"][0]["document_id"] == "004_evolution"
+    assert "can_answer" not in result
+    assert "evidence" not in result
+    assert result["generation_metadata"]["documents_in_prompt"] == ["004_evolution"]
+
+
+def test_evolution_passages_keep_transition_and_conditions_together_and_first():
+    content = (
+        "Evolution family of Charmander: charmander, charmeleon, charizard.\n"
+        "Charmander is the first stage and does not evolve from another Pokémon.\n"
+        "- charmander -> charmeleon.\n"
+        "Conditions: (trigger: level up; minimum level: 16).\n"
+        "Not specifically verified for FireRed.\n"
+        "- charmeleon -> charizard.\n"
+        "Conditions: (trigger: level up; minimum level: 36)."
+    )
+
+    passages = RAGEngine._rank_passages("Como evoluir Charmander?", content)
+
+    assert passages[0].startswith("- charmander -> charmeleon.")
+    assert "minimum level: 16" in passages[0]
+
+
+def test_evolution_generation_falls_back_when_model_omits_required_conditions():
+    rag = engine()
+    evolution = {
+        "rank": 1, "document_id": "004_evolution", "pokemon_id": 4,
+        "pokemon_name": "Charmander", "section": "evolution", "score": .9,
+        "content": (
+            "- charmander -> charmeleon. Conditions: (trigger: level up; minimum level: 16).\n"
+            "- charmeleon -> charizard. Conditions: (trigger: level up; minimum level: 36)."
+        ),
+    }
+    rag.select_evidence = lambda question, top_k=5: ([evolution], "ready")
+
+    class IncompleteGenerator:
+        max_input_tokens = 100
+
+        @staticmethod
+        def count_prompt_tokens(question, context):
+            return len((question + " " + context).split()) + 18
+
+        def __call__(self, question, context):
+            return {"answer": "Charmander é o primeiro estágio de sua família.",
+                    "model": "google/flan-t5-small", "input_tokens": 50}
+
+    rag.generator = IncompleteGenerator()
+    result = rag.answer("Como evoluir Charmander?", generate=True)
+
+    assert result["status"] == "answered"
+    assert "Charmander evolui para Charmeleon no nível 16" in result["answer"]
+    assert "Charmeleon evolui para Charizard no nível 36" in result["answer"]
+    assert result["answer_mode"] == "extractive_fallback"
+    assert result["generation_metadata"]["fallback_reason"] == "missing_evolution_conditions"
+
+
+def test_low_similarity_named_pokemon_evidence_is_rejected():
+    rag = engine()
+    rag.retriever.search = lambda question, top_k=5: [{
+        "rank": 1, "document_id": "025_profile", "pokemon_id": 4,
+        "pokemon_name": "Charmander", "section": "profile", "score": .12,
+        "content": "Charmander is a fire Pokémon.",
+    }]
+    rag.settings.rag_min_score = .15
+
+    rows, reason = rag.select_evidence("Qual é o número do sapato do Charmander?")
+
+    assert rows == []
+    assert reason == "below_similarity_threshold"
+
+
+def test_type_generation_falls_back_when_model_omits_retrieved_types():
+    rag = engine()
+    profile = {
+        "rank": 1, "document_id": "006_profile", "pokemon_id": 4,
+        "pokemon_name": "Charmander", "section": "profile", "score": .9,
+        "content": "Types in Generation III: fire. Types PT-BR: fogo.",
+    }
+    rag.select_evidence = lambda question, top_k=5: ([profile], "ready")
+
+    class IncompleteGenerator:
+        max_input_tokens = 100
+
+        @staticmethod
+        def count_prompt_tokens(question, context): return 40
+
+        def __call__(self, question, context):
+            return {"answer": "Charmander vive em montanhas.", "model": "google/flan-t5-small"}
+
+    rag.generator = IncompleteGenerator()
+    result = rag.answer("Qual é o tipo do Charmander?", generate=True)
+
+    assert result["answer"] == "Charmander é do tipo fogo."
+    assert result["answer_mode"] == "extractive_fallback"
+    assert result["generation_metadata"]["fallback_reason"] == "missing_structured_facts"
+
+
+def test_stat_comparison_falls_back_with_values_for_every_pokemon():
+    rag = engine()
+    rows = [
+        {"rank": 1, "document_id": "006_stats", "pokemon_id": 4,
+         "pokemon_name": "Charmander", "section": "stats", "score": .9,
+         "content": "Base stats for Charmander:\n- speed: 65."},
+        {"rank": 2, "document_id": "007_stats", "pokemon_id": 7,
+         "pokemon_name": "Squirtle", "section": "stats", "score": .8,
+         "content": "Base stats for Squirtle:\n- speed: 43."},
+    ]
+    rag.select_evidence = lambda question, top_k=5: (rows, "ready")
+
+    class IncompleteGenerator:
+        max_input_tokens = 100
+
+        @staticmethod
+        def count_prompt_tokens(question, context): return 50
+
+        def __call__(self, question, context):
+            return {"answer": "Charmander e Squirtle têm velocidades diferentes.",
+                    "model": "google/flan-t5-small"}
+
+    rag.generator = IncompleteGenerator()
+    result = rag.answer("Compare a velocidade de Charmander e Squirtle.", generate=True)
+
+    assert "Charmander tem velocidade base 65" in result["answer"]
+    assert "Squirtle tem velocidade base 43" in result["answer"]
+    assert result["answer_mode"] == "extractive_fallback"
 
 def test_location_question_accepts_obtainment_evidence():
     class EeveeRetriever:
@@ -36,6 +215,84 @@ def test_location_question_accepts_obtainment_evidence():
     rows, reason = rag.select_evidence("Onde encontro o Eevee?")
     assert reason == "ready"
     assert [row["document_id"] for row in rows] == ["133_obtainment"]
+
+
+def test_location_fallback_turns_eevee_gift_evidence_into_a_natural_answer():
+    rows = [
+        {
+            "document_id": "133_obtainment", "pokemon_id": 133,
+            "pokemon_name": "Eevee", "section": "obtainment", "score": .9,
+            "content": (
+                "Acquisition evidence for Eevee in FireRed:\n"
+                "Documented mechanisms: wild_encounter."
+            ),
+        },
+        {
+            "document_id": "133_encounters_01", "pokemon_id": 133,
+            "pokemon_name": "Eevee", "section": "encounters", "score": .8,
+            "content": (
+                "Documented wild encounters for Eevee in Pokémon FireRed:\n"
+                "- celadon city celadon mansion; method: gift; levels: 25-25; "
+                "API encounter chance weight: 100; conditions: not specified."
+            ),
+        },
+    ]
+
+    answer = RAGEngine.retrieval_answer(rows, "Onde eu encontro o Eevee?")
+
+    assert answer == "No Pokémon FireRed, Eevee é obtido como presente em Celadon City Celadon Mansion, no nível 25."
+    assert "Acquisition evidence" not in answer
+    assert "Documented wild encounters" not in answer
+
+
+def test_location_fallback_does_not_answer_with_evolution_data():
+    rows = [
+        {
+            "document_id": "041_evolution", "pokemon_id": 41,
+            "pokemon_name": "Zubat", "section": "evolution", "score": .9,
+            "content": "- zubat -> golbat. Conditions: (minimum level: 22).",
+        },
+        {
+            "document_id": "041_encounters_01", "pokemon_id": 41,
+            "pokemon_name": "Zubat", "section": "encounters", "score": .8,
+            "content": (
+                "- mt moon 1f; method: walk; levels: 6-8; "
+                "API encounter chance weight: 69; conditions: not specified."
+            ),
+        },
+    ]
+
+    answer = RAGEngine.retrieval_answer(rows, "Onde encontrar o Zubat?")
+
+    assert "Mt Moon 1F" in answer
+    assert "Golbat" not in answer
+
+
+def test_location_generation_failure_returns_the_natural_acquisition_fallback():
+    rag = engine()
+    rows = [{
+        "document_id": "133_encounters_01", "pokemon_id": 133,
+        "pokemon_name": "Eevee", "section": "encounters", "score": .9,
+        "content": (
+            "- celadon city celadon mansion; method: gift; levels: 25-25; "
+            "API encounter chance weight: 100; conditions: not specified."
+        ),
+    }]
+    rag.select_evidence = lambda question, top_k=5: (rows, "ready")
+
+    class BrokenGenerator:
+        max_input_tokens = 384
+
+        @staticmethod
+        def count_prompt_tokens(question, context):
+            raise RuntimeError("model unavailable")
+
+    rag.generator = BrokenGenerator()
+
+    result = rag.answer("Onde eu encontro o Eevee?", generate=True)
+
+    assert result["status"] == "provider_unavailable"
+    assert result["answer"] == "No Pokémon FireRed, Eevee é obtido como presente em Celadon City Celadon Mansion, no nível 25."
 
 def test_find_and_catch_phrasings_select_location_or_acquisition_sections():
     rag = engine()

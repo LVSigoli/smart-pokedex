@@ -1,19 +1,23 @@
 {
   "project": "Pokédex Inteligente — Trabalho 2",
   "notebook": "03_RAG_CHATBOT",
-  "run_utc": "2026-11-13T01:28:04.938520+00:00",
+  "run_utc": "2026-11-13T10:38:34.765436+00:00",
   "document_count": 1732,
   "pokemon_count": 151,
   "retriever": "TF-IDF + cosseno persistido no Notebook 02; sem novo fit",
   "generator": "FLAN-T5 local",
   "model": "google/flan-t5-small",
-  "model_loaded": false,
+  "model_loaded": true,
   "input_token_budget": 384,
+  "minimum_evidence_score": 0.15,
+  "structured_fact_validation": true,
+  "extractive_fallback_enabled": true,
   "live_demo_executed": false,
-  "generation_evaluation_executed": false,
+  "generation_evaluation_executed": true,
   "limitations": [
     "FLAN-T5-small pode ser menos consistente em português.",
-    "A seleção de fontes e a citação textual não comprovam suporte semântico sozinhas.",
+    "A seleção de fontes e os trechos enviados não comprovam suporte semântico sozinhos.",
+    "Tipos, estatísticas, evoluções e formas de obtenção podem usar fallback extrativo quando a geração omite valores.",
     "A primeira inferência exige acesso ao Hugging Face para baixar os pesos."
   ]
 }

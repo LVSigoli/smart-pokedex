@@ -1,7 +1,7 @@
 {
   "project": "Pokédex Inteligente — Trabalho 2",
   "notebook": "02_RETRIEVAL_AND_EVALUATION",
-  "run_utc": "2026-11-12T23:06:54.613802+00:00",
+  "run_utc": "2026-11-13T04:09:15.028021+00:00",
   "source_document_file": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\processed\\pokemon_rag_documents.jsonl",
   "source_document_sha256": "bfabdaf0354eb3d9c6a7f171e190903abac63a35848c10b54d37458d46712f14",
   "document_count": 1732,

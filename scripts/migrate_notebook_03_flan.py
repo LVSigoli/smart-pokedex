@@ -32,6 +32,16 @@ def code(value):
 
 def main():
     notebook = json.loads(PATH.read_text(encoding="utf-8"))
+    current_source = "\n".join("".join(cell.get("source", [])) for cell in notebook["cells"])
+    current_contract = (
+        "def split_passages(content):",
+        "def structured_answer(rows, question):",
+        "RUN_GENERATION_EVALUATION = os.environ.get(",
+        "def validate_generation_questions(frame, source_name):",
+    )
+    if all(marker in current_source for marker in current_contract):
+        print("Notebook 03 já está alinhado ao FLAN-T5 e ao contrato RAG atual.")
+        return
     replace_first(notebook, "MAX_CONTEXT_CHARS", r'''MAX_INPUT_TOKENS = 384
 MAX_DOC_CHARS = 3500
 
@@ -84,8 +94,8 @@ def load_flan_t5():
     except ImportError as error:
         raise RuntimeError('Instale transformers, sentencepiece e torch para usar FLAN-T5.') from error
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-    FLAN_TOKENIZER = AutoTokenizer.from_pretrained(FLAN_MODEL_NAME, local_files_only=True)
-    FLAN_MODEL = AutoModelForSeq2SeqLM.from_pretrained(FLAN_MODEL_NAME, local_files_only=True).to(DEVICE).eval()
+    FLAN_TOKENIZER = AutoTokenizer.from_pretrained(FLAN_MODEL_NAME)
+    FLAN_MODEL = AutoModelForSeq2SeqLM.from_pretrained(FLAN_MODEL_NAME).to(DEVICE).eval()
     return FLAN_TOKENIZER, FLAN_MODEL
 
 def generate_with_flan_t5(question, context):

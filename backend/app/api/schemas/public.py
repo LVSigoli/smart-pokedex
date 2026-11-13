@@ -21,6 +21,8 @@ class ChatResponse(BaseModel):
     session_id: UUID
     status: str
     answer: str | None = None
+    answer_mode: str | None = None
     source_documents: list[Source] = []
     supporting_excerpts: list[dict] = []
+    generation_metadata: dict | None = None
 

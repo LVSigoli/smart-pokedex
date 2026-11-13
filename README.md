@@ -45,3 +45,28 @@ Se o comando `python` não for reconhecido, feche e reabra o PowerShell para car
 
 `POST /api/v1/sessions`, `POST /api/v1/chat`, `DELETE /api/v1/sessions/{id}`, `GET /api/v1/pokemon`, `GET /api/v1/pokemon/{id}`. A geração de texto usa localmente `google/flan-t5-small`; não é necessária chave de API. Na primeira geração, os pesos podem ser baixados do Hugging Face.
 
+## Fluxo RAG alinhado ao material da aula
+
+O projeto segue o mesmo fluxo didático do notebook `S017_LLM_RAG.ipynb`:
+
+1. O Notebook 01 transforma o corpus existente em documentos temáticos.
+2. O Notebook 02 ajusta e persiste TF-IDF, matriz, ordem dos documentos e manifesto.
+3. O Notebook 03 reutiliza esses artefatos, recupera por cosseno, seleciona passagens completas dentro de 384 tokens e chama o FLAN-T5 com um prompt curto de contexto, pergunta e resposta.
+4. A API usa o mesmo modelo, orçamento e política de evidências. Tipos, estatísticas, evoluções e formas de obtenção são conferidos contra os trechos enviados. Se o modelo omitir valores obrigatórios, a resposta usa `answer_mode=extractive_fallback` e registra o motivo em `generation_metadata`; evidências de encontros e presentes são formatadas como respostas naturais, sem expor o documento bruto.
+
+O modelo é carregado sob demanda. O Hugging Face faz o download no primeiro uso e reutiliza o cache nas execuções seguintes. `FLAN_MODEL=google/flan-t5-base` configura a API e `FLAN_MODEL_NAME=google/flan-t5-base` configura o Notebook 03 para uma comparação opcional; o padrão continua sendo `google/flan-t5-small`.
+
+Para executar o Notebook 03 diretamente no VS Code ou Jupyter, abra a pasta `notebooks` e rode as células em ordem. Ele detecta o monorepo e lê `data/processed` e `data/artifacts/retrieval`; `PLN_AVALIACAO_DIR` pode apontar explicitamente para a raiz.
+
+A avaliação real com e sem RAG é opt-in. No PowerShell:
+
+```powershell
+$env:RUN_GENERATION_EVALUATION = "true"
+jupyter nbconvert --to notebook --execute notebooks/03_RAG_CHATBOT.ipynb `
+  --output 03_RAG_CHATBOT_evaluation.ipynb `
+  --output-dir data/executed_notebooks `
+  --ExecutePreprocessor.timeout=-1
+```
+
+Os resultados ficam em `data/evaluation/rag_generation_results.jsonl`; a planilha `rag_manual_review.csv` preserva notas humanas existentes. Remova a variável ou defina `false` para executar apenas os testes determinísticos e os prechecks.
+

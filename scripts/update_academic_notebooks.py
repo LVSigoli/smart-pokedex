@@ -68,14 +68,18 @@ def markdown_cell(text: str) -> dict:
 
 
 BASE_RESOLVER = """def resolve_workspace_root():
-    \"\"\"Resolve a raiz no Colab, VS Code ou execução por linha de comando.\"\"\"
-    if IN_COLAB:
-        return Path('/content/drive/MyDrive/IFSP-ADS/ultimo_periodo/tc_2/avaliacao')
+    \"\"\"Resolve a raiz do monorepo atual ou da estrutura legada no Drive.\"\"\"
     configured = os.environ.get('PLN_AVALIACAO_DIR', '').strip()
     if configured:
         return Path(configured).expanduser().resolve()
-    for candidate in (Path.cwd(), *Path.cwd().parents):
-        if (candidate / 'corpus').exists() or (candidate / 'application').exists():
+    if IN_COLAB:
+        return Path('/content/drive/MyDrive/IFSP-ADS/ultimo_periodo/tc_2/avaliacao')
+    candidates = (Path.cwd(), *Path.cwd().parents)
+    for candidate in candidates:
+        if (candidate / 'backend').is_dir() and (candidate / 'notebooks').is_dir() and (candidate / 'data').is_dir():
+            return candidate
+    for candidate in candidates:
+        if (candidate / 'application' / 'data' / 'rag' / 'documents').is_dir():
             return candidate
     return Path.cwd().resolve()"""
 
@@ -201,6 +205,7 @@ for ptbr, english in translations.get('query_aliases_ptbr_en', {}).items():
     ALIAS_MAP[normalize_plain(ptbr)] = normalize_plain(english)
 
 ALIAS_MAP.update({
+    'tipo pedra': 'type rock', 'tipo rocha': 'type rock',
     'quais': 'which', 'qual': 'which', 'onde': 'where',
     'aprender': 'learn', 'aprende': 'learn', 'aprendem': 'learn',
     'encontro': 'encounter', 'possui': 'has', 'tem': 'has',
