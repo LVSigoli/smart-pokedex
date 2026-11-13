@@ -1,0 +1,17 @@
+{
+  "run_utc": "2026-11-13T11:13:35.389057+00:00",
+  "pokemon_count": 151,
+  "pair_count": 150,
+  "turn_count": 1655,
+  "generate": false,
+  "status_counts": {
+    "retrieval_only": 1655
+  },
+  "answer_mode_counts": {
+    "extractive": 1655
+  },
+  "failure_count": 0,
+  "failures": [],
+  "output": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\evaluation\\rag_conversation_test.jsonl",
+  "summary_output": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\evaluation\\rag_conversation_test_summary.json"
+}

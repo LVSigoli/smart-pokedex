@@ -33,6 +33,20 @@ Para executar todas as operações com um único comando na raiz do projeto:
 
 O script verifica os artefatos, executa o pipeline caso estejam ausentes ou inválidos, instala as dependências do frontend quando necessário e inicia a API em `http://127.0.0.1:8000` e o frontend em `http://127.0.0.1:5173`. Encerre com `Ctrl+C`.
 
+Para executar um teste conversacional completo do RAG, use:
+
+```powershell
+python scripts/test_rag_conversations.py
+```
+
+O teste percorre os 151 Pokémon, cria conversas individuais, mistura pares de Pokémon, troca o Pokémon ativo e testa referências contextuais como `ele` e `eles`. Os turnos e as fontes recuperadas são salvos em `data/evaluation/rag_conversation_test.jsonl`, e o resumo em `data/evaluation/rag_conversation_test_summary.json`. Para uma execução menor:
+
+```powershell
+python scripts/test_rag_conversations.py --max-pokemon 10 --pair-limit 3
+```
+
+Para também chamar o FLAN-T5 local, acrescente `--generate`; isso pode ser demorado em CPU. Use `--allow-failures` para gerar o relatório mesmo quando o teste encontrar falhas de cobertura ou contexto; sem essa opção, o processo termina com código 1, adequado para CI.
+
 O CORS já permite os dois hosts locais (`localhost` e `127.0.0.1`). Se criar `backend/.env`, mantenha ambos em `ALLOWED_ORIGINS`.
 
 Se o comando `python` não for reconhecido, feche e reabra o PowerShell para carregar o PATH atualizado. Como alternativa, use o executável instalado diretamente:

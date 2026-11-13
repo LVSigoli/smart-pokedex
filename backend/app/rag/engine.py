@@ -19,9 +19,16 @@ class RAGEngine:
         )
 
     def canonicalize(self, question):
+        normalized = normalize_plain(question)
+        protected_tokens = set()
+        for name in self.known_names:
+            if " " in name and re.search(r"(?<!\w)" + re.escape(name) + r"(?!\w)", normalized):
+                protected_tokens.update(name.split())
         result, corrections = [], []
-        for token in normalize_plain(question).split():
-            if token in self.name_to_id or len(token) < 4:
+        for token in normalized.split():
+            # Nidoran F/M e outras espécies compostas não podem passar pela
+            # correção fuzzy palavra a palavra, que confundiria os irmãos.
+            if token in protected_tokens or token in self.name_to_id or len(token) < 4:
                 result.append(token); continue
             choice = difflib.get_close_matches(token, self.known_names, n=1, cutoff=.84)
             if choice:
@@ -95,12 +102,46 @@ class RAGEngine:
         if self.is_same_type_query(question):
             return self.select_same_type_evidence(question, targets, top_k)
         ranked = self.retriever.search(question, top_k=len(self.retriever.documents))
-        if targets: ranked = [r for r in ranked if r["pokemon_id"] in targets]
         if section in {"obtainment", "encounters"}:
-            ranked = [r for r in ranked if r["section"] in ("obtainment", "encounters", "evolution")]
-        elif section: ranked = [r for r in ranked if r["section"] == section]
-        if not ranked: return [], "no_relevant_documents"
+            # Evolução não comprova onde o Pokémon é encontrado ou obtido.
+            # Mantemos somente evidência de aquisição/localização para evitar
+            # respostas como "evolui para..." em perguntas de encontro.
+            ranked = [r for r in ranked if r["section"] in ("obtainment", "encounters")]
+        elif section:
+            ranked = [r for r in ranked if r["section"] == section]
         minimum_score = float(getattr(self.settings, "rag_min_score", 0.15))
+        if targets:
+            ranked = [r for r in ranked if r["pokemon_id"] in targets]
+            found_targets = {
+                int(r["pokemon_id"])
+                for r in ranked
+                if float(r.get("score", 0.0)) >= minimum_score
+            }
+            # Uma consulta comparativa pode dar pontuação suficiente para um
+            # alvo e quase nenhuma para o outro. Reaplicamos o mesmo TF-IDF
+            # persistido por alvo apenas para completar a cobertura exigida.
+            for target_id in targets:
+                if target_id in found_targets:
+                    continue
+                record = next((item for item in self.retriever.records if int(item["id"]) == target_id), None)
+                if not record:
+                    continue
+                target_name = record.get("api_name") or record.get("name") or str(target_id)
+                target_query = f"{target_name} {section or ''}".strip()
+                complementary = self.retriever.search(target_query, top_k=len(self.retriever.documents))
+                complementary = [r for r in complementary if int(r["pokemon_id"]) == target_id]
+                if section in {"obtainment", "encounters"}:
+                    complementary = [r for r in complementary if r["section"] in ("obtainment", "encounters")]
+                elif section:
+                    complementary = [r for r in complementary if r["section"] == section]
+                ranked.extend(complementary)
+            unique = {}
+            for row in ranked:
+                current = unique.get(row["document_id"])
+                if current is None or float(row.get("score", 0.0)) > float(current.get("score", 0.0)):
+                    unique[row["document_id"]] = row
+            ranked = list(unique.values())
+        if not ranked: return [], "no_relevant_documents"
         ranked = [row for row in ranked if float(row.get("score", 0.0)) >= minimum_score]
         if not ranked: return [], "below_similarity_threshold"
         if targets: ranked.sort(key=lambda r: (targets.index(r["pokemon_id"]) if r["pokemon_id"] in targets else len(targets), -r["score"]))

@@ -114,3 +114,10 @@ def test_notebook_03_formats_acquisition_evidence_instead_of_returning_raw_docum
     assert "def acquisition_facts(rows):" in source
     assert "def acquisition_answer(rows, question):" in source
     assert "é obtido como presente" in source
+
+
+def test_notebook_03_protects_compound_species_names_during_normalization() -> None:
+    source = notebook_source("03_RAG_CHATBOT.ipynb")
+    assert "protected_tokens = set()" in source
+    assert "if ' ' in name and re.search" in source
+    assert "token in protected_tokens" in source

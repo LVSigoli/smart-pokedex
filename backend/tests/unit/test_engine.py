@@ -15,6 +15,35 @@ def test_multiple_pokemon_reserve_evidence():
     assert reason == "ready"
     assert {r["pokemon_id"] for r in rows} == {4, 7}
 
+
+def test_multi_pokemon_retrieval_complements_missing_target_with_targeted_tfidf_query():
+    class ComplementaryRetriever:
+        documents = [{"pokemon_id": 1}, {"pokemon_id": 2}]
+        records = [
+            {"id": 1, "api_name": "bulbasaur", "name": "Bulbasaur"},
+            {"id": 2, "api_name": "ivysaur", "name": "Ivysaur"},
+        ]
+
+        def search(self, question, top_k=5):
+            if question.casefold().startswith("quais"):
+                return [{
+                    "rank": 1, "document_id": "001_profile", "pokemon_id": 1,
+                    "pokemon_name": "Bulbasaur", "section": "profile", "score": .9,
+                    "content": "Types in Generation III: grass, poison.",
+                }]
+            return [{
+                "rank": 1, "document_id": "002_profile", "pokemon_id": 2,
+                "pokemon_name": "Ivysaur", "section": "profile", "score": .8,
+                "content": "Types in Generation III: grass, poison.",
+            }]
+
+    rag = RAGEngine(ComplementaryRetriever(), SimpleNamespace(flan_model="google/flan-t5-small", rag_top_k=5))
+
+    rows, reason = rag.select_evidence("Quais são os tipos de Bulbasaur e Ivysaur?")
+
+    assert reason == "ready"
+    assert {row["pokemon_id"] for row in rows} == {1, 2}
+
 def test_outside_dex_refuses():
     result = engine().answer("Qual é o Pokémon número 152?")
     assert result["status"] == "out_of_scope"
@@ -293,6 +322,45 @@ def test_location_generation_failure_returns_the_natural_acquisition_fallback():
 
     assert result["status"] == "provider_unavailable"
     assert result["answer"] == "No Pokémon FireRed, Eevee é obtido como presente em Celadon City Celadon Mansion, no nível 25."
+
+
+def test_location_queries_do_not_use_evolution_documents_as_encounter_evidence():
+    class EvolutionOnlyRetriever:
+        documents = [{"pokemon_id": 2}]
+        records = [{"id": 2, "api_name": "ivysaur", "name": "Ivysaur"}]
+
+        def search(self, question, top_k=5):
+            return [{
+                "rank": 1, "document_id": "002_evolution", "pokemon_id": 2,
+                "pokemon_name": "Ivysaur", "section": "evolution", "score": .9,
+                "content": "- bulbasaur -> ivysaur. Conditions: (minimum level: 16).",
+            }]
+
+    rag = RAGEngine(EvolutionOnlyRetriever(), SimpleNamespace(flan_model="google/flan-t5-small", rag_top_k=5))
+
+    rows, reason = rag.select_evidence("Onde encontro o Ivysaur?")
+
+    assert rows == []
+    assert reason == "no_relevant_documents"
+
+
+def test_canonicalization_preserves_compound_species_names():
+    class CompoundNameRetriever:
+        documents = []
+        records = [
+            {"id": 29, "api_name": "nidoran-f", "name": "Nidoran F"},
+            {"id": 32, "api_name": "nidoran-m", "name": "Nidoran M"},
+        ]
+
+        def search(self, question, top_k=5):
+            return []
+
+    rag = RAGEngine(CompoundNameRetriever(), SimpleNamespace(flan_model="google/flan-t5-small", rag_top_k=5))
+
+    canonical, _ = rag.canonicalize("Fale sobre o Pokémon Nidoran F")
+
+    assert "nidoran f" in canonical
+    assert rag.mentioned_ids(canonical) == [29]
 
 def test_find_and_catch_phrasings_select_location_or_acquisition_sections():
     rag = engine()
