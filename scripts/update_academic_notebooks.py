@@ -433,6 +433,36 @@ print('Normalização compartilhada carregada do Notebook 01/02.')""")
             cell["outputs"] = []
             cell["execution_count"] = None
             break
+    for cell in notebook["cells"]:
+        body = "".join(cell.get("source", []))
+        if cell["cell_type"] == "code" and "def select_evidence(question, top_k=5):" in body:
+            if "def same_type_evidence(" not in body:
+                helper = """def same_type_evidence(question, targets, top_k):
+    if len(targets) != 1:
+        return [], 'same_type_requires_one_reference'
+    target_id = targets[0]
+    profiles = [row for row in documents if row['section'] == 'profile']
+    target = next((row for row in profiles if int(row['pokemon_id']) == target_id), None)
+    if not target:
+        return [], 'missing_target_profile'
+    match = re.search(r'Types in Generation III:\\s*([^.]*)\\.', str(target['content']), re.IGNORECASE)
+    target_types = frozenset(normalize_plain(value) for value in match.group(1).split(',')) if match else frozenset()
+    if not target_types:
+        return [], 'missing_target_types'
+    matches = [row for row in profiles if int(row['pokemon_id']) != target_id and
+               (found := re.search(r'Types in Generation III:\\s*([^.]*)\\.', str(row['content']), re.IGNORECASE)) and
+               frozenset(normalize_plain(value) for value in found.group(1).split(',')) == target_types]
+    matches.sort(key=lambda row: (int(row['pokemon_id']), row['document_id']))
+    return [dict(row, rank=index + 1, score=float(row.get('score', 0.0)))
+            for index, row in enumerate([target] + matches[:max(1, top_k - 1)])], 'ready'
+
+"""
+                body = body.replace("def select_evidence(question, top_k=5):", helper + "def select_evidence(question, top_k=5):")
+                body = body.replace("    section = requested_section(canonical)\n", "    section = requested_section(canonical)\n    if re.search(r'\\b(?:mesm[oa]s?|igual(?:es)?|same)\\b.*\\b(?:tipo|types?)\\b', normalize_plain(question)):\n        return same_type_evidence(question, targets, top_k)\n")
+                cell["source"] = body.splitlines(keepends=True)
+                cell["outputs"] = []
+                cell["execution_count"] = None
+            break
     replace_cell(notebook, "MAX_CONTEXT_CHARS", """MAX_CONTEXT_CHARS = 13500
 MAX_DOC_CHARS = 3500
 
@@ -813,6 +843,10 @@ for location_question in location_selection_cases:
     assert location_gate == 'ready', (location_question, location_gate)
     assert location_rows and all(int(row['pokemon_id']) == 133 for row in location_rows)
     assert all(row['section'] in {'encounters', 'obtainment', 'evolution'} for row in location_rows)
+
+same_type_rows, same_type_gate = select_evidence('Quais os pokemons com o mesmo tipo do charizard?', top_k=5)
+assert same_type_gate == 'ready'
+assert {int(row['pokemon_id']) for row in same_type_rows} == {6, 146}
 """
             if selection_marker not in body:
                 marker = "assert requested_section('Como eu pego o Eevee?') == 'encounters'"
@@ -821,6 +855,12 @@ for location_question in location_selection_cases:
                 cell["source"] = body.replace(marker, marker + selection_tests).splitlines(keepends=True)
                 cell["outputs"] = []
                 cell["execution_count"] = None
+            else:
+                same_type_test = "same_type_rows, same_type_gate = select_evidence('Quais os pokemons com o mesmo tipo do charizard?', top_k=5)"
+                if same_type_test not in body:
+                    cell["source"] = (body + "\n" + selection_tests).splitlines(keepends=True)
+                    cell["outputs"] = []
+                    cell["execution_count"] = None
             break
     else:
         raise ValueError("Célula de testes do Notebook 03 não encontrada")

@@ -45,6 +45,39 @@ class RAGEngine:
         if re.search(r"\b(ataque|defesa|velocidade|speed|stat|atribut|hp)\b", q): return "stats"
         return "profile" if self.mentioned_ids(question) else None
 
+    @staticmethod
+    def is_same_type_query(question):
+        q = normalize_plain(question)
+        return bool(re.search(r"\b(?:mesm[oa]s?|igual(?:es)?|same)\b.*\b(?:tipo|types?)\b", q))
+
+    @staticmethod
+    def profile_types(row):
+        content = str(row.get("content", ""))
+        match = re.search(r"Types in Generation III:\s*([^.]*)\.", content, re.IGNORECASE)
+        if not match:
+            return frozenset()
+        return frozenset(normalize_plain(value) for value in match.group(1).split(",") if value.strip())
+
+    def select_same_type_evidence(self, question, targets, top_k):
+        if len(targets) != 1:
+            return [], "same_type_requires_one_reference"
+        target_id = targets[0]
+        target_profile = next((row for row in self.retriever.documents
+                               if int(row["pokemon_id"]) == target_id and row["section"] == "profile"), None)
+        if not target_profile:
+            return [], "missing_target_profile"
+        target_types = self.profile_types(target_profile)
+        if not target_types:
+            return [], "missing_target_types"
+        candidates = [row for row in self.retriever.documents
+                      if row["section"] == "profile"
+                      and int(row["pokemon_id"]) != target_id
+                      and self.profile_types(row) == target_types]
+        candidates.sort(key=lambda row: (int(row["pokemon_id"]), row["document_id"]))
+        selected = [target_profile] + candidates[:max(1, top_k - 1)]
+        return [dict(row, rank=index + 1, score=float(row.get("score", 0.0)))
+                for index, row in enumerate(selected)], "ready"
+
     def scope_gate(self, question):
         q = normalize_plain(question)
         if re.search(r"\b(ginasio|gym|elite four|detonado|walkthrough|storyline)\b", q): return "out_of_scope"
@@ -56,6 +89,8 @@ class RAGEngine:
         gate = self.scope_gate(question)
         if gate: return [], gate
         targets, section = self.mentioned_ids(question), self.requested_section(question)
+        if self.is_same_type_query(question):
+            return self.select_same_type_evidence(question, targets, top_k)
         ranked = self.retriever.search(question, top_k=len(self.retriever.documents))
         if targets: ranked = [r for r in ranked if r["pokemon_id"] in targets]
         if section in {"obtainment", "encounters"}:

@@ -6,6 +6,7 @@ Este documento estabelece as regras obrigatórias para desenvolvimento, manuten�
 
 ## 1. Princípios gerais
 
+- os notebooks devem funcionar exatamente como a api
 - Priorize soluções simples, legíveis, testáveis e de fácil manutenção.
 - Preserve a arquitetura existente, evitando refatorações desnecessárias.
 - Não introduza bibliotecas, frameworks ou padrões arquiteturais sem uma justificativa técnica.

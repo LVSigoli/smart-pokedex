@@ -57,3 +57,26 @@ def test_question_about_stats_is_restricted_to_named_pokemon():
     rows, _ = rag.select_evidence("Qual seu ataque? sobre Eevee")
     assert rows and {row["pokemon_id"] for row in rows} == {133}
 
+def test_same_type_query_recovers_matching_profile_documents():
+    class TypeRetriever:
+        documents = [
+            {"pokemon_id": 6, "section": "profile", "document_id": "006_profile", "content": "Types in Generation III: fire, flying."},
+            {"pokemon_id": 146, "section": "profile", "document_id": "146_profile", "content": "Types in Generation III: fire, flying."},
+            {"pokemon_id": 25, "section": "profile", "document_id": "025_profile", "content": "Types in Generation III: electric."},
+        ]
+        records = [
+            {"id": 6, "api_name": "charizard", "name": "Charizard"},
+            {"id": 146, "api_name": "moltres", "name": "Moltres"},
+            {"id": 25, "api_name": "pikachu", "name": "Pikachu"},
+        ]
+        def search(self, question, top_k=5):
+            return [
+                {"rank": 1, "document_id": "006_profile", "pokemon_id": 6, "pokemon_name": "Charizard", "section": "profile", "score": .9, "content": "Types in Generation III: fire, flying."},
+                {"rank": 2, "document_id": "146_profile", "pokemon_id": 146, "pokemon_name": "Moltres", "section": "profile", "score": .8, "content": "Types in Generation III: fire, flying."},
+                {"rank": 3, "document_id": "025_profile", "pokemon_id": 25, "pokemon_name": "Pikachu", "section": "profile", "score": .7, "content": "Types in Generation III: electric."},
+            ][:top_k]
+    rag = RAGEngine(TypeRetriever(), SimpleNamespace(gemini_api_key=None, gemini_model="test", rag_top_k=5))
+    rows, reason = rag.select_evidence("Quais os pokemons com o mesmo tipo do charizard?")
+    assert reason == "ready"
+    assert {row["pokemon_id"] for row in rows} == {6, 146}
+
