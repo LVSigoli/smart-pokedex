@@ -875,7 +875,8 @@ def update(path: Path, function) -> None:
 def main() -> None:
     update(NOTEBOOKS / "01_RAG_DATA_PREPARATION.ipynb", update_notebook_01)
     update(NOTEBOOKS / "02_RETRIEVAL_AND_EVALUATION.ipynb", update_notebook_02)
-    update(NOTEBOOKS / "03_RAG_CHATBOT.ipynb", update_notebook_03)
+    from migrate_notebook_03_flan import main as migrate_flan_notebook
+    migrate_flan_notebook()
     print("Notebooks acadêmicos atualizados.")
 
 

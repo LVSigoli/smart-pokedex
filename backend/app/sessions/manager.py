@@ -9,6 +9,7 @@ FOLLOWUP_TERMS = {
     "qual", "quais", "evolucao", "evolution", "tipo", "type",
     "onde", "encontro", "encontrar", "capturo", "capturar", "localizacao",
     "localizar", "where", "find", "catch", "get", "obter", "conseguir", "ganhar",
+    "como", "evoluo", "evoluir", "evolui", "evolucao",
 }
 
 @dataclass

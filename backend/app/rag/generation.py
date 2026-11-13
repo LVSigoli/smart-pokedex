@@ -35,8 +35,11 @@ class FlanT5Generator:
                 "Instale transformers, sentencepiece e torch para usar FLAN-T5."
             ) from exc
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(device).eval()
+        # O ambiente pode definir um proxy sem saída (por exemplo, no sandbox).
+        # Os pesos são provisionados fora do servidor; inferência não tenta baixar
+        # arquivos nem fica dependente da rede em uma requisição.
+        tokenizer = AutoTokenizer.from_pretrained(model_name, local_files_only=True)
+        model = AutoModelForSeq2SeqLM.from_pretrained(model_name, local_files_only=True).to(device).eval()
         return tokenizer, model, device
 
     def _ensure_loaded(self):

@@ -12,10 +12,10 @@ def test_sessions_are_isolated():
     assert manager.get(second.session_id).turns == []
 
 class ContextualEngine:
-    retriever = SimpleNamespace(by_id={133: {"name": "Eevee"}, 25: {"name": "Pikachu"}})
+    retriever = SimpleNamespace(by_id={4: {"name": "Charmander"}, 133: {"name": "Eevee"}, 25: {"name": "Pikachu"}})
     def mentioned_ids(self, message):
         lowered = message.casefold()
-        return [pokemon_id for pokemon_id, name in ((133, "eevee"), (25, "pikachu")) if name in lowered]
+        return [pokemon_id for pokemon_id, name in ((4, "charmander"), (133, "eevee"), (25, "pikachu")) if name in lowered]
     def answer(self, message, generate=False):
         ids = self.mentioned_ids(message)
         return {"status": "retrieval_only", "answer": message, "source_documents": [{"pokemon_id": pokemon_id} for pokemon_id in ids], "supporting_excerpts": []}
@@ -34,4 +34,11 @@ def test_location_followup_keeps_single_active_pokemon():
     manager.ask(session.session_id, "Fale sobre Eevee")
     result = manager.ask(session.session_id, "Onde eu encontro ele?")
     assert result["answer"] == "Onde eu encontro ele? sobre Eevee"
+
+def test_evolution_followup_without_species_keeps_active_pokemon():
+    manager = SessionManager(ContextualEngine())
+    session = manager.create()
+    manager.ask(session.session_id, "Como evoluir Charmander?")
+    result = manager.ask(session.session_id, "Mas como evoluo?")
+    assert result["answer"] == "Mas como evoluo? sobre Charmander"
 

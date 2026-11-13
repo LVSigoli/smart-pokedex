@@ -1,4 +1,4 @@
-"""Migra o Notebook 03 do Gemini para FLAN-T5 sem editar o notebook da aula."""
+"""Aplica correções de FLAN-T5 local ao Notebook 03."""
 from __future__ import annotations
 
 import json
@@ -66,7 +66,7 @@ def build_context(rows, question=None, tokenizer=None, max_chars=13500, max_doc_
     return '\n\n'.join(parts), used
 
 print('Contexto FLAN-T5: orçamento de entrada=', MAX_INPUT_TOKENS, 'tokens; seleção sem truncamento silencioso.')''', "code")
-    replace_first(notebook, "import os\n\nGEMINI_MODEL", r'''import os
+    replace_first(notebook, "FLAN_MODEL_NAME = os.environ", r'''import os
 import time
 
 FLAN_MODEL_NAME = os.environ.get('FLAN_MODEL_NAME', 'google/flan-t5-small')
@@ -84,8 +84,8 @@ def load_flan_t5():
     except ImportError as error:
         raise RuntimeError('Instale transformers, sentencepiece e torch para usar FLAN-T5.') from error
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-    FLAN_TOKENIZER = AutoTokenizer.from_pretrained(FLAN_MODEL_NAME)
-    FLAN_MODEL = AutoModelForSeq2SeqLM.from_pretrained(FLAN_MODEL_NAME).to(DEVICE).eval()
+    FLAN_TOKENIZER = AutoTokenizer.from_pretrained(FLAN_MODEL_NAME, local_files_only=True)
+    FLAN_MODEL = AutoModelForSeq2SeqLM.from_pretrained(FLAN_MODEL_NAME, local_files_only=True).to(DEVICE).eval()
     return FLAN_TOKENIZER, FLAN_MODEL
 
 def generate_with_flan_t5(question, context):
@@ -180,7 +180,6 @@ else:
     action.on_click(run)
     display(widgets.VBox([hint, widgets.HBox([field, action]), do_gen, output]))
     return conversation''', "code")
-    replace_first(notebook, "## 6 · Gemini como gerador", "## 6 · FLAN-T5 local como gerador", "markdown")
     replace_first(notebook, "## 9 · Demonstração do RAG", "## 9 · Demonstração do RAG com FLAN-T5", "markdown")
     replace_first(notebook, "## 8 · Testes do contrato", "## 8 · Testes do contrato e fontes selecionadas", "markdown")
     replace_first(notebook, "valid = answer_question", r'''# O FLAN-T5 retorna texto livre; as fontes continuam selecionadas pelo Python.
@@ -206,7 +205,7 @@ rows, gate = select_evidence("Quais os pokemons com o mesmo tipo do charizard?",
 assert gate == "ready" and {6, 146}.issubset({int(row["pokemon_id"]) for row in rows})
 print("Contratos de intenção, fontes e comparação por tipo: OK.")''', "code")
     for cell in notebook["cells"]:
-        cell["source"] = [line.replace('Gemini', 'FLAN-T5').replace('GEMINI', 'FLAN').replace(
+        cell["source"] = [line.replace(
             'language = detect_response_language(user_question)',
             "language = detect_response_language(user_question) if 'detect_response_language' in globals() else 'pt'"
         ).replace(

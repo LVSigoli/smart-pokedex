@@ -147,7 +147,14 @@ class RAGEngine:
                     _origin, target = (part.replace("-", " ").title() for part in match.groups())
                     item_match = re.search(r"\bitem:\s*([^;.)]+)", line, re.I)
                     item = item_match.group(1).strip().replace("-", " ").title() if item_match else ""
-                    transitions.append(f"{target} usando {item}" if item else target)
+                    level_match = re.search(r"\bminimum level:\s*(\d+)", line, re.I)
+                    if item:
+                        condition = f"usando {item}"
+                    elif level_match:
+                        condition = f"no nÃ­vel {level_match.group(1)}"
+                    else:
+                        condition = ""
+                    transitions.append(f"{target} {condition}".strip())
             if transitions:
                 subject = rows[0].get("pokemon_name", "O Pokémon")
                 joined = ", ".join(transitions)

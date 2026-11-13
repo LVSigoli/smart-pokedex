@@ -8,7 +8,7 @@ class FakeRetriever:
         rows = [{"rank":1,"document_id":"004_evolution","pokemon_id":4,"pokemon_name":"Charmander","section":"evolution","score":.9,"content":"Charmander evolves into Charmeleon at level 16."}, {"rank":2,"document_id":"007_evolution","pokemon_id":7,"pokemon_name":"Squirtle","section":"evolution","score":.8,"content":"Squirtle evolves into Wartortle at level 16."}]
         return rows[:top_k]
 
-def engine(): return RAGEngine(FakeRetriever(), SimpleNamespace(gemini_api_key=None, gemini_model="test", rag_top_k=5))
+def engine(): return RAGEngine(FakeRetriever(), SimpleNamespace(flan_model="google/flan-t5-small", rag_top_k=5))
 
 def test_multiple_pokemon_reserve_evidence():
     rows, reason = engine().select_evidence("Quais sao as evolucoes de Charmander e Squirtle")
@@ -32,7 +32,7 @@ def test_location_question_accepts_obtainment_evidence():
         def search(self, question, top_k=5):
             return [{"rank": 1, "document_id": "133_obtainment", "pokemon_id": 133, "pokemon_name": "Eevee", "section": "obtainment", "score": .9, "content": "Eevee is available as a documented gift."}]
 
-    rag = RAGEngine(EeveeRetriever(), SimpleNamespace(gemini_api_key=None, gemini_model="test", rag_top_k=5))
+    rag = RAGEngine(EeveeRetriever(), SimpleNamespace(flan_model="google/flan-t5-small", rag_top_k=5))
     rows, reason = rag.select_evidence("Onde encontro o Eevee?")
     assert reason == "ready"
     assert [row["document_id"] for row in rows] == ["133_obtainment"]
@@ -53,7 +53,7 @@ def test_question_about_stats_is_restricted_to_named_pokemon():
                 {"rank": 1, "document_id": "025_stats", "pokemon_id": 25, "pokemon_name": "Pikachu", "section": "stats", "score": .9, "content": "Pikachu base attack: 55."},
                 {"rank": 2, "document_id": "133_stats", "pokemon_id": 133, "pokemon_name": "Eevee", "section": "stats", "score": .8, "content": "Eevee base attack: 55."},
             ][:top_k]
-    rag = RAGEngine(SpeciesRetriever(), SimpleNamespace(gemini_api_key=None, gemini_model="test", rag_top_k=5))
+    rag = RAGEngine(SpeciesRetriever(), SimpleNamespace(flan_model="google/flan-t5-small", rag_top_k=5))
     rows, _ = rag.select_evidence("Qual seu ataque? sobre Eevee")
     assert rows and {row["pokemon_id"] for row in rows} == {133}
 
@@ -75,7 +75,7 @@ def test_same_type_query_recovers_matching_profile_documents():
                 {"rank": 2, "document_id": "146_profile", "pokemon_id": 146, "pokemon_name": "Moltres", "section": "profile", "score": .8, "content": "Types in Generation III: fire, flying."},
                 {"rank": 3, "document_id": "025_profile", "pokemon_id": 25, "pokemon_name": "Pikachu", "section": "profile", "score": .7, "content": "Types in Generation III: electric."},
             ][:top_k]
-    rag = RAGEngine(TypeRetriever(), SimpleNamespace(gemini_api_key=None, gemini_model="test", rag_top_k=5))
+    rag = RAGEngine(TypeRetriever(), SimpleNamespace(flan_model="google/flan-t5-small", rag_top_k=5))
     rows, reason = rag.select_evidence("Quais os pokemons com o mesmo tipo do charizard?")
     assert reason == "ready"
     assert {row["pokemon_id"] for row in rows} == {6, 146}
@@ -102,4 +102,12 @@ def test_evolution_fallback_keeps_targets_without_item():
     assert reason == "ready"
     assert "Charmeleon" in answer
     assert "para ." not in answer
+
+def test_evolution_fallback_explains_method_and_level():
+    row = {"pokemon_name": "Charmander", "section": "evolution", "content": (
+        "- charmander -> charmeleon. Conditions: (trigger: level up; minimum level: 16).\n"
+        "- charmeleon -> charizard. Conditions: (trigger: level up; minimum level: 36)."
+    )}
+    answer = RAGEngine.retrieval_answer([row], "Como evoluir Charmander?")
+    assert "16" in answer and "36" in answer
 
