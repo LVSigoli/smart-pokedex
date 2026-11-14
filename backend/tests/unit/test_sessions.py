@@ -42,3 +42,33 @@ def test_evolution_followup_without_species_keeps_active_pokemon():
     result = manager.ask(session.session_id, "Mas como evoluo?")
     assert result["answer"] == "Mas como evoluo? sobre Charmander"
 
+
+class ComparisonContextualEngine(ContextualEngine):
+    def answer(self, message, generate=False):
+        ids = self.mentioned_ids(message)
+        if "mais forte" in message.casefold():
+            names = [self.retriever.by_id[pokemon_id]["name"] for pokemon_id in ids]
+            return {
+                "status": "clarification_needed",
+                "gate_reason": "needs_comparison_criterion",
+                "answer": f"Em qual atributo você quer comparar {' e '.join(names)}?",
+                "source_documents": [],
+                "supporting_excerpts": [],
+            }
+        return super().answer(message, generate=generate)
+
+
+def test_pronoun_comparison_keeps_both_pokemon_and_attribute_answers_clarification():
+    manager = SessionManager(ComparisonContextualEngine())
+    session = manager.create()
+    manager.ask(session.session_id, "Fale sobre Eevee")
+
+    clarification = manager.ask(session.session_id, "Ele é mais forte que o Pikachu?", generate=True)
+    assert clarification["status"] == "clarification_needed"
+    assert "Eevee" in clarification["answer"] and "Pikachu" in clarification["answer"]
+    assert manager.get(session.session_id).active_ids == [133, 25]
+
+    comparison = manager.ask(session.session_id, "Ataque", generate=True)
+    assert comparison["answer"] == "Compare o ataque de Eevee e Pikachu."
+    assert {item["pokemon_id"] for item in comparison["source_documents"]} == {133, 25}
+

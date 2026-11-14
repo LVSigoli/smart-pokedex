@@ -68,7 +68,7 @@ O projeto segue o mesmo fluxo didático do notebook `S017_LLM_RAG.ipynb`:
 1. O Notebook 01 transforma o corpus existente em documentos temáticos.
 2. O Notebook 02 ajusta e persiste TF-IDF, matriz, ordem dos documentos e manifesto.
 3. O Notebook 03 reutiliza esses artefatos, recupera por cosseno, seleciona passagens completas dentro de 384 tokens e chama o FLAN-T5 com um prompt curto de contexto, pergunta e resposta.
-4. A API usa o mesmo modelo, orçamento e política de evidências. Tipos, estatísticas, evoluções e formas de obtenção são conferidos contra os trechos enviados. Se o modelo omitir valores obrigatórios, a resposta usa `answer_mode=extractive_fallback` e registra o motivo em `generation_metadata`; evidências de encontros e presentes são formatadas como respostas naturais, sem expor o documento bruto.
+4. A API usa o mesmo modelo, orçamento e política de evidências. Tipos, estatísticas, evoluções e formas de obtenção são conferidos contra os trechos enviados. Se o modelo omitir valores obrigatórios, a resposta permanece generativa e recebe um reparo fundamentado registrado em `generation_metadata`; o texto público continua natural e não expõe o documento bruto.
 
 O modelo é carregado sob demanda. O Hugging Face faz o download no primeiro uso e reutiliza o cache nas execuções seguintes. `FLAN_MODEL=google/flan-t5-base` configura a API e `FLAN_MODEL_NAME=google/flan-t5-base` configura o Notebook 03 para uma comparação opcional; o padrão continua sendo `google/flan-t5-small`.
 

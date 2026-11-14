@@ -20,6 +20,35 @@ def test_alias_pedra_has_unambiguous_contract() -> None:
     assert "'pedra evolutiva':'evolution stone'" in source
 
 
+def test_notebook_01_translates_descriptions_offline_and_documents_the_reason() -> None:
+    source = notebook_source("01_RAG_DATA_PREPARATION.ipynb")
+    assert "facebook/nllb-200-distilled-600M" in source
+    assert "eng_Latn" in source and "por_Latn" in source
+    assert "description_pt" in source
+    assert "description_translations_ptbr.json" in source
+    assert "TRANSLATION_PIPELINE_VERSION" in source
+    assert "translation_payload.get('pipeline_version')" in source
+    assert "description_translations_reviewed_ptbr.json" in source
+    assert "human_reviewed" in source
+    assert "apply_description_translations" in source
+    assert "evita latência no chat" in source
+    assert "não depende de tradução durante cada pergunta" in source
+    assert "Descrição: {r['description_pt']}" in source
+
+
+def test_notebook_01_translation_is_self_contained_for_colab_without_backend() -> None:
+    source = notebook_source("01_RAG_DATA_PREPARATION.ipynb")
+    assert "if BACKEND_DIR.is_dir():" in source
+    assert "A pasta backend do projeto é necessária" not in source
+    assert "class NllbDescriptionTranslator:" in source
+    assert "def apply_description_translations(" in source
+    assert "EDITORIAL_TRANSLATIONS_BY_ID" in source
+    assert "Suas asas conseguem levá-lo" in source
+    assert "DRIVE_AVAILABLE = False" in source
+    assert "except Exception as drive_error" in source
+    assert "if IN_COLAB and DRIVE_AVAILABLE:" in source
+
+
 def test_notebook_02_fits_each_vectorizer_once() -> None:
     source = notebook_source("02_RETRIEVAL_AND_EVALUATION.ipynb")
     assert source.count("BOW.fit_transform(normalized_texts)") == 1
@@ -99,11 +128,36 @@ def test_notebook_03_colab_prefers_current_repo_and_provisions_generator() -> No
     assert candidates < drive_fallback
     assert "'1' if IN_COLAB else '0'" in source
     assert "subprocess.check_call" in source
+    assert "colab_output.enable_custom_widget_manager()" in source
+    assert "CHAT_UI = open_chat_ui() if IN_COLAB else None" in source
+    assert "def show_answer(result, question=None):" in source
+    assert "f'Falha na geração: {type(error).__name__}: {error}'" in source
+    assert "def pokemon_names_by_ids(pokemon_ids):" in source
+    assert "def detect_response_language(question):" in source
+
+
+def test_notebook_03_chat_ui_shows_only_conversation_and_preloads_model() -> None:
+    source = notebook_source("03_RAG_CHATBOT.ipynb")
+    ui_source = source[source.index("def show_answer(result") : source.index("## 12")]
+    preload = source.index("if PRELOAD_FLAN_MODEL:\n    load_flan_t5()")
+    assert preload < source.index("def answer_question(")
+    assert "Você" in ui_source
+    assert "Smart Pokédex" in ui_source
+    assert "Pensando..." in ui_source
+    assert "conversation.ask(prompt, generate=True)" in ui_source
+    assert "load_flan_t5()" in ui_source
+    assert "transcript = widgets.HTML" in ui_source
+    assert "widgets.Output" not in ui_source
+    assert "overflow-y:auto" in ui_source
+    assert "Fontes recuperadas" not in ui_source
+    assert "source_documents" not in ui_source
+    assert "widgets.Checkbox" not in ui_source
 
 
 def test_notebook_03_compacts_context_by_complete_passages_and_balances_entities() -> None:
     source = notebook_source("03_RAG_CHATBOT.ipynb")
     assert "def split_passages(content):" in source
+    assert "def compact_evolution_passage(passage):" in source
     assert "def balance_rows_by_pokemon(rows):" in source
     assert "documents_in_prompt" in source
     assert "def evolution_transitions(rows):" in source
@@ -123,10 +177,18 @@ def test_notebook_03_compacts_context_by_complete_passages_and_balances_entities
     assert "'answer_mode': 'extractive', 'generation_error': type(preflight_error).__name__" in source
     assert "if target_id in found_targets and section not in {'obtainment', 'encounters'}:" in source
     assert "response_mode='grounded_structured'" in source
+    assert "response_mode='grounded_repair'" in source
+    assert "max_new_tokens=64" in source
     assert "obtido por evolução" in source
-    assert "widgets.Checkbox(value=True, description='Gerar com FLAN-T5 local', disabled=True)" in source
+    assert "conversation.ask(prompt, generate=True)" in source
     assert "def profile_answer(rows, question):" in source
+    assert "fale|sabe|sabre|conte" in source
+    assert "r'Descri[cç][aã]o:" in source
+    assert "connector = ',' if dex_match else ' é'" in source
+    assert "Descrição da Pokédex FireRed:" not in source
     assert "vive próximo à água" in source
+    assert "EDITORIAL_DESCRIPTION_BY_ID" in source
+    assert "editorial_description = EDITORIAL_DESCRIPTION_BY_ID.get" in source
 
 
 def test_notebook_03_distinguishes_scope_limits_from_missing_evidence() -> None:
@@ -134,6 +196,11 @@ def test_notebook_03_distinguishes_scope_limits_from_missing_evidence() -> None:
     assert "SCOPE_LIMIT_REASONS" in source
     assert "'out_of_scope' if gate in SCOPE_LIMIT_REASONS else 'insufficient_evidence'" in source
     assert "('scope_limit' if gate else 'insufficient_evidence')" not in source
+    assert "clarification_needed" in source
+    assert "Em qual atributo" in source
+    assert "pending_kind" in source
+    assert "needs_comparison_criterion" in source
+    assert "Compare o {attribute_label} de {joined}." in source
 
 
 def test_notebook_03_formats_acquisition_evidence_instead_of_returning_raw_documents() -> None:

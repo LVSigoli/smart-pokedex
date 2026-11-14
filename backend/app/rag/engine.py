@@ -14,7 +14,7 @@ class RAGEngine:
         self.generator = FlanT5Generator(
             getattr(settings, "flan_model", "google/flan-t5-small"),
             max_input_tokens=getattr(settings, "flan_max_input_tokens", 384),
-            max_new_tokens=getattr(settings, "flan_max_new_tokens", 96),
+            max_new_tokens=getattr(settings, "flan_max_new_tokens", 64),
             num_beams=getattr(settings, "flan_num_beams", 1),
         )
 
@@ -194,6 +194,29 @@ class RAGEngine:
         return balanced
 
     @staticmethod
+    def _compact_evolution_passage(passage):
+        match = re.search(
+            r"-\s*([a-z0-9-]+)\s*->\s*([a-z0-9-]+)\.\s*(?:Conditions:\s*\((.*?)\))?",
+            str(passage), re.I | re.S,
+        )
+        if not match:
+            return passage
+        origin, target, conditions = match.groups()
+        conditions = conditions or ""
+        item = re.search(r"\bitem:\s*([^;.)]+)", conditions, re.I)
+        level = re.search(r"\bminimum level:\s*(\d+)", conditions, re.I)
+        trigger = re.search(r"\btrigger:\s*([^;.)]+)", conditions, re.I)
+        relevant = []
+        if item:
+            relevant.append(f"item: {item.group(1).strip()}")
+        if level:
+            relevant.append(f"minimum level: {level.group(1)}")
+        if trigger and not relevant:
+            relevant.append(f"trigger: {trigger.group(1).strip()}")
+        suffix = f" Conditions: ({'; '.join(relevant)})." if relevant else ""
+        return f"- {origin} -> {target}.{suffix}"
+
+    @staticmethod
     def _rank_passages(question, content):
         terms = {token for token in normalize_plain(question).split() if len(token) > 2}
         passages = RAGEngine.split_passages(content)
@@ -206,6 +229,8 @@ class RAGEngine:
             if stat_passages:
                 return stat_passages
         evolution_query = bool(re.search(r"\b(?:evolu\w*|evolv\w*)\b", normalize_plain(question)))
+        if evolution_query:
+            passages = [RAGEngine._compact_evolution_passage(passage) for passage in passages]
 
         def relevance(item):
             index, passage = item
@@ -434,7 +459,7 @@ class RAGEngine:
     @staticmethod
     def is_profile_summary_question(question):
         return bool(re.search(
-            r"\b(?:fale|conte|descreva|apresente|resuma|quem e|tell me about|who is)\b",
+            r"\b(?:fale|sabe|sabre|conte|descreva|apresente|resuma|quem e|tell me about|who is)\b",
             normalize_plain(question),
         ))
 
@@ -453,9 +478,17 @@ class RAGEngine:
         if dex_match:
             opening += f" é o Pokémon #{dex_match.group(1)}"
         if types:
-            connector = " e, na Geração III, é" if dex_match else " é, na Geração III,"
+            connector = "," if dex_match else " é"
             opening += f"{connector} dos tipos {' e '.join(types)}"
         sentences = [opening + "."]
+        description_match = re.search(
+            r"Descri[cç][aã]o:\s*(.+?)(?=\r?\n(?:Habitat|Height|Capture rate|Pok[eé]mon|Types(?: in| PT-BR)?):|\Z)",
+            content,
+            re.I | re.S,
+        )
+        if description_match:
+            description = re.sub(r"\s+", " ", description_match.group(1)).strip().rstrip(" .")
+            sentences.append(f"{description}.")
         measures = re.search(
             r"Height:\s*(\d+(?:\.\d+)?)\s*m;\s*weight:\s*(\d+(?:\.\d+)?)\s*kg",
             content,
@@ -475,6 +508,7 @@ class RAGEngine:
                 "mountain": "vive em regiões montanhosas",
                 "grassland": "vive em campos",
                 "cave": "vive em cavernas",
+                "urban": "vive em áreas urbanas",
             }.get(habitat, f"vive em habitat {habitat.replace('-', ' ')}")
             details.append(habitat_text)
         if details:
@@ -603,6 +637,23 @@ class RAGEngine:
                 _, used = self.build_context(rows)
         else:
             _, used = self.build_context(rows)
+        if gate == "needs_comparison_criterion":
+            names_by_id = {
+                int(record["id"]): str(record.get("name") or record.get("api_name") or record["id"])
+                for record in self.retriever.records
+            }
+            names = [names_by_id[target_id] for target_id in self.mentioned_ids(canonical)
+                     if target_id in names_by_id]
+            subjects = " e ".join(names) if names else "esses Pokémon"
+            return {
+                "status": "clarification_needed",
+                "answer": (f"Em qual atributo você quer comparar {subjects}: ataque, defesa, "
+                           "velocidade ou HP?"),
+                "answer_mode": "clarification",
+                "source_documents": [],
+                "supporting_excerpts": [],
+                "spelling_corrections": corrections,
+            }
         if not used:
             status = "out_of_scope" if gate in {"out_of_scope", "outside_kanto_dex", "needs_comparison_criterion"} else "insufficient_evidence"
             return {"status": status, "answer": REFUSAL, "answer_mode": "extractive",
@@ -638,14 +689,14 @@ class RAGEngine:
             fallback = self.retrieval_answer(used, question)
             if fallback:
                 generation_metadata.update(
-                    response_mode="extractive_fallback",
+                    response_mode="grounded_repair",
                     fallback_reason=("missing_evolution_conditions" if not self.is_acquisition_question(question)
                                      and self.evolution_transitions(used)
                                      else "missing_structured_facts"),
                 )
                 excerpts = [{"document_id": row["document_id"], "quote": row["content"]} for row in used]
-                return {**base, "status": "answered", "answer": fallback,
-                        "answer_mode": "extractive_fallback", "supporting_excerpts": excerpts,
+                return {**base, "status": "answered", "answer": structured or fallback,
+                        "answer_mode": "generative", "supporting_excerpts": excerpts,
                         "generation_metadata": generation_metadata}
         if (structured and self.requested_stat(question)
                 and len({int(row["pokemon_id"]) for row in used}) == 1):

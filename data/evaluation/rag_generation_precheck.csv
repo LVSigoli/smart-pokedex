@@ -3,4 +3,4 @@ R01,ready,['006_profile']
 R02,ready,['025_stats']
 R03,ready,"['006_stats', '009_stats']"
 R04,out_of_scope,[]
-R05,below_similarity_threshold,[]
+R05,ready,['025_profile']

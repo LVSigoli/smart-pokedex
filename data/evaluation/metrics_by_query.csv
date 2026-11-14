@@ -4,13 +4,13 @@ Q01,Quais são os tipos do Charizard?,pt,perfil,literal,3,provisional,proxy_poke
 Q01,Quais são os tipos do Charizard?,pt,perfil,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q01,Quais são os tipos do Charizard?,pt,perfil,literal,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q01,Quais são os tipos do Charizard?,pt,perfil,bow,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
-Q01,Quais são os tipos do Charizard?,pt,perfil,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.3333333333333333,1.0,1.0,0.5,0.6309297535714575,3
-Q01,Quais são os tipos do Charizard?,pt,perfil,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.5,0.6309297535714575,5
-Q01,Quais são os tipos do Charizard?,pt,perfil,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.5,0.6309297535714575,10
+Q01,Quais são os tipos do Charizard?,pt,perfil,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
+Q01,Quais são os tipos do Charizard?,pt,perfil,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
+Q01,Quais são os tipos do Charizard?,pt,perfil,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,10
 Q01,Quais são os tipos do Charizard?,pt,perfil,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q01,Quais são os tipos do Charizard?,pt,perfil,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q01,Quais são os tipos do Charizard?,pt,perfil,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
-Q01,Quais são os tipos do Charizard?,pt,perfil,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.14285714285714285,0.3333333333333333,10
+Q01,Quais são os tipos do Charizard?,pt,perfil,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,10
 Q02,What type is Venusaur?,en,perfil,literal,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q02,What type is Venusaur?,en,perfil,literal,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q02,What type is Venusaur?,en,perfil,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
@@ -22,7 +22,7 @@ Q02,What type is Venusaur?,en,perfil,bow,10,provisional,proxy_pokemon_section_un
 Q02,What type is Venusaur?,en,perfil,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q02,What type is Venusaur?,en,perfil,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q02,What type is Venusaur?,en,perfil,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
-Q02,What type is Venusaur?,en,perfil,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.125,0.31546487678572877,10
+Q02,What type is Venusaur?,en,perfil,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,10
 Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,literal,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,literal,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q03,Qual a velocidade base do Pikachu?,pt,estatisticas,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
@@ -58,7 +58,7 @@ Q05,Como o Eevee evolui?,pt,evolucao,bow,10,provisional,proxy_pokemon_section_un
 Q05,Como o Eevee evolui?,pt,evolucao,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q05,Como o Eevee evolui?,pt,evolucao,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q05,Como o Eevee evolui?,pt,evolucao,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
-Q05,Como o Eevee evolui?,pt,evolucao,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.1111111111111111,0.3010299956639812,10
+Q05,Como o Eevee evolui?,pt,evolucao,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.125,0.31546487678572877,10
 Q06,Which Pokemon evolves from Charmander?,en,evolucao,literal,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q06,Which Pokemon evolves from Charmander?,en,evolucao,literal,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q06,Which Pokemon evolves from Charmander?,en,evolucao,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
@@ -77,8 +77,8 @@ Q07,Quais são as fraquezas do Gyarados?,pt,tipos,literal,5,provisional,proxy_po
 Q07,Quais são as fraquezas do Gyarados?,pt,tipos,literal,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q07,Quais são as fraquezas do Gyarados?,pt,tipos,bow,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q07,Quais são as fraquezas do Gyarados?,pt,tipos,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
-Q07,Quais são as fraquezas do Gyarados?,pt,tipos,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.25,0.43067655807339306,5
-Q07,Quais são as fraquezas do Gyarados?,pt,tipos,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.25,0.43067655807339306,10
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
+Q07,Quais são as fraquezas do Gyarados?,pt,tipos,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.16666666666666666,0.3562071871080222,10
 Q07,Quais são as fraquezas do Gyarados?,pt,tipos,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q07,Quais são as fraquezas do Gyarados?,pt,tipos,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q07,Quais são as fraquezas do Gyarados?,pt,tipos,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
@@ -93,8 +93,8 @@ Q08,Which types are strong against Charizard?,en,tipos,bow,5,provisional,proxy_p
 Q08,Which types are strong against Charizard?,en,tipos,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.5,0.6309297535714575,10
 Q08,Which types are strong against Charizard?,en,tipos,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q08,Which types are strong against Charizard?,en,tipos,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
-Q08,Which types are strong against Charizard?,en,tipos,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.2,0.38685280723454163,5
-Q08,Which types are strong against Charizard?,en,tipos,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.2,0.38685280723454163,10
+Q08,Which types are strong against Charizard?,en,tipos,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.25,0.43067655807339306,5
+Q08,Which types are strong against Charizard?,en,tipos,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.25,0.43067655807339306,10
 Q09,Quais habilidades o Gengar possui?,pt,habilidades,literal,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q09,Quais habilidades o Gengar possui?,pt,habilidades,literal,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q09,Quais habilidades o Gengar possui?,pt,habilidades,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
@@ -142,7 +142,7 @@ Q12,What moves does Pikachu learn in FireRed?,en,golpes,bow,10,provisional,proxy
 Q12,What moves does Pikachu learn in FireRed?,en,golpes,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,3,0.0,0.0,0.0,0.0,0.0,1
 Q12,What moves does Pikachu learn in FireRed?,en,golpes,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,3,0.0,0.0,0.0,0.0,0.0,3
 Q12,What moves does Pikachu learn in FireRed?,en,golpes,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,3,0.0,0.0,0.0,0.0,0.0,5
-Q12,What moves does Pikachu learn in FireRed?,en,golpes,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,3,0.2,0.6666666666666666,1.0,0.1111111111111111,0.2769189462922768,10
+Q12,What moves does Pikachu learn in FireRed?,en,golpes,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,3,0.3,1.0,1.0,0.125,0.42495990177520937,10
 Q13,Onde encontro Pikachu no FireRed?,pt,encontros,literal,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q13,Onde encontro Pikachu no FireRed?,pt,encontros,literal,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q13,Onde encontro Pikachu no FireRed?,pt,encontros,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
@@ -171,10 +171,10 @@ Q15,Qual o habitat do Dratini?,pt,perfil,literal,1,provisional,proxy_pokemon_sec
 Q15,Qual o habitat do Dratini?,pt,perfil,literal,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q15,Qual o habitat do Dratini?,pt,perfil,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q15,Qual o habitat do Dratini?,pt,perfil,literal,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
-Q15,Qual o habitat do Dratini?,pt,perfil,bow,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
-Q15,Qual o habitat do Dratini?,pt,perfil,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.3333333333333333,1.0,1.0,0.3333333333333333,0.5,3
-Q15,Qual o habitat do Dratini?,pt,perfil,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.3333333333333333,0.5,5
-Q15,Qual o habitat do Dratini?,pt,perfil,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.3333333333333333,0.5,10
+Q15,Qual o habitat do Dratini?,pt,perfil,bow,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,1.0,1.0,1.0,1.0,1.0,1
+Q15,Qual o habitat do Dratini?,pt,perfil,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.3333333333333333,1.0,1.0,1.0,1.0,3
+Q15,Qual o habitat do Dratini?,pt,perfil,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,1.0,1.0,5
+Q15,Qual o habitat do Dratini?,pt,perfil,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,1.0,1.0,10
 Q15,Qual o habitat do Dratini?,pt,perfil,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q15,Qual o habitat do Dratini?,pt,perfil,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q15,Qual o habitat do Dratini?,pt,perfil,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
@@ -185,12 +185,12 @@ Q16,How tall is Onix?,en,perfil,literal,5,provisional,proxy_pokemon_section_unre
 Q16,How tall is Onix?,en,perfil,literal,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q16,How tall is Onix?,en,perfil,bow,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q16,How tall is Onix?,en,perfil,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
-Q16,How tall is Onix?,en,perfil,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
-Q16,How tall is Onix?,en,perfil,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.125,0.31546487678572877,10
+Q16,How tall is Onix?,en,perfil,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.2,0.38685280723454163,5
+Q16,How tall is Onix?,en,perfil,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.2,0.38685280723454163,10
 Q16,How tall is Onix?,en,perfil,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q16,How tall is Onix?,en,perfil,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q16,How tall is Onix?,en,perfil,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
-Q16,How tall is Onix?,en,perfil,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.125,0.31546487678572877,10
+Q16,How tall is Onix?,en,perfil,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.14285714285714285,0.3333333333333333,10
 Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,literal,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,literal,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
@@ -198,7 +198,7 @@ Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,literal,10,pr
 Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,bow,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
-Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.16666666666666666,0.3562071871080222,10
+Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,10
 Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q17,Quais dados de obtenção existem para Charmander?,pt,obtencao,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.25,0.43067655807339306,5
@@ -245,8 +245,8 @@ Q21,Quais as resistências do Bulbasaur?,pt,tipos,literal,5,provisional,proxy_po
 Q21,Quais as resistências do Bulbasaur?,pt,tipos,literal,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q21,Quais as resistências do Bulbasaur?,pt,tipos,bow,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q21,Quais as resistências do Bulbasaur?,pt,tipos,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
-Q21,Quais as resistências do Bulbasaur?,pt,tipos,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.25,0.43067655807339306,5
-Q21,Quais as resistências do Bulbasaur?,pt,tipos,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.25,0.43067655807339306,10
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.2,0.38685280723454163,5
+Q21,Quais as resistências do Bulbasaur?,pt,tipos,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.2,0.38685280723454163,10
 Q21,Quais as resistências do Bulbasaur?,pt,tipos,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q21,Quais as resistências do Bulbasaur?,pt,tipos,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q21,Quais as resistências do Bulbasaur?,pt,tipos,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.2,0.38685280723454163,5
@@ -292,9 +292,9 @@ Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,literal,3,provisio
 Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,literal,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,bow,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
-Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.3333333333333333,1.0,1.0,0.5,0.6309297535714575,3
-Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.5,0.6309297535714575,5
-Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.5,0.6309297535714575,10
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
+Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,10
 Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q25,Charmander é a evolução de algum Pokémon?,pt,evolucao,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
@@ -304,9 +304,9 @@ Q26,Charmeleon evolui de quem?,pt,evolucao,literal,3,provisional,proxy_pokemon_s
 Q26,Charmeleon evolui de quem?,pt,evolucao,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q26,Charmeleon evolui de quem?,pt,evolucao,literal,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q26,Charmeleon evolui de quem?,pt,evolucao,bow,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
-Q26,Charmeleon evolui de quem?,pt,evolucao,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.3333333333333333,1.0,1.0,0.5,0.6309297535714575,3
-Q26,Charmeleon evolui de quem?,pt,evolucao,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.5,0.6309297535714575,5
-Q26,Charmeleon evolui de quem?,pt,evolucao,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.5,0.6309297535714575,10
+Q26,Charmeleon evolui de quem?,pt,evolucao,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
+Q26,Charmeleon evolui de quem?,pt,evolucao,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
+Q26,Charmeleon evolui de quem?,pt,evolucao,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.16666666666666666,0.3562071871080222,10
 Q26,Charmeleon evolui de quem?,pt,evolucao,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q26,Charmeleon evolui de quem?,pt,evolucao,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q26,Charmeleon evolui de quem?,pt,evolucao,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
@@ -316,25 +316,25 @@ Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,literal,3,provisional,proxy
 Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,literal,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,bow,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
-Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
-Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.25,0.43067655807339306,5
-Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.25,0.43067655807339306,10
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.3333333333333333,1.0,1.0,0.3333333333333333,0.5,3
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.3333333333333333,0.5,5
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.3333333333333333,0.5,10
 Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
-Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.14285714285714285,0.3333333333333333,10
+Q27,Qual Pokémon evolui para Charizard?,pt,evolucao,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.16666666666666666,0.3562071871080222,10
 Q28,Charmander é uma forma inicial?,pt,evolucao,literal,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q28,Charmander é uma forma inicial?,pt,evolucao,literal,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q28,Charmander é uma forma inicial?,pt,evolucao,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q28,Charmander é uma forma inicial?,pt,evolucao,literal,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q28,Charmander é uma forma inicial?,pt,evolucao,bow,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q28,Charmander é uma forma inicial?,pt,evolucao,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
-Q28,Charmander é uma forma inicial?,pt,evolucao,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.2,0.38685280723454163,5
-Q28,Charmander é uma forma inicial?,pt,evolucao,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.2,0.38685280723454163,10
+Q28,Charmander é uma forma inicial?,pt,evolucao,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
+Q28,Charmander é uma forma inicial?,pt,evolucao,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,10
 Q28,Charmander é uma forma inicial?,pt,evolucao,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q28,Charmander é uma forma inicial?,pt,evolucao,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q28,Charmander é uma forma inicial?,pt,evolucao,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
-Q28,Charmander é uma forma inicial?,pt,evolucao,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.14285714285714285,0.3333333333333333,10
+Q28,Charmander é uma forma inicial?,pt,evolucao,tfidf,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,10
 Q29,Onde encontro Eevee?,pt,encontros,literal,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q29,Onde encontro Eevee?,pt,encontros,literal,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
 Q29,Onde encontro Eevee?,pt,encontros,literal,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,0
@@ -354,7 +354,7 @@ Q30,Como conseguir Eevee?,pt,obtencao,literal,10,provisional,proxy_pokemon_secti
 Q30,Como conseguir Eevee?,pt,obtencao,bow,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q30,Como conseguir Eevee?,pt,obtencao,bow,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q30,Como conseguir Eevee?,pt,obtencao,bow,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,5
-Q30,Como conseguir Eevee?,pt,obtencao,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.16666666666666666,0.3562071871080222,10
+Q30,Como conseguir Eevee?,pt,obtencao,bow,10,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.1,1.0,1.0,0.14285714285714285,0.3333333333333333,10
 Q30,Como conseguir Eevee?,pt,obtencao,tfidf,1,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,1
 Q30,Como conseguir Eevee?,pt,obtencao,tfidf,3,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.0,0.0,0.0,0.0,0.0,3
 Q30,Como conseguir Eevee?,pt,obtencao,tfidf,5,provisional,proxy_pokemon_section_unreviewed,pending_manual_review,1,0.2,1.0,1.0,0.25,0.43067655807339306,5

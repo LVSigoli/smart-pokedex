@@ -1,19 +1,19 @@
 {
   "project": "Pokédex Inteligente — Trabalho 2",
   "notebook": "02_RETRIEVAL_AND_EVALUATION",
-  "run_utc": "2026-11-13T04:09:15.028021+00:00",
+  "run_utc": "2026-11-14T12:08:34.039765+00:00",
   "source_document_file": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\processed\\pokemon_rag_documents.jsonl",
-  "source_document_sha256": "bfabdaf0354eb3d9c6a7f171e190903abac63a35848c10b54d37458d46712f14",
+  "source_document_sha256": "94d471e6ca1f6a730b393cd8b163614de5c1aadb04265f8c8457b8f48eb3135e",
   "document_count": 1732,
   "pokemon_count": 151,
   "model_index_dimensions": {
     "bow": [
       1732,
-      2211
+      2820
     ],
     "tfidf": [
       1732,
-      13842
+      16010
     ]
   },
   "queries": 32,
@@ -26,41 +26,41 @@
       "label_set": "provisional",
       "method": "bow",
       "k": 1,
-      "precision_at_k": 0.3125,
-      "recall_at_k": 0.3125,
-      "hit_at_k": 0.3125,
-      "mrr_at_k": 0.3125,
-      "ndcg_at_k": 0.3125
+      "precision_at_k": 0.34375,
+      "recall_at_k": 0.34375,
+      "hit_at_k": 0.34375,
+      "mrr_at_k": 0.34375,
+      "ndcg_at_k": 0.34375
     },
     {
       "label_set": "provisional",
       "method": "bow",
       "k": 3,
-      "precision_at_k": 0.20833333333333331,
-      "recall_at_k": 0.625,
-      "hit_at_k": 0.625,
-      "mrr_at_k": 0.44791666666666663,
-      "ndcg_at_k": 0.4932993287946483
+      "precision_at_k": 0.1875,
+      "recall_at_k": 0.5625,
+      "hit_at_k": 0.5625,
+      "mrr_at_k": 0.43229166666666663,
+      "ndcg_at_k": 0.46539966439732416
     },
     {
       "label_set": "provisional",
       "method": "bow",
       "k": 5,
-      "precision_at_k": 0.15000000000000002,
-      "recall_at_k": 0.75,
-      "hit_at_k": 0.75,
-      "mrr_at_k": 0.47760416666666666,
-      "ndcg_at_k": 0.5457644063401084
+      "precision_at_k": 0.125,
+      "recall_at_k": 0.625,
+      "hit_at_k": 0.625,
+      "mrr_at_k": 0.44479166666666664,
+      "ndcg_at_k": 0.489577964849483
     },
     {
       "label_set": "provisional",
       "method": "bow",
       "k": 10,
-      "precision_at_k": 0.084375,
-      "recall_at_k": 0.84375,
-      "hit_at_k": 0.84375,
-      "mrr_at_k": 0.49192708333333335,
-      "ndcg_at_k": 0.5778856329339137
+      "precision_at_k": 0.07187500000000001,
+      "recall_at_k": 0.71875,
+      "hit_at_k": 0.71875,
+      "mrr_at_k": 0.459672619047619,
+      "ndcg_at_k": 0.5222575807104011
     },
     {
       "label_set": "provisional",
@@ -129,18 +129,18 @@
       "precision_at_k": 0.08750000000000001,
       "recall_at_k": 0.4375,
       "hit_at_k": 0.4375,
-      "mrr_at_k": 0.3,
-      "ndcg_at_k": 0.3329012903569334
+      "mrr_at_k": 0.3015625,
+      "ndcg_at_k": 0.3342707825706475
     },
     {
       "label_set": "provisional",
       "method": "tfidf",
       "k": 10,
-      "precision_at_k": 0.09375,
-      "recall_at_k": 0.8958333333333334,
-      "hit_at_k": 0.90625,
-      "mrr_at_k": 0.3645461309523809,
-      "ndcg_at_k": 0.48583863814760503
+      "precision_at_k": 0.08750000000000001,
+      "recall_at_k": 0.8125,
+      "hit_at_k": 0.8125,
+      "mrr_at_k": 0.3554439484126984,
+      "ndcg_at_k": 0.4628670867198997
     }
   ],
   "literal_baseline": "Correspondência da pergunta normalizada completa; é deliberadamente restritiva.",

@@ -10,7 +10,7 @@ from app.core.exceptions import ProviderUnavailable
 class FlanT5Generator:
     def __init__(self, model_name: str = "google/flan-t5-small", *, loader=None,
                  device: str | None = None, max_input_tokens: int = 384,
-                 max_new_tokens: int = 96, num_beams: int = 1):
+                 max_new_tokens: int = 64, num_beams: int = 1):
         self.model_name = model_name
         self._loader = loader or self._load_transformers
         self.device = device

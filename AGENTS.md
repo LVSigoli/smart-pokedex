@@ -7,6 +7,8 @@ Este documento estabelece as regras obrigatórias para desenvolvimento, manuten�
 ## 1. Princípios gerais
 
 - os notebooks devem funcionar exatamente como a api
+- os notebooks são o documento oficial. Se não funciona neles então não funciona.
+- os notebooks deve funcionar no colab e não deve ter nenhuma dependencia do backend
 - Priorize soluções simples, legíveis, testáveis e de fácil manutenção.
 - Preserve a arquitetura existente, evitando refatorações desnecessárias.
 - Não introduza bibliotecas, frameworks ou padrões arquiteturais sem uma justificativa técnica.

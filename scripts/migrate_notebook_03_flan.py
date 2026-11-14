@@ -108,7 +108,7 @@ def generate_with_flan_t5(question, context):
     started = time.perf_counter()
     import torch
     with torch.inference_mode():
-        output_ids = model.generate(**inputs, max_new_tokens=96, do_sample=False, num_beams=1)
+        output_ids = model.generate(**inputs, max_new_tokens=64, do_sample=False, num_beams=1)
     answer = tokenizer.decode(output_ids[0], skip_special_tokens=True).strip()
     return {'answer': answer, 'model': FLAN_MODEL_NAME, 'input_tokens': input_tokens,
             'output_tokens': int(output_ids.shape[-1]),

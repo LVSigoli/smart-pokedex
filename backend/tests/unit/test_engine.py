@@ -10,6 +10,10 @@ class FakeRetriever:
 
 def engine(): return RAGEngine(FakeRetriever(), SimpleNamespace(flan_model="google/flan-t5-small", rag_top_k=5))
 
+
+def test_engine_uses_short_generation_limit_by_default():
+    assert engine().generator.max_new_tokens == 64
+
 def test_multiple_pokemon_reserve_evidence():
     rows, reason = engine().select_evidence("Quais sao as evolucoes de Charmander e Squirtle")
     assert reason == "ready"
@@ -54,6 +58,16 @@ def test_plural_gym_question_is_out_of_scope():
     result = engine().answer("Quais ginásios preciso vencer?", generate=True)
     assert result["status"] == "out_of_scope"
     assert result["answer"] == REFUSAL
+
+
+def test_vague_strength_comparison_asks_for_an_attribute_instead_of_refusing():
+    result = engine().answer("Charmander é mais forte que Squirtle?", generate=True)
+
+    assert result["status"] == "clarification_needed"
+    assert "Charmander" in result["answer"]
+    assert "Squirtle" in result["answer"]
+    assert "ataque" in result["answer"]
+    assert result["source_documents"] == []
 
 def test_token_budget_keeps_complete_passages_for_each_compared_pokemon():
     rag = engine()
@@ -159,8 +173,49 @@ def test_evolution_generation_falls_back_when_model_omits_required_conditions():
     assert result["status"] == "answered"
     assert "Charmander evolui para Charmeleon no nível 16" in result["answer"]
     assert "Charmeleon evolui para Charizard no nível 36" in result["answer"]
-    assert result["answer_mode"] == "extractive_fallback"
+    assert result["answer_mode"] == "generative"
+    assert result["generation_metadata"]["response_mode"] == "grounded_repair"
     assert result["generation_metadata"]["fallback_reason"] == "missing_evolution_conditions"
+
+
+def test_branched_evolution_keeps_every_compact_transition_and_repairs_naturally():
+    rag = engine()
+    evolution = {
+        "rank": 1, "document_id": "133_evolution", "pokemon_id": 133,
+        "pokemon_name": "Eevee", "section": "evolution", "score": .9,
+        "content": (
+            "- eevee -> vaporeon. Conditions: (version_group: red blue; item: water stone; "
+            "trigger: use item; near_special_rock: False). Not specifically verified for FireRed.\n"
+            "- eevee -> jolteon. Conditions: (version_group: red blue; item: thunder stone; "
+            "trigger: use item; near_special_rock: False). Not specifically verified for FireRed.\n"
+            "- eevee -> flareon. Conditions: (version_group: red blue; item: fire stone; "
+            "trigger: use item; near_special_rock: False). Not specifically verified for FireRed."
+        ),
+    }
+    rag.select_evidence = lambda question, top_k=5: ([evolution], "ready")
+
+    class IncompleteGenerator:
+        max_input_tokens = 90
+        received_context = ""
+
+        @staticmethod
+        def count_prompt_tokens(question, context):
+            return len((question + " " + context).split()) + 18
+
+        def __call__(self, question, context):
+            self.received_context = context
+            return {"answer": "Eevee evolui para Vaporeon usando Water Stone."}
+
+    generator = IncompleteGenerator()
+    rag.generator = generator
+    result = rag.answer("Como evoluir o Eevee?", generate=True)
+
+    assert all(name in generator.received_context.casefold() for name in ("vaporeon", "jolteon", "flareon"))
+    assert all(name in result["answer"] for name in ("Vaporeon", "Jolteon", "Flareon"))
+    assert "version_group" not in result["answer"]
+    assert "Not specifically verified" not in result["answer"]
+    assert result["answer_mode"] == "generative"
+    assert result["generation_metadata"]["response_mode"] == "grounded_repair"
 
 
 def test_low_similarity_named_pokemon_evidence_is_rejected():
@@ -200,7 +255,8 @@ def test_type_generation_falls_back_when_model_omits_retrieved_types():
     result = rag.answer("Qual é o tipo do Charmander?", generate=True)
 
     assert result["answer"] == "Charmander é do tipo fogo."
-    assert result["answer_mode"] == "extractive_fallback"
+    assert result["answer_mode"] == "generative"
+    assert result["generation_metadata"]["response_mode"] == "grounded_repair"
     assert result["generation_metadata"]["fallback_reason"] == "missing_structured_facts"
 
 
@@ -231,7 +287,8 @@ def test_stat_comparison_falls_back_with_values_for_every_pokemon():
 
     assert "Charmander tem velocidade base 65" in result["answer"]
     assert "Squirtle tem velocidade base 43" in result["answer"]
-    assert result["answer_mode"] == "extractive_fallback"
+    assert result["answer_mode"] == "generative"
+    assert result["generation_metadata"]["response_mode"] == "grounded_repair"
 
 
 def test_single_stat_generation_receives_only_the_requested_stat():
@@ -419,12 +476,92 @@ def test_profile_overview_is_generated_then_presented_as_a_natural_summary():
     result = rag.answer("Fale um pouco sobre Dragonite", generate=True)
 
     assert result["answer"] == (
-        "Dragonite é o Pokémon #149 e, na Geração III, é dos tipos dragão e voador. "
+        "Dragonite é o Pokémon #149, dos tipos dragão e voador. "
         "Mede 2,2 m, pesa 210 kg e vive próximo à água."
     )
     assert result["answer_mode"] == "generative"
     assert result["generation_metadata"]["response_mode"] == "grounded_structured"
     assert result["generation_metadata"]["raw_answer"].startswith("Dragonite is")
+
+
+def test_profile_summary_with_sabre_typo_repairs_incomplete_generation():
+    rag = engine()
+    rows = [{
+        "rank": 1, "document_id": "006_profile", "pokemon_id": 6,
+        "pokemon_name": "Charizard", "section": "profile", "score": .9,
+        "content": (
+            "Pokémon Charizard (National Pokédex #006).\n"
+            "Types in Generation III: fire, flying.\n"
+            "Types PT-BR: fogo, voador.\n"
+            "Pokédex description (firered): It spits fire that is hot enough to melt boulders.\n"
+            "Habitat: mountain.\n"
+            "Height: 1.7 m; weight: 90.5 kg."
+        ),
+    }]
+    rag.select_evidence = lambda question, top_k=5: (rows, "ready")
+
+    class ShortProfileGenerator:
+        max_input_tokens = 100
+
+        @staticmethod
+        def count_prompt_tokens(question, context): return 50
+
+        def __call__(self, question, context):
+            return {"answer": "Charizard (National Pokédex #006)."}
+
+    rag.generator = ShortProfileGenerator()
+    result = rag.answer("O que sabre sobre o Charizard?", generate=True)
+
+    assert "tipos fogo e voador" in result["answer"]
+    assert "Mede 1,7 m" in result["answer"]
+    assert "It spits fire" not in result["answer"]
+    assert "Descrição da Pokédex" not in result["answer"]
+    assert "vive em regiões montanhosas" in result["answer"]
+    assert result["generation_metadata"]["response_mode"] == "grounded_structured"
+
+    overview = rag.answer("O que sabe sobre o Charizard?", generate=True)
+    assert "tipos fogo e voador" in overview["answer"]
+    assert "Mede 1,7 m" in overview["answer"]
+    assert "It spits fire" not in overview["answer"]
+    assert overview["generation_metadata"]["response_mode"] == "grounded_structured"
+
+
+def test_profile_overview_uses_portuguese_description_without_technical_labels():
+    rag = engine()
+    rows = [{
+        "rank": 1, "document_id": "006_profile", "pokemon_id": 6,
+        "pokemon_name": "Charizard", "section": "profile", "score": .9,
+        "content": (
+            "Pokémon Charizard (National Pokédex #006).\n"
+            "Types PT-BR: fogo, voador.\n"
+            "Descrição: Suas asas conseguem levá-lo a grandes altitudes.\n"
+            "Ele expele fogo em temperaturas muito altas.\n"
+            "Habitat: mountain.\n"
+            "Height: 1.7 m; weight: 90.5 kg."
+        ),
+    }]
+    rag.select_evidence = lambda question, top_k=5: (rows, "ready")
+
+    class Generator:
+        max_input_tokens = 100
+
+        @staticmethod
+        def count_prompt_tokens(question, context): return 50
+
+        def __call__(self, question, context):
+            return {"answer": "Charizard (National Pokédex #006)."}
+
+    rag.generator = Generator()
+    result = rag.answer("O que sabe sobre o Charizard?", generate=True)
+
+    assert result["answer"] == (
+        "Charizard é o Pokémon #006, dos tipos fogo e voador. "
+        "Suas asas conseguem levá-lo a grandes altitudes. Ele expele fogo em temperaturas muito altas. "
+        "Mede 1,7 m, pesa 90,5 kg e vive em regiões montanhosas."
+    )
+    assert "Geração III" not in result["answer"]
+    assert "Descrição:" not in result["answer"]
+    assert "Pokédex FireRed" not in result["answer"]
 
 
 def test_location_fallback_turns_eevee_gift_evidence_into_a_natural_answer():

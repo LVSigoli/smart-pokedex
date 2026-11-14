@@ -36,6 +36,7 @@ def test_flan_loads_lazily_and_generates_deterministically():
     assert result["answer"] == "Resposta fundamentada no contexto."
     assert result["model"] == "google/flan-t5-small"
     assert result["generation_config"]["do_sample"] is False
+    assert result["generation_config"]["max_new_tokens"] == 64
 
 
 def test_flan_prompt_reports_input_tokens_without_silent_truncation():

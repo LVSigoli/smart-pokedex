@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     flan_model: str = "google/flan-t5-small"
     flan_max_input_tokens: int = 384
-    flan_max_new_tokens: int = 96
+    flan_max_new_tokens: int = 64
     flan_num_beams: int = 1
     rag_data_dir: Path = Path("../data")
     allowed_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
