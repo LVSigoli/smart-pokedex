@@ -79,6 +79,14 @@ class RAGEngine:
                     and RAGEngine.requested_stat(question))
 
     @staticmethod
+    def ranking_limit(question):
+        q = normalize_plain(question)
+        if re.search(r"\b(?:todos?|all)\b", q):
+            return None
+        match = re.search(r"\btop\s*(\d{1,3})\b", q)
+        return int(match.group(1)) if match else 10
+
+    @staticmethod
     def requested_type(question):
         normalized = normalize_plain(question)
         aliases = {
@@ -152,7 +160,7 @@ class RAGEngine:
         if re.search(r"\b(ginasios?|gyms?|elite four|detonado|walkthrough|storyline)\b", q): return "out_of_scope"
         match = re.search(r"\b(?:pokemon|pokedex|numero|number|n)\s*(\d{1,4})\b", q)
         if match and int(match.group(1)) not in range(1, 152): return "outside_kanto_dex"
-        if re.search(r"\b(mais forte|melhor pokemon|strongest|best pokemon)\b", q) and not re.search(r"\b(ataque|defesa|velocidade|hp|stat|atribut|speed)\b", q): return "needs_comparison_criterion"
+        if re.search(r"\b(?:mais fortes?|melhores? pokemons?|strongest|best pokemons?)\b", q) and not re.search(r"\b(ataqu\w*|defes\w*|velocidade|hp|stat|atribut|speed)\b", q): return "needs_comparison_criterion"
 
     def select_evidence(self, question, top_k=5):
         gate = self.scope_gate(question)
@@ -418,6 +426,17 @@ class RAGEngine:
         )
 
     @staticmethod
+    def non_evolving_answer(rows, question):
+        if not re.search(r"\b(?:evolu\w*|evolv\w*)\b", normalize_plain(question)):
+            return None
+        names = [str(row.get("pokemon_name", "Pokémon")) for row in rows
+                 if row.get("section") == "evolution"
+                 and re.search(r"does not evolve", str(row.get("content", "")), re.I)]
+        if names:
+            return "; ".join(f"{name} não evolui para outro Pokémon" for name in dict.fromkeys(names)) + "."
+        return None
+
+    @staticmethod
     def requested_stat(question):
         normalized = normalize_plain(question)
         patterns = (
@@ -594,6 +613,7 @@ class RAGEngine:
                 "grassland": "vive em campos",
                 "cave": "vive em cavernas",
                 "urban": "vive em áreas urbanas",
+                "rare": "é uma espécie rara",
             }.get(habitat, f"vive em habitat {habitat.replace('-', ' ')}")
             details.append(habitat_text)
         if details:
@@ -673,6 +693,10 @@ class RAGEngine:
                     steps.append(f"{transition['origin']} evolves into {transition['target']} {condition}".strip())
             return "; ".join(steps) + "."
 
+        non_evolving = cls.non_evolving_answer(rows, question)
+        if non_evolving:
+            return non_evolving
+
         normalized_question = normalize_plain(question)
         if cls.is_ranking_question(question):
             stat = cls.requested_stat(question)
@@ -684,7 +708,10 @@ class RAGEngine:
                     ranked.append((float(match.group(1)), row["pokemon_name"], match.group(1)))
             ranked.sort(key=lambda item: (-item[0], item[1]))
             if ranked:
-                return "; ".join(f"{name}: {label} {value}" for _, name, value in ranked) + "."
+                limit = cls.ranking_limit(question)
+                shown = ranked if limit is None else ranked[:limit]
+                prefix = "Os maiores valores são: " if limit is None else f"Os {len(shown)} maiores valores são: "
+                return prefix + "; ".join(f"{name}: {label} {value}" for _, name, value in shown) + "."
         if re.search(r"\b(?:tipos?|types?)\b", normalized_question) or cls.is_type_listing_question(question):
             if re.search(r"\b(?:mesm[oa]s?|igual(?:es)?|same)\b", normalized_question) and len(rows) > 1:
                 reference, matches = rows[0], rows[1:]
@@ -844,6 +871,7 @@ class RAGEngine:
             self.is_acquisition_question(question)
             or self.is_profile_summary_question(question)
             or self.requested_section(question) == "type_matchups"
+            or self.non_evolving_answer(used, question)
         ):
             generation_metadata.update(
                 response_mode="grounded_structured",

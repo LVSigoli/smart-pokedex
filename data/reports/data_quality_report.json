@@ -1,8 +1,8 @@
 {
   "title": "Pokédex Inteligente — preparação de documentos RAG",
-  "run_utc": "2026-11-15T14:31:22.968397+00:00",
-  "source_raw_dir": "c:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\raw",
-  "output_dir": "c:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data",
+  "run_utc": "2026-11-15T17:49:19.036295+00:00",
+  "source_raw_dir": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\raw",
+  "output_dir": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data",
   "coverage": {
     "pokemon_expected": 151,
     "pokemon_loaded": 151,

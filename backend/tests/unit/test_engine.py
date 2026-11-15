@@ -855,6 +855,43 @@ def test_attribute_ranking_returns_all_species_sorted_by_requested_stat():
     assert reason == "ready"
     assert [row["pokemon_name"] for row in rows] == ["Charizard", "Pikachu", "Charmander"]
 
+
+def test_attribute_ranking_is_top_ten_by_default_and_can_request_all():
+    rows = [
+        {"pokemon_name": f"Pokemon {index}", "section": "stats", "content": f"- attack: {200 - index}."}
+        for index in range(12)
+    ]
+    concise = RAGEngine.structured_answer(rows, "Quais são os maiores ataques?")
+    complete = RAGEngine.structured_answer(rows, "Quais são todos os maiores ataques?")
+    assert concise.count("Pokemon ") == 10
+    assert complete.count("Pokemon ") == 12
+
+
+def test_generic_strongest_question_requests_a_ranking_criterion():
+    rag = engine()
+    result = rag.answer("Quais são os mais fortes?", generate=False)
+    assert result["status"] == "clarification_needed"
+    assert "ataque" in result["answer"]
+
+
+def test_non_evolving_species_has_a_natural_portuguese_evolution_answer():
+    rows = [{"pokemon_name": "Moltres", "section": "evolution", "content": (
+        "Evolution family of Moltres (only species 1-151): moltres.\n"
+        "Moltres is the first stage of its evolution family and does not evolve from another Pokémon."
+    )}]
+    answer = RAGEngine.retrieval_answer(rows, "E como ele evolui?")
+    assert answer == "Moltres não evolui para outro Pokémon."
+
+
+def test_profile_with_rare_habitat_does_not_expose_the_raw_habitat_label():
+    row = {"pokemon_id": 146, "pokemon_name": "Moltres", "section": "profile", "content": (
+        "Pokémon Moltres (National Pokédex #146).\nTypes PT-BR: fogo, voador.\n"
+        "Descrição: Moltres é uma ave lendária.\nHabitat: rare.\nHeight: 2.0 m; weight: 60.0 kg."
+    )}
+    answer = RAGEngine.profile_answer([row], "O que sabe sobre o Moltres?")
+    assert "habitat rare" not in answer
+    assert "é uma espécie rara" in answer
+
 def test_generation_failure_keeps_retrieved_sources():
     rag = engine()
     class BrokenGenerator:

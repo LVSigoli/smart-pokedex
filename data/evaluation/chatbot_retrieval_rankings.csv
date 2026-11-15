@@ -52,7 +52,7 @@ Q05,tfidf_raw,6,133_encounters_01,encounters,133,ready,reviewed
 Q05,tfidf_raw,7,133_moves_03,moves,133,ready,reviewed
 Q05,tfidf_raw,8,133_evolution,evolution,133,ready,reviewed
 Q05,tfidf_raw,9,133_profile,profile,133,ready,reviewed
-Q05,tfidf_raw,10,135_evolution,evolution,135,ready,reviewed
+Q05,tfidf_raw,10,134_evolution,evolution,134,ready,reviewed
 Q05,tfidf_filtered,1,133_evolution,evolution,133,ready,reviewed
 Q06,tfidf_raw,1,004_abilities,abilities,4,ready,reviewed
 Q06,tfidf_raw,2,005_evolution,evolution,5,ready,reviewed
@@ -308,9 +308,9 @@ Q28,tfidf_raw,2,004_abilities,abilities,4,ready,reviewed
 Q28,tfidf_raw,3,102_profile,profile,102,ready,reviewed
 Q28,tfidf_raw,4,004_type_matchups,type_matchups,4,ready,reviewed
 Q28,tfidf_raw,5,004_encounters_01,encounters,4,ready,reviewed
-Q28,tfidf_raw,6,103_profile,profile,103,ready,reviewed
-Q28,tfidf_raw,7,004_obtainment,obtainment,4,ready,reviewed
-Q28,tfidf_raw,8,004_species_traits,species_traits,4,ready,reviewed
+Q28,tfidf_raw,6,004_obtainment,obtainment,4,ready,reviewed
+Q28,tfidf_raw,7,004_species_traits,species_traits,4,ready,reviewed
+Q28,tfidf_raw,8,103_profile,profile,103,ready,reviewed
 Q28,tfidf_raw,9,085_profile,profile,85,ready,reviewed
 Q28,tfidf_raw,10,004_stats,stats,4,ready,reviewed
 Q28,tfidf_filtered,1,004_evolution,evolution,4,ready,reviewed

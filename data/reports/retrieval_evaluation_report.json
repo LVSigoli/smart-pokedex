@@ -1,19 +1,19 @@
 {
   "project": "Pokédex Inteligente — Trabalho 2",
   "notebook": "02_RETRIEVAL_AND_EVALUATION",
-  "run_utc": "2026-11-15T14:32:16.746000+00:00",
-  "source_document_file": "c:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\processed\\pokemon_rag_documents.jsonl",
-  "source_document_sha256": "94d471e6ca1f6a730b393cd8b163614de5c1aadb04265f8c8457b8f48eb3135e",
+  "run_utc": "2026-11-15T17:49:35.393293+00:00",
+  "source_document_file": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\processed\\pokemon_rag_documents.jsonl",
+  "source_document_sha256": "f10027bb01d97d0480faf26b558ef6141add3736ee39fa56de0ef5e69739f108",
   "document_count": 1732,
   "pokemon_count": 151,
   "model_index_dimensions": {
     "bow": [
       1732,
-      2820
+      2822
     ],
     "tfidf": [
       1732,
-      16010
+      16013
     ]
   },
   "queries": 32,
@@ -148,6 +148,6 @@
     "Qrels proxy continuam exploratórios até revisão humana.",
     "TF-IDF puro não mede o pipeline filtrado do chatbot (Notebook 03)."
   ],
-  "retrieval_manifest": "c:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\artifacts\\retrieval\\retrieval_manifest.json",
-  "error_report": "c:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\reports\\retrieval_error_analysis.csv"
+  "retrieval_manifest": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\artifacts\\retrieval\\retrieval_manifest.json",
+  "error_report": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\reports\\retrieval_error_analysis.csv"
 }

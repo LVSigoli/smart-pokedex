@@ -28,6 +28,7 @@ class ChatSession:
     last_activity: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     active_ids: list[int] = field(default_factory=list)
     pending_comparison_ids: list[int] = field(default_factory=list)
+    pending_ranking: bool = False
     turns: list[dict] = field(default_factory=list)
 
 class SessionManager:
@@ -66,7 +67,11 @@ class SessionManager:
         pronoun_comparison = bool(tokens & {"ele", "ela", "dele", "dela", "it", "its"}) and bool(
             tokens & {"forte", "melhor", "stronger", "better"})
 
-        if session.pending_comparison_ids and attribute and not explicit:
+        if session.pending_ranking and attribute and not explicit:
+            result = session.engine.answer(
+                f"Quais são os pokemons com maior {attribute}?", generate=generate)
+            session.pending_ranking = False
+        elif session.pending_comparison_ids and attribute and not explicit:
             names = [session.engine.retriever.by_id[i].get("name", str(i))
                      for i in session.pending_comparison_ids]
             result = session.engine.answer(
@@ -89,7 +94,7 @@ class SessionManager:
             if explicit:
                 session.pending_comparison_ids = []
             result = session.engine.answer(message, generate=generate)
-        if result.get("gate_reason") == "needs_comparison_criterion":
+        if result.get("gate_reason") == "needs_comparison_criterion" and session.active_ids:
             session.pending_comparison_ids = list(session.active_ids)
             names = [session.engine.retriever.by_id[i].get("name", str(i))
                      for i in session.pending_comparison_ids]
@@ -97,6 +102,9 @@ class SessionManager:
                 f"Em qual atributo você quer comparar {' e '.join(names)}: "
                 "ataque, defesa, velocidade ou HP?"
             )
+        elif result.get("gate_reason") == "needs_comparison_criterion":
+            session.pending_ranking = True
+            result["answer"] = "Em qual atributo você quer ranquear: ataque, defesa, velocidade ou HP?"
         ids = {int(item["pokemon_id"]) for item in result.get("source_documents", [])}
         if ids: session.active_ids = sorted(ids)
         session.turns.append({"message": message, "result": result}); session.turns = session.turns[-8:]

@@ -252,6 +252,28 @@ def test_notebook_03_supports_complete_type_lists_and_attribute_rankings() -> No
     assert "def is_ranking_question(question):" in source
     assert "candidates.sort(key=lambda item: (-item[0], int(item[1]['pokemon_id'])))" in source
     assert "collection_answer = structured_answer(retrieved, user_question)" in source
+    assert "def ranking_limit(question):" in source
+    assert "shown = ranked if limit is None else ranked[:limit]" in source
+    assert "mais fortes?" in source
+
+
+def test_notebook_03_remembers_pending_global_ranking_attribute() -> None:
+    source = notebook_source("03_RAG_CHATBOT.ipynb")
+    assert "self.pending_kind == 'ranking' and attribute_label" in source
+    assert "Quais são os pokemons com maior {attribute_label}?" in source
+    assert "self.pending_kind = 'comparison' if targets else 'ranking'" in source
+
+
+def test_notebook_03_renders_non_evolving_species_in_portuguese() -> None:
+    source = notebook_source("03_RAG_CHATBOT.ipynb")
+    assert "def non_evolving_answer(rows, question):" in source
+    assert "não evolui para outro Pokémon" in source
+    assert "or non_evolving_answer(used, user_question)" in source
+
+
+def test_notebook_03_renders_rare_habitat_without_raw_english_label() -> None:
+    source = notebook_source("03_RAG_CHATBOT.ipynb")
+    assert "'rare': 'é uma espécie rara'" in source
 
 
 def test_notebook_03_runs_retrieval_evaluation_once() -> None:

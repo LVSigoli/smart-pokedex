@@ -58,6 +58,14 @@ class ComparisonContextualEngine(ContextualEngine):
         return super().answer(message, generate=generate)
 
 
+class RankingContextualEngine(ContextualEngine):
+    def answer(self, message, generate=False):
+        if "mais fortes" in message.casefold():
+            return {"status": "clarification_needed", "gate_reason": "needs_comparison_criterion",
+                    "answer": "Em qual atributo?", "source_documents": [], "supporting_excerpts": []}
+        return super().answer(message, generate=generate)
+
+
 def test_pronoun_comparison_keeps_both_pokemon_and_attribute_answers_clarification():
     manager = SessionManager(ComparisonContextualEngine())
     session = manager.create()
@@ -71,4 +79,14 @@ def test_pronoun_comparison_keeps_both_pokemon_and_attribute_answers_clarificati
     comparison = manager.ask(session.session_id, "Ataque", generate=True)
     assert comparison["answer"] == "Compare o ataque de Eevee e Pikachu."
     assert {item["pokemon_id"] for item in comparison["source_documents"]} == {133, 25}
+
+
+def test_global_strength_ranking_uses_attribute_from_the_followup():
+    manager = SessionManager(RankingContextualEngine())
+    session = manager.create()
+    clarification = manager.ask(session.session_id, "Quais são os pokemons mais fortes?")
+    assert clarification["status"] == "clarification_needed"
+    assert "ranquear" in clarification["answer"]
+    ranking = manager.ask(session.session_id, "Ataque")
+    assert ranking["answer"] == "Quais são os pokemons com maior ataque?"
 
