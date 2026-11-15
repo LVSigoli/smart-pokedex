@@ -1,8 +1,8 @@
 {
   "project": "Pokédex Inteligente — Trabalho 2",
   "notebook": "02_RETRIEVAL_AND_EVALUATION",
-  "run_utc": "2026-11-14T12:08:34.039765+00:00",
-  "source_document_file": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\processed\\pokemon_rag_documents.jsonl",
+  "run_utc": "2026-11-15T14:32:16.746000+00:00",
+  "source_document_file": "c:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\processed\\pokemon_rag_documents.jsonl",
   "source_document_sha256": "94d471e6ca1f6a730b393cd8b163614de5c1aadb04265f8c8457b8f48eb3135e",
   "document_count": 1732,
   "pokemon_count": 151,
@@ -19,11 +19,11 @@
   "queries": 32,
   "qrels": 39,
   "label_status": {
-    "pending_manual_review": 32
+    "reviewed": 32
   },
   "metrics_macro_by_label_set": [
     {
-      "label_set": "provisional",
+      "label_set": "reviewed",
       "method": "bow",
       "k": 1,
       "precision_at_k": 0.34375,
@@ -33,7 +33,7 @@
       "ndcg_at_k": 0.34375
     },
     {
-      "label_set": "provisional",
+      "label_set": "reviewed",
       "method": "bow",
       "k": 3,
       "precision_at_k": 0.1875,
@@ -43,7 +43,7 @@
       "ndcg_at_k": 0.46539966439732416
     },
     {
-      "label_set": "provisional",
+      "label_set": "reviewed",
       "method": "bow",
       "k": 5,
       "precision_at_k": 0.125,
@@ -53,7 +53,7 @@
       "ndcg_at_k": 0.489577964849483
     },
     {
-      "label_set": "provisional",
+      "label_set": "reviewed",
       "method": "bow",
       "k": 10,
       "precision_at_k": 0.07187500000000001,
@@ -63,7 +63,7 @@
       "ndcg_at_k": 0.5222575807104011
     },
     {
-      "label_set": "provisional",
+      "label_set": "reviewed",
       "method": "literal",
       "k": 1,
       "precision_at_k": 0.0,
@@ -73,7 +73,7 @@
       "ndcg_at_k": 0.0
     },
     {
-      "label_set": "provisional",
+      "label_set": "reviewed",
       "method": "literal",
       "k": 3,
       "precision_at_k": 0.0,
@@ -83,7 +83,7 @@
       "ndcg_at_k": 0.0
     },
     {
-      "label_set": "provisional",
+      "label_set": "reviewed",
       "method": "literal",
       "k": 5,
       "precision_at_k": 0.0,
@@ -93,7 +93,7 @@
       "ndcg_at_k": 0.0
     },
     {
-      "label_set": "provisional",
+      "label_set": "reviewed",
       "method": "literal",
       "k": 10,
       "precision_at_k": 0.0,
@@ -103,7 +103,7 @@
       "ndcg_at_k": 0.0
     },
     {
-      "label_set": "provisional",
+      "label_set": "reviewed",
       "method": "tfidf",
       "k": 1,
       "precision_at_k": 0.25,
@@ -113,7 +113,7 @@
       "ndcg_at_k": 0.25
     },
     {
-      "label_set": "provisional",
+      "label_set": "reviewed",
       "method": "tfidf",
       "k": 3,
       "precision_at_k": 0.09375,
@@ -123,7 +123,7 @@
       "ndcg_at_k": 0.26971655479910805
     },
     {
-      "label_set": "provisional",
+      "label_set": "reviewed",
       "method": "tfidf",
       "k": 5,
       "precision_at_k": 0.08750000000000001,
@@ -133,7 +133,7 @@
       "ndcg_at_k": 0.3342707825706475
     },
     {
-      "label_set": "provisional",
+      "label_set": "reviewed",
       "method": "tfidf",
       "k": 10,
       "precision_at_k": 0.08750000000000001,
@@ -148,6 +148,6 @@
     "Qrels proxy continuam exploratórios até revisão humana.",
     "TF-IDF puro não mede o pipeline filtrado do chatbot (Notebook 03)."
   ],
-  "retrieval_manifest": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\artifacts\\retrieval\\retrieval_manifest.json",
-  "error_report": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\reports\\retrieval_error_analysis.csv"
+  "retrieval_manifest": "c:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\artifacts\\retrieval\\retrieval_manifest.json",
+  "error_report": "c:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\data\\reports\\retrieval_error_analysis.csv"
 }

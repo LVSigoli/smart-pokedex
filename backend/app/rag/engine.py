@@ -43,13 +43,16 @@ class RAGEngine:
 
     def requested_section(self, question):
         q = normalize_plain(question)
+        # Estatísticas têm prioridade quando a pergunta também menciona
+        # evoluções (por exemplo, "atributos do Eevee e das evoluções").
+        if re.search(r"\b(?:atribut\w*|atronut\w*|estatistic\w*|stat\w*)\b", q): return "stats"
         if re.search(r"\b(evolu\w*|evolv\w*|pre[- ]?evolu\w*)\b", q): return "evolution"
         # Verbos flexionados aparecem em formas como encontrar, encontro, pego e captura.
         if re.search(r"\b(?:onde|where)\b.*\b(?:encontr\w*|localiz\w*|captur\w*|peg\w*|find|catch)\b", q): return "encounters"
         if re.search(r"\b(?:como|how)\b.*\b(?:encontr\w*|localiz\w*|captur\w*|peg\w*|find|catch)\b", q): return "encounters"
         if re.search(r"\b(?:encontr\w*|localiz\w*|captur\w*|peg\w*|find|catch)\b", q): return "encounters"
         if re.search(r"\b(como (?:conseguir|obter|ganhar|receber)|obter|obten\w*|conseguir|obtain|gift|trade|get)\b", q): return "obtainment"
-        if re.search(r"\b(fraquez|resist|imun|weak|effectiveness)\b", q): return "type_matchups"
+        if re.search(r"\b(?:fraquez|resist|imun|weak|effectiveness)\w*\b", q): return "type_matchups"
         if re.search(r"\b(habilidad|ability)\b", q): return "abilities"
         if re.search(r"\b(golpe|movimento|move|tm|hm|aprende|learn)\b", q): return "moves"
         if re.search(r"\b(ataque|defesa|velocidade|speed|stat|atribut|hp)\b", q): return "stats"
@@ -59,6 +62,62 @@ class RAGEngine:
     def is_same_type_query(question):
         q = normalize_plain(question)
         return bool(re.search(r"\b(?:mesm[oa]s?|igual(?:es)?|same)\b.*\b(?:tipo|types?)\b", q))
+
+    @staticmethod
+    def is_type_listing_question(question):
+        normalized = normalize_plain(question)
+        return bool(
+            re.search(r"\b(?:quais|liste|listar|todos?|todas?|which|list|all)\b", normalized)
+            and re.search(r"\b(?:pokemon|pokemons)\b", normalized)
+            and (re.search(r"\b(?:tipo|types?)\b", normalized) or RAGEngine.requested_type(normalized))
+        )
+
+    @staticmethod
+    def is_ranking_question(question):
+        q = normalize_plain(question)
+        return bool(re.search(r"\b(?:maior(?:es)?|menor(?:es)?|melhor(?:es)?|pior(?:es)?|ranking|rank|top)\b", q)
+                    and RAGEngine.requested_stat(question))
+
+    @staticmethod
+    def requested_type(question):
+        normalized = normalize_plain(question)
+        aliases = {
+            "normal": "normal", "lutador": "fighting", "luta": "fighting", "voador": "flying",
+            "venenoso": "poison", "veneno": "poison", "terrestre": "ground", "terra": "ground",
+            "pedra": "rock", "rocha": "rock", "inseto": "bug", "fantasma": "ghost",
+            "aco": "steel", "metal": "steel", "fogo": "fire", "agua": "water", "planta": "grass",
+            "eletrico": "electric", "psiquico": "psychic", "gelo": "ice", "dragao": "dragon",
+            "sombrio": "dark", "dark": "dark", "fire": "fire", "water": "water", "grass": "grass",
+            "electric": "electric", "psychic": "psychic", "ice": "ice", "dragon": "dragon",
+            "flying": "flying", "poison": "poison", "ground": "ground", "rock": "rock",
+            "bug": "bug", "ghost": "ghost", "steel": "steel", "fighting": "fighting",
+        }
+        return next((english for alias, english in aliases.items()
+                     if re.search(r"(?<!\w)" + re.escape(alias) + r"(?!\w)", normalized)), None)
+
+    def select_type_evidence(self, question):
+        requested = self.requested_type(question)
+        if not requested:
+            return [], "type_not_recognized"
+        profiles = [row for row in self.retriever.documents
+                    if row.get("section") == "profile" and requested in self.profile_types(row)]
+        profiles.sort(key=lambda row: int(row["pokemon_id"]))
+        return [dict(row, rank=index + 1, score=float(row.get("score", 1.0)))
+                for index, row in enumerate(profiles)], "ready"
+
+    def select_stat_evidence(self, question):
+        stat = self.requested_stat(question)
+        if not stat:
+            return [], "stat_not_recognized"
+        rows = [row for row in self.retriever.documents if row.get("section") == "stats"]
+        values = []
+        for row in rows:
+            match = re.search(rf"-\s*{re.escape(stat)}:\s*(\d+(?:\.\d+)?)", str(row.get("content", "")), re.I)
+            if match:
+                values.append((float(match.group(1)), row))
+        values.sort(key=lambda item: (-item[0], int(item[1]["pokemon_id"])))
+        return [dict(row, rank=index + 1, score=float(row.get("score", 1.0)))
+                for index, (_, row) in enumerate(values)], "ready"
 
     @staticmethod
     def profile_types(row):
@@ -99,8 +158,27 @@ class RAGEngine:
         gate = self.scope_gate(question)
         if gate: return [], gate
         targets, section = self.mentioned_ids(question), self.requested_section(question)
+        if targets and section == "stats" and re.search(r"\bevolu\w*\b", normalize_plain(question)):
+            related_ids = set(targets)
+            for row in self.retriever.documents:
+                if row.get("section") != "evolution":
+                    continue
+                for transition in self.evolution_transitions([row]):
+                    if self.name_to_id.get(normalize_plain(transition["origin"])) in targets:
+                        related_id = self.name_to_id.get(normalize_plain(transition["target"]))
+                        if related_id:
+                            related_ids.add(related_id)
+                    if self.name_to_id.get(normalize_plain(transition["target"])) in targets:
+                        related_id = self.name_to_id.get(normalize_plain(transition["origin"]))
+                        if related_id:
+                            related_ids.add(related_id)
+            targets = list(dict.fromkeys([*targets, *sorted(related_ids - set(targets))]))
         if self.is_same_type_query(question):
             return self.select_same_type_evidence(question, targets, top_k)
+        if self.is_type_listing_question(question):
+            return self.select_type_evidence(question)
+        if self.is_ranking_question(question):
+            return self.select_stat_evidence(question)
         ranked = self.retriever.search(question, top_k=len(self.retriever.documents))
         if section in {"obtainment", "encounters"}:
             # Evolução não comprova onde o Pokémon é encontrado ou obtido.
@@ -346,8 +424,8 @@ class RAGEngine:
             ("special attack", r"\b(?:ataque especial|special attack)\b"),
             ("special defense", r"\b(?:defesa especial|special defense)\b"),
             ("speed", r"\b(?:velocidade|speed)\b"),
-            ("attack", r"\b(?:ataque|attack)\b"),
-            ("defense", r"\b(?:defesa|defense)\b"),
+            ("attack", r"\b(?:ataqu\w*|attack\w*)\b"),
+            ("defense", r"\b(?:defes\w*|defens\w*)\b"),
             ("hp", r"\b(?:hp|pontos de vida|vida)\b"),
         )
         return next((name for name, pattern in patterns if re.search(pattern, normalized)), None)
@@ -358,7 +436,14 @@ class RAGEngine:
         match = re.search(r"Types PT-BR:\s*([^.]*)\.", content, re.I)
         if not match:
             match = re.search(r"Types in Generation III:\s*([^.]*)\.", content, re.I)
-        return [value.strip() for value in match.group(1).split(",") if value.strip()] if match else []
+        translations = {
+            "normal": "normal", "fighting": "lutador", "flying": "voador", "poison": "venenoso",
+            "ground": "terrestre", "rock": "pedra", "bug": "inseto", "ghost": "fantasma",
+            "steel": "aço", "fire": "fogo", "water": "água", "grass": "planta",
+            "electric": "elétrico", "psychic": "psíquico", "ice": "gelo", "dragon": "dragão",
+            "dark": "sombrio",
+        }
+        return [translations.get(value.strip().casefold(), value.strip()) for value in match.group(1).split(",") if value.strip()] if match else []
 
     @staticmethod
     def is_acquisition_question(question):
@@ -516,10 +601,60 @@ class RAGEngine:
         return " ".join(sentences)
 
     @classmethod
+    def type_matchup_answer(cls, rows, question):
+        row = next((item for item in rows if item.get("section") == "type_matchups"), None)
+        if not row:
+            return None
+        question_text = normalize_plain(question)
+        if not re.search(r"\b(?:fraquez|weak|resist|imun|effectiveness)\w*\b", question_text):
+            return None
+        type_names = {
+            "normal": "normal", "fighting": "lutador", "flying": "voador", "poison": "venenoso",
+            "ground": "terrestre", "rock": "pedra", "bug": "inseto", "ghost": "fantasma",
+            "steel": "aço", "fire": "fogo", "water": "água", "grass": "planta", "electric": "elétrico",
+            "psychic": "psíquico", "ice": "gelo", "dragon": "dragão", "dark": "sombrio",
+        }
+        content = str(row.get("content", ""))
+        weaknesses = []
+        resistances = []
+        immunities = []
+        for line in content.splitlines():
+            match = re.match(r"-\s*(4x|2x)\s+weak:\s*([^.]*)", line, re.I)
+            if match:
+                weaknesses.append((match.group(2), match.group(1)))
+                continue
+            match = re.match(r"-\s*(0\.5x|0\.25x)\s+resistant:\s*([^.]*)", line, re.I)
+            if match:
+                resistances.append((match.group(2), match.group(1)))
+                continue
+            match = re.match(r"-\s*immune\s+\(0x\):\s*([^.]*)", line, re.I)
+            if match:
+                immunities.append(match.group(1))
+        def render_group(groups):
+            rendered = []
+            for names, multiplier in groups:
+                translated = [type_names.get(normalize_plain(name), name.strip()) for name in names.split(",")]
+                joined = ", ".join(translated[:-1]) + (" e " if len(translated) > 1 else "") + translated[-1]
+                rendered.append(f"{joined} ({multiplier.replace('x', '×')})")
+            return ", ".join(rendered)
+        pokemon = str(row.get("pokemon_name", "o Pokémon"))
+        if re.search(r"\b(?:fraquez|weak)\w*\b", question_text) and weaknesses:
+            return f"{pokemon} é fraco contra {render_group(weaknesses)}."
+        if re.search(r"\b(?:resist)\w*\b", question_text) and resistances:
+            return f"{pokemon} resiste a {render_group(resistances)}."
+        if re.search(r"\b(?:imun)\w*\b", question_text) and immunities:
+            translated = [type_names.get(normalize_plain(name), name.strip()) for name in immunities[0].split(",")]
+            return f"{pokemon} é imune a {' e '.join(translated)}."
+        return None
+
+    @classmethod
     def structured_answer(cls, rows, question):
         acquisition = cls.acquisition_answer(rows, question)
         if acquisition:
             return acquisition
+        matchup = cls.type_matchup_answer(rows, question)
+        if matchup:
+            return matchup
         profile = cls.profile_answer(rows, question)
         if profile:
             return profile
@@ -539,7 +674,18 @@ class RAGEngine:
             return "; ".join(steps) + "."
 
         normalized_question = normalize_plain(question)
-        if re.search(r"\b(?:tipos?|types?)\b", normalized_question):
+        if cls.is_ranking_question(question):
+            stat = cls.requested_stat(question)
+            label = {"speed": "velocidade", "attack": "ataque", "defense": "defesa", "special attack": "ataque especial", "special defense": "defesa especial", "hp": "HP"}[stat]
+            ranked = []
+            for row in rows:
+                match = re.search(rf"-\s*{re.escape(stat)}:\s*(\d+(?:\.\d+)?)", str(row.get("content", "")), re.I)
+                if match:
+                    ranked.append((float(match.group(1)), row["pokemon_name"], match.group(1)))
+            ranked.sort(key=lambda item: (-item[0], item[1]))
+            if ranked:
+                return "; ".join(f"{name}: {label} {value}" for _, name, value in ranked) + "."
+        if re.search(r"\b(?:tipos?|types?)\b", normalized_question) or cls.is_type_listing_question(question):
             if re.search(r"\b(?:mesm[oa]s?|igual(?:es)?|same)\b", normalized_question) and len(rows) > 1:
                 reference, matches = rows[0], rows[1:]
                 names = ", ".join(row["pokemon_name"] for row in matches)
@@ -554,6 +700,19 @@ class RAGEngine:
                 return "; ".join(answers) + "."
 
         stat = cls.requested_stat(question)
+        if re.search(r"\b(?:atribut\w*|atronut\w*|estatistic\w*|stats?)\b", normalized_question) and not stat:
+            labels = {"hp": "HP", "attack": "ataque", "defense": "defesa", "special attack": "ataque especial", "special defense": "defesa especial", "speed": "velocidade"}
+            summaries = []
+            for row in rows:
+                values = []
+                for key, label in labels.items():
+                    match = re.search(rf"-\s*{re.escape(key)}:\s*(\d+(?:\.\d+)?)", str(row.get("content", "")), re.I)
+                    if match:
+                        values.append(f"{label} {match.group(1)}")
+                if values:
+                    summaries.append(f"{row['pokemon_name']}: {', '.join(values)}")
+            if summaries:
+                return "; ".join(summaries) + "."
         if stat:
             labels = {"speed": "velocidade base", "attack": "ataque base", "defense": "defesa base",
                       "special attack": "ataque especial base", "special defense": "defesa especial base",
@@ -579,6 +738,11 @@ class RAGEngine:
         if not expected:
             return True
         normalized_answer = normalize_plain(answer)
+        if cls.is_type_listing_question(question):
+            return all(
+                normalize_plain(row.get("pokemon_name", "")) in normalized_answer
+                for row in rows if row.get("section") == "profile"
+            )
         acquisition = cls.acquisition_facts(rows) if cls.is_acquisition_question(question) else []
         if acquisition:
             for fact in acquisition:
@@ -679,6 +843,7 @@ class RAGEngine:
         if structured and (
             self.is_acquisition_question(question)
             or self.is_profile_summary_question(question)
+            or self.requested_section(question) == "type_matchups"
         ):
             generation_metadata.update(
                 response_mode="grounded_structured",

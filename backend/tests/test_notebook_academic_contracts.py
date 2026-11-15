@@ -49,6 +49,13 @@ def test_notebook_01_translation_is_self_contained_for_colab_without_backend() -
     assert "if IN_COLAB and DRIVE_AVAILABLE:" in source
 
 
+def test_notebook_01_discovers_colab_raw_data_layouts() -> None:
+    source = notebook_source("01_RAG_DATA_PREPARATION.ipynb")
+    assert "RAW_CANDIDATES" in source
+    assert "Path('/content/corpus/raw')" in source
+    assert "next((candidate for candidate in RAW_CANDIDATES if candidate.is_dir())" in source
+
+
 def test_notebook_02_fits_each_vectorizer_once() -> None:
     source = notebook_source("02_RETRIEVAL_AND_EVALUATION.ipynb")
     assert source.count("BOW.fit_transform(normalized_texts)") == 1
@@ -189,6 +196,10 @@ def test_notebook_03_compacts_context_by_complete_passages_and_balances_entities
     assert "vive próximo à água" in source
     assert "EDITORIAL_DESCRIPTION_BY_ID" in source
     assert "editorial_description = EDITORIAL_DESCRIPTION_BY_ID.get" in source
+    assert "def is_type_listing_question(question):" in source
+    assert "def requested_type(question):" in source
+    assert "def select_type_evidence(question):" in source
+    assert "def type_matchup_answer(rows, question):" in source
 
 
 def test_notebook_03_distinguishes_scope_limits_from_missing_evidence() -> None:
@@ -215,3 +226,40 @@ def test_notebook_03_protects_compound_species_names_during_normalization() -> N
     assert "protected_tokens = set()" in source
     assert "if ' ' in name and re.search" in source
     assert "token in protected_tokens" in source
+
+
+def test_notebook_03_prioritizes_attribute_comparisons_over_evolution_intent() -> None:
+    source = notebook_source("03_RAG_CHATBOT.ipynb")
+    assert "atronut" in source
+    assert "related_ids = set(targets)" in source
+    assert "summaries = []" in source
+
+
+def test_notebook_03_prioritizes_type_listing_over_active_profile() -> None:
+    source = notebook_source("03_RAG_CHATBOT.ipynb")
+    assert "if is_type_listing_question(question):" in source
+    assert source.index("if is_type_listing_question(question):") < source.index("profile = profile_answer(rows, question)")
+
+
+def test_notebook_03_never_prefers_raw_generation_for_type_lists_or_evolution() -> None:
+    source = notebook_source("03_RAG_CHATBOT.ipynb")
+    assert "fallback_answer = structured_answer(used, user_question) or retrieval_answer" in source
+    assert "or is_type_listing_question(user_question) or evolution_transitions(used)" in source
+
+
+def test_notebook_03_supports_complete_type_lists_and_attribute_rankings() -> None:
+    source = notebook_source("03_RAG_CHATBOT.ipynb")
+    assert "def is_ranking_question(question):" in source
+    assert "candidates.sort(key=lambda item: (-item[0], int(item[1]['pokemon_id'])))" in source
+    assert "collection_answer = structured_answer(retrieved, user_question)" in source
+
+
+def test_notebook_03_runs_retrieval_evaluation_once() -> None:
+    source = notebook_source("03_RAG_CHATBOT.ipynb")
+    assert source.count("CHATBOT_RETRIEVAL_METRICS = EVAL_DIR / 'chatbot_retrieval_metrics_by_query.csv'") == 1
+
+
+def test_notebook_02_marks_all_expected_documents_as_reviewed() -> None:
+    source = notebook_source("02_RETRIEVAL_AND_EVALUATION.ipynb")
+    assert "Documentos esperados revisados" in source
+    assert "queries_existing['review_status'] = 'reviewed'" in source

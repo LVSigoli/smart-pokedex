@@ -14,6 +14,69 @@ def engine(): return RAGEngine(FakeRetriever(), SimpleNamespace(flan_model="goog
 def test_engine_uses_short_generation_limit_by_default():
     assert engine().generator.max_new_tokens == 64
 
+
+def test_all_pokemon_of_a_type_returns_the_complete_deterministic_list():
+    rag = engine()
+    rows = [
+        {"rank": 1, "document_id": "004_profile", "pokemon_id": 4, "pokemon_name": "Charmander",
+         "section": "profile", "score": .9, "content": "Types PT-BR: fogo."},
+        {"rank": 2, "document_id": "006_profile", "pokemon_id": 6, "pokemon_name": "Charizard",
+         "section": "profile", "score": .8, "content": "Types PT-BR: fogo, voador."},
+        {"rank": 3, "document_id": "037_profile", "pokemon_id": 37, "pokemon_name": "Vulpix",
+         "section": "profile", "score": .7, "content": "Types PT-BR: fogo."},
+    ]
+    rag.select_evidence = lambda question, top_k=5: (rows, "ready")
+
+    class IncompleteGenerator:
+        max_input_tokens = 100
+
+        @staticmethod
+        def count_prompt_tokens(question, context): return 50
+
+        def __call__(self, question, context):
+            return {"answer": "Charizard é do tipo fogo e voador."}
+
+    rag.generator = IncompleteGenerator()
+    result = rag.answer("Quais são todos os Pokémon do tipo fogo?", generate=True)
+
+    assert result["answer"] == (
+        "Charmander é do tipo fogo; Charizard é do tipo fogo e voador; "
+        "Vulpix é do tipo fogo."
+    )
+    assert result["generation_metadata"]["response_mode"] == "grounded_repair"
+
+
+def test_type_matchup_question_is_rendered_as_natural_weakness_answer():
+    rag = engine()
+    rows = [{
+        "rank": 1, "document_id": "006_type_matchups", "pokemon_id": 6,
+        "pokemon_name": "Charizard", "section": "type_matchups", "score": .9,
+        "content": (
+            "Defensive effectiveness against Charizard (Generation III type chart):\n"
+            "- 4x weak: rock.\n"
+            "- 2x weak: electric, water.\n"
+            "- 0.5x resistant: fighting, fire, steel.\n"
+            "- 0.25x resistant: bug, grass.\n"
+            "- immune (0x): ground."
+        ),
+    }]
+    rag.select_evidence = lambda question, top_k=5: (rows, "ready")
+
+    class Generator:
+        max_input_tokens = 100
+
+        @staticmethod
+        def count_prompt_tokens(question, context): return 50
+
+        def __call__(self, question, context):
+            return {"answer": "[006_type_matchups] is a Pokémon: Charizard."}
+
+    rag.generator = Generator()
+    result = rag.answer("Quais são as fraquezas do Charizard?", generate=True)
+
+    assert result["answer"] == "Charizard é fraco contra pedra (4×), elétrico e água (2×)."
+    assert "[006_type_matchups]" not in result["answer"]
+
 def test_multiple_pokemon_reserve_evidence():
     rows, reason = engine().select_evidence("Quais sao as evolucoes de Charmander e Squirtle")
     assert reason == "ready"
@@ -722,6 +785,75 @@ def test_same_type_query_recovers_matching_profile_documents():
     rows, reason = rag.select_evidence("Quais os pokemons com o mesmo tipo do charizard?")
     assert reason == "ready"
     assert {row["pokemon_id"] for row in rows} == {6, 146}
+
+
+def test_type_listing_accepts_fire_as_the_type_name_without_word_tipo():
+    class TypeRetriever:
+        documents = [
+            {"pokemon_id": 6, "section": "profile", "document_id": "006_profile", "pokemon_name": "Charizard", "content": "Types in Generation III: fire, flying."},
+            {"pokemon_id": 4, "section": "profile", "document_id": "004_profile", "pokemon_name": "Charmander", "content": "Types in Generation III: fire."},
+        ]
+        records = []
+        def search(self, question, top_k=5):
+            return []
+    rag = RAGEngine(TypeRetriever(), SimpleNamespace(flan_model="google/flan-t5-small", rag_top_k=5))
+    rows, reason = rag.select_evidence("Quais são os pokemons de fogo?")
+    assert reason == "ready"
+    assert {row["pokemon_name"] for row in rows} == {"Charizard", "Charmander"}
+    assert "Charmander" in rag.retrieval_answer(rows, "Quais são os pokemons de fogo?")
+
+
+def test_same_type_answer_lists_matching_pokemon_naturally():
+    rows = [
+        {"pokemon_name": "Charizard", "section": "profile", "content": "Types in Generation III: fire, flying."},
+        {"pokemon_name": "Moltres", "section": "profile", "content": "Types in Generation III: fire, flying."},
+    ]
+    answer = RAGEngine.retrieval_answer(rows, "Quais pokemons têm o mesmo tipo do Charizard?")
+    assert answer == "Moltres têm os mesmos tipos (fogo e voador) que Charizard."
+
+
+def test_attributes_of_pokemon_and_evolutions_use_stats_even_with_typo():
+    class StatsRetriever:
+        documents = [
+            {"pokemon_id": 133, "section": "stats", "document_id": "133_stats", "pokemon_name": "Eevee", "content": "- attack: 55."},
+            {"pokemon_id": 134, "section": "stats", "document_id": "134_stats", "pokemon_name": "Vaporeon", "content": "- attack: 65."},
+            {"pokemon_id": 133, "section": "evolution", "document_id": "133_evolution", "pokemon_name": "Eevee", "content": "- eevee -> vaporeon. Conditions: (item: water stone)."},
+        ]
+        records = [{"id": 133, "api_name": "eevee", "name": "Eevee"}, {"id": 134, "api_name": "vaporeon", "name": "Vaporeon"}]
+        def search(self, question, top_k=5):
+            return [dict(row, score=0.9, rank=index + 1) for index, row in enumerate(self.documents) if row["section"] == "stats"]
+    rag = RAGEngine(StatsRetriever(), SimpleNamespace(flan_model="google/flan-t5-small", rag_top_k=5))
+    rows, reason = rag.select_evidence("Quais são os atronutos do Eevee e das evoluções?")
+    assert reason == "ready"
+    assert {row["pokemon_id"] for row in rows} == {133, 134}
+    answer = rag.retrieval_answer(rows, "Quais são os atronutos do Eevee e das evoluções?")
+    assert "Eevee: ataque 55" in answer and "Vaporeon: ataque 65" in answer
+
+
+def test_type_listing_has_priority_over_active_pokemon_profile():
+    rows = [
+        {"pokemon_name": "Charmander", "section": "profile", "content": "Types in Generation III: fire."},
+        {"pokemon_name": "Charizard", "section": "profile", "content": "Types in Generation III: fire, flying."},
+    ]
+    answer = RAGEngine.retrieval_answer(rows, "Quais são os pokemon d e tipo fogo? sobre Charizard")
+    assert "Charmander" in answer and "Charizard" in answer
+    assert "National Pokédex" not in answer
+
+
+def test_attribute_ranking_returns_all_species_sorted_by_requested_stat():
+    class RankingRetriever:
+        documents = [
+            {"pokemon_id": 4, "section": "stats", "document_id": "004_stats", "pokemon_name": "Charmander", "content": "- attack: 52."},
+            {"pokemon_id": 6, "section": "stats", "document_id": "006_stats", "pokemon_name": "Charizard", "content": "- attack: 84."},
+            {"pokemon_id": 25, "section": "stats", "document_id": "025_stats", "pokemon_name": "Pikachu", "content": "- attack: 55."},
+        ]
+        records = []
+        def search(self, question, top_k=5):
+            return [dict(row, score=.9, rank=i + 1) for i, row in enumerate(self.documents)]
+    rag = RAGEngine(RankingRetriever(), SimpleNamespace(flan_model="google/flan-t5-small", rag_top_k=5))
+    rows, reason = rag.select_evidence("Quais são os maiores ataques?")
+    assert reason == "ready"
+    assert [row["pokemon_name"] for row in rows] == ["Charizard", "Pikachu", "Charmander"]
 
 def test_generation_failure_keeps_retrieved_sources():
     rag = engine()

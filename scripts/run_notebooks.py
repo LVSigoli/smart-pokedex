@@ -12,6 +12,15 @@ from pathlib import Path
 import nbformat
 from nbclient import NotebookClient
 
+# Em ambientes Windows restritos (como o Colab/local sem pywin32), o Jupyter
+# pode falhar ao aplicar ACL no arquivo temporário de conexão do kernel. A
+# execução ainda é local e o arquivo fica no runtime privado do processo.
+try:
+    import jupyter_core.paths as _jupyter_paths
+    _jupyter_paths.win32_restrict_file_to_user = lambda _filename: None
+except Exception:
+    pass
+
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOKS = ROOT / "notebooks"

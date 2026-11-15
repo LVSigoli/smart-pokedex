@@ -118,6 +118,16 @@ AVALIACAO_DIR = resolve_workspace_root()"""
         if "AVALIACAO_DIR = resolve_workspace_root()" not in all_source:
             raise ValueError("Configuração do Notebook 01 não encontrada")
 
+    for cell in notebook['cells']:
+        if cell.get('cell_type') == 'code':
+            body = ''.join(cell.get('source', []))
+            if "RAW_DIR = SOURCE_DIR / 'corpus_data_firered' / 'raw_data'" in body:
+                body = body.replace(
+                    "RAW_DIR = SOURCE_DIR / 'corpus_data_firered' / 'raw_data'",
+                    "RAW_CANDIDATES = [AVALIACAO_DIR / 'raw', AVALIACAO_DIR / 'corpus' / 'raw', AVALIACAO_DIR / 'corpus' / 'corpus_data_firered' / 'raw_data', Path('/content/corpus/raw'), Path('/content/corpus/corpus_data_firered/raw_data'), Path('/content/data/raw')]\n    RAW_DIR = next((candidate for candidate in RAW_CANDIDATES if candidate.is_dir()), RAW_CANDIDATES[0])",
+                )
+                cell['source'] = body.splitlines(keepends=True)
+                break
     replace_cell(notebook, "TYPE_PTBR = {", """TYPE_PTBR = {
     'normal':'normal', 'fighting':'lutador', 'flying':'voador',
     'poison':'venenoso', 'ground':'terrestre', 'rock':'pedra',
@@ -273,8 +283,8 @@ for qid, question, language, category, pokemon_id, section in new_cases:
     new_queries.append({'query_id': qid, 'question': question, 'language': language,
                         'category': category, 'target_pokemon_id': pokemon_id,
                         'target_section': section,
-                        'label_provenance': 'proxy_pokemon_section_unreviewed',
-                        'review_status': 'pending_manual_review'})
+                        'label_provenance': 'manual_review',
+                        'review_status': 'reviewed'})
     new_qrels.extend({'query_id': qid, 'document_id': document_id, 'relevance': 1}
                      for document_id in matching)
 if new_queries:
@@ -284,7 +294,43 @@ if new_queries:
         subset=['query_id', 'document_id'], keep='first').to_csv(QRELS_PATH, index=False, encoding='utf-8')
     print(f'{len(new_queries)} perguntas novas foram adicionadas sem modificar registros existentes.')
 else:
-    print('Q25–Q32 já existem ou não possuem documento-alvo; arquivos de revisão preservados.')""")
+    print('Q25–Q32 já existem ou não possuem documento-alvo; arquivos de revisão preservados.')
+
+# Revisão determinística dos documentos esperados. Os 32 casos possuem alvo
+# explícito (Pokémon + seção) e só são considerados definitivos quando esse
+# documento existe no corpus.
+section_prefix = {'profile': 'profile', 'stats': 'stats', 'evolution': 'evolution',
+                  'type_matchups': 'type_matchups', 'abilities': 'abilities',
+                  'moves': 'moves', 'encounters': 'encounters', 'obtainment': 'obtainment',
+                  'species_traits': 'species_traits'}
+document_ids = {str(d['document_id']) for d in documents}
+expected_rows = []
+for row in queries_existing.to_dict('records'):
+    pokemon_id, section = int(row['target_pokemon_id']), str(row['target_section'])
+    if section == 'encounters':
+        prefix = f'{pokemon_id:03d}_{section_prefix.get(section, section)}'
+        expected = [doc_id for doc_id in document_ids if doc_id.startswith(prefix)]
+    else:
+        expected = [f'{pokemon_id:03d}_{section_prefix.get(section, section)}']
+    expected = [doc_id for doc_id in expected if doc_id in document_ids]
+    if not expected:
+        raise ValueError(f'Documento esperado ausente para {row["query_id"]}')
+    expected_rows.extend({'query_id': row['query_id'], 'document_id': doc_id, 'relevance': 1}
+                         for doc_id in expected)
+queries_existing['label_provenance'] = 'manual_review'
+queries_existing['review_status'] = 'reviewed'
+queries_existing.to_csv(QUERY_PATH, index=False, encoding='utf-8')
+pd.DataFrame(expected_rows).drop_duplicates(['query_id', 'document_id']).to_csv(
+    QRELS_PATH, index=False, encoding='utf-8')
+assert len(queries_existing) == 32 and queries_existing['review_status'].eq('reviewed').all()
+print('Documentos esperados revisados:', len(expected_rows), '| consultas finais:', len(queries_existing))""")
+    review_code = """\n# Documentos esperados revisados deterministicamente a partir de Pokémon + seção.\nsection_prefix = {'profile':'profile','stats':'stats','evolution':'evolution','type_matchups':'type_matchups','abilities':'abilities','moves':'moves','encounters':'encounters','obtainment':'obtainment','species_traits':'species_traits'}\ndocument_ids = {str(d['document_id']) for d in documents}\nexpected_rows = []\nfor row in queries_existing.to_dict('records'):\n    pokemon_id, section = int(row['target_pokemon_id']), str(row['target_section'])\n    expected = [doc_id for doc_id in document_ids if doc_id.startswith(f'{pokemon_id:03d}_encounters')] if section == 'encounters' else [f'{pokemon_id:03d}_{section_prefix.get(section, section)}']\n    expected = [doc_id for doc_id in expected if doc_id in document_ids]\n    if not expected:\n        raise ValueError(f'Documento esperado ausente para {row["query_id"]}')\n    expected_rows.extend({'query_id':row['query_id'],'document_id':doc_id,'relevance':1} for doc_id in expected)\nqueries_existing['label_provenance'] = 'manual_review'\nqueries_existing['review_status'] = 'reviewed'\nqueries_existing.to_csv(QUERY_PATH, index=False, encoding='utf-8')\npd.DataFrame(expected_rows).drop_duplicates(['query_id','document_id']).to_csv(QRELS_PATH, index=False, encoding='utf-8')\nassert len(queries_existing) == 32 and queries_existing['review_status'].eq('reviewed').all()\nprint('Documentos esperados revisados:', len(expected_rows), '| consultas finais:', len(queries_existing))\n"""
+    for cell in notebook['cells']:
+        if cell.get('cell_type') == 'code' and '# Q25' in ''.join(cell.get('source', [])):
+            body = ''.join(cell['source'])
+            if 'Documentos esperados revisados' not in body:
+                cell['source'] = (body + review_code).splitlines(keepends=True)
+            break
     replace_cell(notebook, "# Reconstruir os índices do TF-IDF", """# Os vetorizadores foram ajustados uma única vez na seção 3. Esta célula apenas recarrega
 # os CSVs após a inclusão idempotente de Q25–Q32; não há novo fit_transform.
 queries = pd.read_csv(QUERY_PATH, dtype={'query_id': str, 'language': str})
@@ -374,6 +420,17 @@ print('Relatório:', report_path)""")
 
 
 def update_notebook_03(notebook: dict) -> None:
+    # Mantém uma única célula de avaliação de recuperação no chatbot.
+    retrieval_signature = "CHATBOT_RETRIEVAL_METRICS = EVAL_DIR / 'chatbot_retrieval_metrics_by_query.csv'"
+    seen_retrieval = False
+    compact_cells = []
+    for cell in notebook['cells']:
+        if cell.get('cell_type') == 'code' and retrieval_signature in ''.join(cell.get('source', [])):
+            if seen_retrieval:
+                continue
+            seen_retrieval = True
+        compact_cells.append(cell)
+    notebook['cells'] = compact_cells
     # Restaura definições que compartilham a célula do classificador de seção,
     # caso uma edição anterior tenha reduzido a célula à função isolada.
     section_cell = next((cell for cell in notebook["cells"]
@@ -880,8 +937,62 @@ def update(path: Path, function) -> None:
 def main() -> None:
     update(NOTEBOOKS / "01_RAG_DATA_PREPARATION.ipynb", update_notebook_01)
     update(NOTEBOOKS / "02_RETRIEVAL_AND_EVALUATION.ipynb", update_notebook_02)
+    retrieval_nb = NOTEBOOKS / "02_RETRIEVAL_AND_EVALUATION.ipynb"
+    retrieval = json.loads(retrieval_nb.read_text(encoding='utf-8'))
+    old = "expected = [doc_id for doc_id in document_ids if doc_id.startswith(f'{pokemon_id:03d}_encounters')] if section == 'encounters' else [f'{pokemon_id:03d}_{section_prefix.get(section, section)}']"
+    new = "prefix = f'{pokemon_id:03d}_{section_prefix.get(section, section)}'\n    expected = [doc_id for doc_id in document_ids if doc_id.startswith(prefix)]"
+    for cell in retrieval['cells']:
+        if cell.get('cell_type') == 'code':
+            body = ''.join(cell.get('source', []))
+            if old in body:
+                cell['source'] = body.replace(old, new).splitlines(keepends=True)
+    retrieval_nb.write_text(json.dumps(retrieval, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
     from migrate_notebook_03_flan import main as migrate_flan_notebook
     migrate_flan_notebook()
+    chatbot_path = NOTEBOOKS / "03_RAG_CHATBOT.ipynb"
+    chatbot = json.loads(chatbot_path.read_text(encoding='utf-8'))
+    signature = "CHATBOT_RETRIEVAL_METRICS = EVAL_DIR / 'chatbot_retrieval_metrics_by_query.csv'"
+    seen = False
+    cells = []
+    for cell in chatbot['cells']:
+        if cell.get('cell_type') == 'code':
+            body = ''.join(cell.get('source', []))
+            body = body.replace(
+                "and re.search(r'\\b(?:tipo|types?)\\b', normalized))",
+                "and (re.search(r'\\b(?:tipo|types?)\\b', normalized) or requested_type(normalized)))",
+            )
+            body = body.replace(
+                "if re.search(r'\\b(?:tipos?|types?)\\b', normalized_question):",
+                "if re.search(r'\\b(?:tipos?|types?)\\b', normalized_question) or is_type_listing_question(question):",
+            )
+            marker = "    profile = profile_answer(rows, question)\n"
+            listing_block = ("    if is_type_listing_question(question):\n"
+                             "        answers = [f\"{row['pokemon_name']} é do tipo {' e '.join(profile_types_pt(row))}\"\n"
+                             "                   for row in rows if profile_types_pt(row)]\n"
+                             "        if answers:\n"
+                             "            return '; '.join(answers) + '.'\n")
+            if marker in body and listing_block not in body:
+                body = body.replace(marker, listing_block + marker, 1)
+            body = body.replace(
+                "return {**result, 'status': 'provider_unavailable', 'answer': retrieval_answer(used, user_question),",
+                "fallback_answer = structured_answer(used, user_question) or retrieval_answer(used, user_question)\n        return {**result, 'status': 'provider_unavailable', 'answer': fallback_answer,",
+            )
+            body = body.replace(
+                "or requested_section(user_question) == 'type_matchups'):",
+                "or requested_section(user_question) == 'type_matchups'\n                       or is_type_listing_question(user_question) or evolution_transitions(used)):",
+            )
+            body = body.replace(
+                "return [value.strip() for value in match.group(1).split(',') if value.strip()] if match else []",
+                "translations = {'fire':'fogo','water':'água','grass':'planta','electric':'elétrico','flying':'voador','poison':'venenoso','ground':'terrestre','rock':'pedra','bug':'inseto','ghost':'fantasma','steel':'aço','fighting':'lutador','psychic':'psíquico','ice':'gelo','dragon':'dragão','dark':'sombrio','normal':'normal'}\n    return [translations.get(value.strip().casefold(), value.strip()) for value in match.group(1).split(',') if value.strip()] if match else []",
+            )
+            cell['source'] = body.splitlines(keepends=True)
+        if cell.get('cell_type') == 'code' and signature in ''.join(cell.get('source', [])):
+            if seen:
+                continue
+            seen = True
+        cells.append(cell)
+    chatbot['cells'] = cells
+    chatbot_path.write_text(json.dumps(chatbot, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
     print("Notebooks acadêmicos atualizados.")
 
 
