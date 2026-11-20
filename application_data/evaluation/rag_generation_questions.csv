@@ -1,0 +1,14 @@
+query_id,question,expected_case,expected_section
+R01,Quais são os tipos do Charizard?,answerable,profile
+R02,Qual é a velocidade-base do Pikachu?,answerable,stats
+R03,Compare a velocidade-base de Charizard e Blastoise.,comparison,stats
+R04,Quais ginásios preciso vencer?,out_of_scope,none
+R05,Qual é o número do sapato do Pikachu?,missing_evidence,profile
+R06,Como o Eevee evolui?,answerable,evolution
+R07,Onde encontro Pikachu no FireRed?,answerable,encounters
+R08,Quais são as fraquezas do Gyarados?,answerable,type_matchups
+R09,Liste os Pokémon do tipo fogo.,answerable,profile
+R10,Top 5 Pokémon com maior velocidade base?,answerable,stats
+R11,Qual é o número do sapato do Charizard?,missing_evidence,profile
+R12,Compare o ataque-base do Pikachu e do Eevee.,comparison,stats
+R13,What abilities does Snorlax have?,answerable,abilities

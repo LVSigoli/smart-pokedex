@@ -1,0 +1,116 @@
+{
+  "types_en_ptbr": {
+    "normal": "normal",
+    "fighting": "lutador",
+    "flying": "voador",
+    "poison": "venenoso",
+    "ground": "terrestre",
+    "rock": "pedra",
+    "bug": "inseto",
+    "ghost": "fantasma",
+    "steel": "aço",
+    "fire": "fogo",
+    "water": "água",
+    "grass": "planta",
+    "electric": "elétrico",
+    "psychic": "psíquico",
+    "ice": "gelo",
+    "dragon": "dragão",
+    "dark": "sombrio"
+  },
+  "type_aliases_ptbr": {
+    "fighting": [
+      "lutador",
+      "luta"
+    ],
+    "flying": [
+      "voador",
+      "voando"
+    ],
+    "poison": [
+      "venenoso",
+      "veneno"
+    ],
+    "ground": [
+      "terrestre",
+      "terra"
+    ],
+    "rock": [
+      "pedra",
+      "rocha"
+    ],
+    "bug": [
+      "inseto"
+    ],
+    "ghost": [
+      "fantasma"
+    ],
+    "steel": [
+      "aço",
+      "metal"
+    ],
+    "fire": [
+      "fogo"
+    ],
+    "water": [
+      "água"
+    ],
+    "grass": [
+      "planta",
+      "grama"
+    ],
+    "electric": [
+      "elétrico",
+      "eletrico"
+    ],
+    "psychic": [
+      "psíquico",
+      "psiquico"
+    ],
+    "ice": [
+      "gelo"
+    ],
+    "dragon": [
+      "dragão",
+      "dragao"
+    ],
+    "dark": [
+      "sombrio",
+      "escuridão"
+    ]
+  },
+  "query_aliases_ptbr_en": {
+    "evolução": "evolution",
+    "evoluções": "evolutions",
+    "evolui": "evolves",
+    "fraqueza": "weakness",
+    "fraquezas": "weaknesses",
+    "resistência": "resistance",
+    "resistências": "resistances",
+    "imunidade": "immunity",
+    "imunidades": "immunities",
+    "golpe": "move",
+    "golpes": "moves",
+    "ataque": "attack",
+    "defesa": "defense",
+    "velocidade": "speed",
+    "habilidade": "ability",
+    "habilidades": "abilities",
+    "localização": "location",
+    "localizações": "locations",
+    "encontrar": "encounter",
+    "capturar": "capture",
+    "nível": "level",
+    "pedra evolutiva": "evolution stone",
+    "troca": "trade",
+    "tipo": "type",
+    "tipos": "types",
+    "peso": "weight",
+    "altura": "height",
+    "vida": "hp",
+    "surfar": "surf",
+    "raio solar": "solar beam",
+    "lança chamas": "flamethrower"
+  },
+  "note": "aliases experimentais para recuperação lexical; não são traduções oficiais."
+}

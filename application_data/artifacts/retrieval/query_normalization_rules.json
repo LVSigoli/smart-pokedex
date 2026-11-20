@@ -1,0 +1,298 @@
+{
+  "schema_version": "1.1",
+  "strategy": "NFKD, casefold, strip diacritics, punctuation-to-space, regex phrase replacements",
+  "rules": [
+    {
+      "from": "grupo de ovos",
+      "to": "egg group"
+    },
+    {
+      "from": "pedra evolutiva",
+      "to": "evolution stone"
+    },
+    {
+      "from": "lanca chamas",
+      "to": "flamethrower"
+    },
+    {
+      "from": "raio solar",
+      "to": "solar beam"
+    },
+    {
+      "from": "tipo pedra",
+      "to": "type rock"
+    },
+    {
+      "from": "tipo rocha",
+      "to": "type rock"
+    },
+    {
+      "from": "resistencias",
+      "to": "resistances"
+    },
+    {
+      "from": "localizacoes",
+      "to": "locations"
+    },
+    {
+      "from": "resistencia",
+      "to": "resistance"
+    },
+    {
+      "from": "habilidades",
+      "to": "abilities"
+    },
+    {
+      "from": "localizacao",
+      "to": "location"
+    },
+    {
+      "from": "imunidades",
+      "to": "immunities"
+    },
+    {
+      "from": "velocidade",
+      "to": "speed"
+    },
+    {
+      "from": "habilidade",
+      "to": "ability"
+    },
+    {
+      "from": "terrestre",
+      "to": "ground"
+    },
+    {
+      "from": "escuridao",
+      "to": "dark"
+    },
+    {
+      "from": "evolucoes",
+      "to": "evolutions"
+    },
+    {
+      "from": "fraquezas",
+      "to": "weaknesses"
+    },
+    {
+      "from": "imunidade",
+      "to": "immunity"
+    },
+    {
+      "from": "encontrar",
+      "to": "encounter"
+    },
+    {
+      "from": "atributos",
+      "to": "stats"
+    },
+    {
+      "from": "venenoso",
+      "to": "poison"
+    },
+    {
+      "from": "fantasma",
+      "to": "ghost"
+    },
+    {
+      "from": "eletrico",
+      "to": "electric"
+    },
+    {
+      "from": "psiquico",
+      "to": "psychic"
+    },
+    {
+      "from": "evolucao",
+      "to": "evolution"
+    },
+    {
+      "from": "fraqueza",
+      "to": "weakness"
+    },
+    {
+      "from": "capturar",
+      "to": "capture"
+    },
+    {
+      "from": "aprender",
+      "to": "learn"
+    },
+    {
+      "from": "aprendem",
+      "to": "learn"
+    },
+    {
+      "from": "encontro",
+      "to": "encounter"
+    },
+    {
+      "from": "atributo",
+      "to": "stat"
+    },
+    {
+      "from": "lutador",
+      "to": "fighting"
+    },
+    {
+      "from": "sombrio",
+      "to": "dark"
+    },
+    {
+      "from": "aprende",
+      "to": "learn"
+    },
+    {
+      "from": "evoluir",
+      "to": "evolve"
+    },
+    {
+      "from": "captura",
+      "to": "capture"
+    },
+    {
+      "from": "voador",
+      "to": "flying"
+    },
+    {
+      "from": "voando",
+      "to": "flying"
+    },
+    {
+      "from": "veneno",
+      "to": "poison"
+    },
+    {
+      "from": "inseto",
+      "to": "bug"
+    },
+    {
+      "from": "planta",
+      "to": "grass"
+    },
+    {
+      "from": "dragao",
+      "to": "dragon"
+    },
+    {
+      "from": "evolui",
+      "to": "evolve"
+    },
+    {
+      "from": "golpes",
+      "to": "moves"
+    },
+    {
+      "from": "ataque",
+      "to": "attack"
+    },
+    {
+      "from": "defesa",
+      "to": "defense"
+    },
+    {
+      "from": "altura",
+      "to": "height"
+    },
+    {
+      "from": "surfar",
+      "to": "surf"
+    },
+    {
+      "from": "possui",
+      "to": "has"
+    },
+    {
+      "from": "efeito",
+      "to": "effect"
+    },
+    {
+      "from": "terra",
+      "to": "ground"
+    },
+    {
+      "from": "pedra",
+      "to": "rock"
+    },
+    {
+      "from": "rocha",
+      "to": "rock"
+    },
+    {
+      "from": "metal",
+      "to": "steel"
+    },
+    {
+      "from": "grama",
+      "to": "grass"
+    },
+    {
+      "from": "golpe",
+      "to": "move"
+    },
+    {
+      "from": "nivel",
+      "to": "level"
+    },
+    {
+      "from": "troca",
+      "to": "trade"
+    },
+    {
+      "from": "tipos",
+      "to": "types"
+    },
+    {
+      "from": "quais",
+      "to": "which"
+    },
+    {
+      "from": "luta",
+      "to": "fighting"
+    },
+    {
+      "from": "fogo",
+      "to": "fire"
+    },
+    {
+      "from": "agua",
+      "to": "water"
+    },
+    {
+      "from": "gelo",
+      "to": "ice"
+    },
+    {
+      "from": "tipo",
+      "to": "type"
+    },
+    {
+      "from": "peso",
+      "to": "weight"
+    },
+    {
+      "from": "vida",
+      "to": "hp"
+    },
+    {
+      "from": "qual",
+      "to": "which"
+    },
+    {
+      "from": "onde",
+      "to": "where"
+    },
+    {
+      "from": "como",
+      "to": "how"
+    },
+    {
+      "from": "aco",
+      "to": "steel"
+    },
+    {
+      "from": "tem",
+      "to": "has"
+    }
+  ]
+}

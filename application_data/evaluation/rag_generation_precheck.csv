@@ -1,0 +1,14 @@
+query_id,precheck_gate_reason,precheck_source_ids
+R01,ready,['006_profile']
+R02,ready,['025_stats']
+R03,ready,"['006_stats', '009_stats']"
+R04,out_of_scope,[]
+R05,ready,['025_profile']
+R06,ready,['133_evolution']
+R07,ready,"['025_obtainment', '025_encounters_01']"
+R08,ready,['130_type_matchups']
+R09,ready,"['004_profile', '005_profile', '006_profile', '037_profile', '038_profile', '058_profile', '059_profile', '077_profile', '078_profile', '126_profile', '136_profile', '146_profile']"
+R10,ready,"['101_stats', '135_stats', '142_stats', '150_stats', '051_stats']"
+R11,ready,['006_profile']
+R12,ready,"['025_stats', '133_stats']"
+R13,ready,['143_abilities']

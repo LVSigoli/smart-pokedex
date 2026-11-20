@@ -908,6 +908,99 @@ class RAGEngine:
                 "generation_metadata": generation_metadata}
 
     def answer_notebook_03(self, question, generate=True):
+        """Executa o contrato de geração do Notebook 03 no backend."""
+        if not isinstance(question, str) or not question.strip():
+            raise ValueError("Pergunta vazia")
+        canonical, corrections = self.canonicalize(question)
+        retrieved, gate = self.select_evidence(canonical, self.settings.rag_top_k)
+        base = {
+            "question": question,
+            "canonical_question": canonical,
+            "spelling_corrections": corrections,
+            "status": "retrieval_only" if not generate else "generation_pending",
+            "answer": None,
+            "answer_mode": None,
+            "final_answer_origin": None,
+            "gate_reason": gate,
+            "source_documents": [],
+            "supporting_excerpts": [],
+            "context_chars": 0,
+            "documents_in_prompt": [],
+        }
+        if not generate:
+            return {**base, "source_documents": [
+                {key: row.get(key) for key in ("document_id", "pokemon_id", "pokemon_name", "section", "score")}
+                for row in retrieved
+            ]}
+
+        used = []
+        context = ""
+        try:
+            if gate == "ready":
+                context, used = self.build_context(
+                    retrieved, question=canonical,
+                    token_budget=self.generator.max_input_tokens,
+                )
+            if gate == "needs_comparison_criterion":
+                instruction = (
+                    "A pergunta não define o critério de comparação ou ranking. "
+                    "Faça uma pergunta curta ao usuário sobre qual atributo deseja comparar "
+                    "(ataque, defesa, velocidade ou HP). NÃO dê resultados de comparação."
+                )
+            elif gate in {"out_of_scope", "outside_kanto_dex"}:
+                instruction = "Explique brevemente que as fontes da Pokédex não permitem confirmar esse pedido. Não invente fatos."
+            elif not used:
+                instruction = "Informe em português que não há informação verificada suficiente nas fontes para responder. Não invente fatos."
+            else:
+                instruction = "Responda em português somente com base nas fontes. Não invente fatos e seja natural e direto."
+
+            if self.is_acquisition_question(question):
+                sections_used = {row.get("section") for row in used}
+                instruction += (
+                    " O usuário quer saber como obter este Pokémon no jogo. "
+                    "Não interprete habitat, descrição, altura ou tipo como local de captura. "
+                    "Só indique captura selvagem se existir uma fonte encounters que documente "
+                    "encontros dessa espécie no jogo. Caso só exista obtenção por evolução, "
+                    "explique que deve evoluir a forma anterior e informe a condição se a fonte "
+                    "evolution a documentar. Não invente locais ou métodos."
+                )
+                if "encounters" not in sections_used:
+                    instruction += " Nenhuma fonte de encontro selvagem desta espécie foi fornecida; não diga que o jogador pode capturá-la na natureza."
+            if used and len(used) < len(retrieved):
+                instruction += " Apenas parte dos documentos candidatos cabe no contexto; se pedir uma lista completa, declare que a lista pode ser parcial."
+
+            prompt_context = f"INSTRUÇÃO DE CONTROLE: {instruction}\n{context}"
+            payload = self.generator(question, prompt_context)
+            answer = str(payload.get("answer", "")).strip()
+            if not answer:
+                raise ValueError("Gemini não retornou conteúdo")
+        except Exception as exc:
+            return {**base, "status": "provider_unavailable", "generation_error": type(exc).__name__, "generation_error_detail": str(exc)[:1500]}
+
+        metadata = {key: value for key, value in payload.items() if key != "answer"}
+        source_documents = [
+            {key: row.get(key) for key in ("document_id", "pokemon_id", "pokemon_name", "section", "score")}
+            for row in used
+        ]
+        metadata.update(
+            response_mode="llm_only",
+            documents_in_prompt=[row["document_id"] for row in used],
+            semantic_faithfulness_verified=False,
+        )
+        return {
+            **base,
+            "status": "clarification_needed" if gate == "needs_comparison_criterion" else "needs_manual_validation",
+            "answer": answer,
+            "answer_mode": "llm_generated",
+            "final_answer_origin": "model",
+            "source_documents": source_documents,
+            "supporting_excerpts": [{"document_id": row["document_id"], "quote": row["content"]} for row in used],
+            "context_chars": len(context),
+            "documents_in_prompt": [row["document_id"] for row in used],
+            "generation_metadata": metadata,
+        }
+
+    def answer_notebook_03_legacy(self, question, generate=True):
         """Contrato do Notebook 03: Gemini é o único autor do texto final."""
         if not isinstance(question, str) or not question.strip():
             raise ValueError("Pergunta vazia")

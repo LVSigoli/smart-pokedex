@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "pokemon_expected": 151,
+  "pokemon_enriched": 151,
+  "types_gen3": 151,
+  "full_six_stats_gen3": 151,
+  "abilities_gen3": 151,
+  "type_matchups_gen3": 151,
+  "evolution_relations": 126,
+  "moves_frlg": 151,
+  "wild_encounters_firered": 104,
+  "missing_move_details": 0,
+  "reference_download_errors": 0,
+  "reference_cache_hits": 0,
+  "reference_downloads": 539,
+  "raw_files_updated": 151,
+  "raw_files_unchanged": 0,
+  "limitations": [
+    "Condições evolutivas da PokéAPI não são versionadas por FireRed.",
+    "Disponibilidade baseada em encontros selvagens não cobre presentes/trocas/fósseis.",
+    "A reconstrução histórica pode depender de snapshots incompletos da PokéAPI.",
+    "TMs/HMs e informações de golpes dependem de recursos complementares."
+  ]
+}

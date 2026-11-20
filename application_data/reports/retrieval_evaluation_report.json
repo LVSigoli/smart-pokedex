@@ -1,0 +1,152 @@
+{
+  "project": "Pokédex Inteligente — Trabalho 2",
+  "notebook": "02_RAG_RETRIEVAL",
+  "run_utc": "2026-11-20T17:57:27.297930+00:00",
+  "source_document_file": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\application_data\\rag\\documents\\pokemon_rag_documents.jsonl",
+  "source_document_sha256": "e2a79f30af0696b1aefc210a07d356ee559eb5a39de3ad023095cbac255ba5f4",
+  "document_count": 1732,
+  "pokemon_count": 151,
+  "model_index_dimensions": {
+    "bow": [
+      1732,
+      2824
+    ],
+    "tfidf": [
+      1732,
+      16021
+    ]
+  },
+  "queries": 32,
+  "qrels": 39,
+  "label_status": "automatic_proxy",
+  "human_review_required": false,
+  "metrics_macro_by_label_set": [
+    {
+      "label_set": "automatic_proxy",
+      "method": "bow",
+      "k": 1,
+      "precision_at_k": 0.34375,
+      "recall_at_k": 0.34375,
+      "hit_at_k": 0.34375,
+      "mrr_at_k": 0.34375,
+      "ndcg_at_k": 0.34375
+    },
+    {
+      "label_set": "automatic_proxy",
+      "method": "bow",
+      "k": 3,
+      "precision_at_k": 0.17708333333333331,
+      "recall_at_k": 0.53125,
+      "hit_at_k": 0.53125,
+      "mrr_at_k": 0.421875,
+      "ndcg_at_k": 0.44977466439732416
+    },
+    {
+      "label_set": "automatic_proxy",
+      "method": "bow",
+      "k": 5,
+      "precision_at_k": 0.11875000000000001,
+      "recall_at_k": 0.59375,
+      "hit_at_k": 0.59375,
+      "mrr_at_k": 0.434375,
+      "ndcg_at_k": 0.473952964849483
+    },
+    {
+      "label_set": "automatic_proxy",
+      "method": "bow",
+      "k": 10,
+      "precision_at_k": 0.07187500000000001,
+      "recall_at_k": 0.71875,
+      "hit_at_k": 0.71875,
+      "mrr_at_k": 0.4544642857142857,
+      "ndcg_at_k": 0.5177640553075268
+    },
+    {
+      "label_set": "automatic_proxy",
+      "method": "literal",
+      "k": 1,
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "hit_at_k": 0.0,
+      "mrr_at_k": 0.0,
+      "ndcg_at_k": 0.0
+    },
+    {
+      "label_set": "automatic_proxy",
+      "method": "literal",
+      "k": 3,
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "hit_at_k": 0.0,
+      "mrr_at_k": 0.0,
+      "ndcg_at_k": 0.0
+    },
+    {
+      "label_set": "automatic_proxy",
+      "method": "literal",
+      "k": 5,
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "hit_at_k": 0.0,
+      "mrr_at_k": 0.0,
+      "ndcg_at_k": 0.0
+    },
+    {
+      "label_set": "automatic_proxy",
+      "method": "literal",
+      "k": 10,
+      "precision_at_k": 0.0,
+      "recall_at_k": 0.0,
+      "hit_at_k": 0.0,
+      "mrr_at_k": 0.0,
+      "ndcg_at_k": 0.0
+    },
+    {
+      "label_set": "automatic_proxy",
+      "method": "tfidf",
+      "k": 1,
+      "precision_at_k": 0.25,
+      "recall_at_k": 0.25,
+      "hit_at_k": 0.25,
+      "mrr_at_k": 0.25,
+      "ndcg_at_k": 0.25
+    },
+    {
+      "label_set": "automatic_proxy",
+      "method": "tfidf",
+      "k": 3,
+      "precision_at_k": 0.09375,
+      "recall_at_k": 0.28125,
+      "hit_at_k": 0.28125,
+      "mrr_at_k": 0.265625,
+      "ndcg_at_k": 0.26971655479910805
+    },
+    {
+      "label_set": "automatic_proxy",
+      "method": "tfidf",
+      "k": 5,
+      "precision_at_k": 0.08750000000000001,
+      "recall_at_k": 0.4375,
+      "hit_at_k": 0.4375,
+      "mrr_at_k": 0.3015625,
+      "ndcg_at_k": 0.3342707825706475
+    },
+    {
+      "label_set": "automatic_proxy",
+      "method": "tfidf",
+      "k": 10,
+      "precision_at_k": 0.08750000000000001,
+      "recall_at_k": 0.8125,
+      "hit_at_k": 0.8125,
+      "mrr_at_k": 0.3554439484126984,
+      "ndcg_at_k": 0.4628670867198997
+    }
+  ],
+  "literal_baseline": "Correspondência da pergunta normalizada completa; é deliberadamente restritiva.",
+  "limitations": [
+    "Qrels estruturais são proxy; as métricas não comprovam relevância semântica.",
+    "TF-IDF puro não mede o pipeline filtrado do chatbot (Notebook 03)."
+  ],
+  "retrieval_manifest": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\application_data\\artifacts\\retrieval\\retrieval_manifest.json",
+  "error_report": "C:\\Users\\Lucas Sigoli\\Documents\\Projects\\smart-pokedex\\application_data\\reports\\retrieval_error_analysis.csv"
+}

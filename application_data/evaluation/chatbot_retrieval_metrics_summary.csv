@@ -1,0 +1,9 @@
+label_set,method,k,hit_at_k,precision_at_k,recall_at_k,mrr_at_k,species_coverage
+automatic_proxy,tfidf_filtered,1,0.75,0.75,0.7083333333333334,0.75,1.0
+automatic_proxy,tfidf_filtered,3,0.875,0.3333333333333333,0.8515625,0.8125,1.0
+automatic_proxy,tfidf_filtered,5,0.875,0.2,0.8515625,0.8125,1.0
+automatic_proxy,tfidf_filtered,10,0.875,0.1,0.8515625,0.8125,1.0
+automatic_proxy,tfidf_raw,1,0.25,0.25,0.25,0.25,1.0
+automatic_proxy,tfidf_raw,3,0.28125,0.09375,0.28125,0.265625,1.09375
+automatic_proxy,tfidf_raw,5,0.4375,0.08750000000000001,0.4375,0.3015625,1.09375
+automatic_proxy,tfidf_raw,10,0.8125,0.08750000000000001,0.8125,0.3554439484126984,3.0

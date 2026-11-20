@@ -29,6 +29,10 @@ class ChatSession:
     active_ids: list[int] = field(default_factory=list)
     pending_comparison_ids: list[int] = field(default_factory=list)
     pending_ranking: bool = False
+    last_section: str | None = None
+    pending_question: str | None = None
+    pending_candidates: list[int] = field(default_factory=list)
+    pending_kind: str | None = None
     turns: list[dict] = field(default_factory=list)
 
 class SessionManager:
@@ -57,8 +61,30 @@ class SessionManager:
             try: del self._sessions[UUID(str(sid))]
             except (KeyError, ValueError): raise SessionNotFound(str(sid))
 
+    @staticmethod
+    def _model_clarification(session, question, names, generate):
+        if generate and hasattr(session.engine, "generator"):
+            context = (
+                "INSTRUÇÃO DE CONTROLE: A referência é ambígua. Não responda ao conteúdo factual. "
+                "Pergunte ao usuário qual Pokémon quis dizer, citando as opções: " + ", ".join(names)
+            )
+            try:
+                payload = session.engine.generator(question, context)
+                answer = str(payload.get("answer", "")).strip()
+                if answer:
+                    return {"status": "clarification_needed", "answer": answer,
+                            "answer_mode": "llm_generated", "final_answer_origin": "model",
+                            "source_documents": [], "supporting_excerpts": [],
+                            "generation_metadata": {k: v for k, v in payload.items() if k != "answer"}}
+            except Exception:
+                pass
+        return {"status": "clarification_required",
+                "answer": f"De qual Pokémon você está falando: {' ou '.join(names)}?",
+                "source_documents": [], "supporting_excerpts": []}
+
     def ask(self, sid, message, generate=False):
         session = self.get(sid)
+        previous_active = list(session.active_ids)
         explicit = session.engine.mentioned_ids(message) if hasattr(session.engine, "mentioned_ids") else []
         normalized = str(message).casefold()
         tokens = set(re.findall(r"\w+", normalized))
@@ -94,6 +120,10 @@ class SessionManager:
             if explicit:
                 session.pending_comparison_ids = []
             result = session.engine.answer(message, generate=generate)
+        if result.get("status") == "clarification_required" and generate and len(session.active_ids) > 1:
+            names = [session.engine.retriever.by_id[i].get("name", str(i)) for i in session.active_ids]
+            result = self._model_clarification(session, message, names, generate)
+        model_answer = result.get("answer") if result.get("final_answer_origin") else None
         if result.get("gate_reason") == "needs_comparison_criterion" and session.active_ids:
             session.pending_comparison_ids = list(session.active_ids)
             names = [session.engine.retriever.by_id[i].get("name", str(i))
@@ -105,8 +135,23 @@ class SessionManager:
         elif result.get("gate_reason") == "needs_comparison_criterion":
             session.pending_ranking = True
             result["answer"] = "Em qual atributo você quer ranquear: ataque, defesa, velocidade ou HP?"
-        ids = {int(item["pokemon_id"]) for item in result.get("source_documents", [])}
-        if ids: session.active_ids = sorted(ids)
+        if model_answer is not None:
+            result["answer"] = model_answer
+        if explicit:
+            if not (explicit and previous_active and pronoun_comparison):
+                session.active_ids = list(dict.fromkeys(explicit))
+        elif followup and previous_active:
+            session.active_ids = previous_active
+        else:
+            session.active_ids = []
+        result.setdefault("original_question", message)
+        result.setdefault("resolved_question", message)
+        result.setdefault("context_used", bool(session.active_ids))
+        result.setdefault("active_pokemon", [
+            session.engine.retriever.by_id[i].get("name", str(i))
+            for i in session.active_ids if i in session.engine.retriever.by_id
+        ])
+        session.last_question = message
         session.turns.append({"message": message, "result": result}); session.turns = session.turns[-8:]
         return result
 

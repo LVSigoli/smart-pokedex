@@ -113,3 +113,24 @@ def test_scope_gate_is_preserved_before_generation():
     result = engine().answer("Quais ginásios preciso vencer?", generate=False)
     assert result["gate_reason"] == "out_of_scope"
     assert result["source_documents"] == []
+def test_notebook_generation_adds_control_instruction_for_acquisition_questions():
+    rag = engine()
+    received = {}
+
+    class Generator:
+        max_input_tokens = 8192
+
+        @staticmethod
+        def count_prompt_tokens(question, context):
+            return len((question + context).split())
+
+        def __call__(self, question, context):
+            received["context"] = context
+            return {"answer": "A resposta foi escrita pelo modelo."}
+
+    rag.generator = Generator()
+    result = rag.answer("Como encontro Charizard?", generate=True)
+
+    assert result["final_answer_origin"] == "model"
+    assert "Não interprete habitat" in received["context"]
+    assert "captura selvagem" in received["context"]

@@ -1,0 +1,25 @@
+{
+  "project": "Pokédex Inteligente — Trabalho 2",
+  "notebook": "03_SMART_POKEDEX",
+  "run_utc": "2026-11-20T17:57:32.757614+00:00",
+  "document_count": 1732,
+  "pokemon_count": 151,
+  "retriever": "TF-IDF + cosseno persistido no Notebook 02; sem novo fit",
+  "generator": "Gemini API (remoto)",
+  "model": "gemini-3.5-flash-lite",
+  "model_client_initialized": false,
+  "context_budget_chars": 23000,
+  "minimum_evidence_score": 0.15,
+  "structured_fact_validation": false,
+  "semantic_faithfulness_automatically_verified": false,
+  "response_modes": "somente texto de resposta gerado pelo Gemini; Python seleciona evidências",
+  "live_demo_executed": false,
+  "generation_evaluation_executed": false,
+  "limitations": [
+    "A API exige rede, chave válida e cota disponível; o Free Tier não garante disponibilidade constante.",
+    "A seleção de fontes não garante fidelidade semântica automaticamente.",
+    "Nenhuma resposta é montada/reparada em Python; erros da geração são expostos como erro técnico.",
+    "O plano gratuito pode permitir uso de prompts para melhoria dos serviços do Google.",
+    "As métricas de execução não asseguram acerto factual; validação semântica fica fora do escopo desta entrega."
+  ]
+}
