@@ -10,7 +10,7 @@ import pandas as pd
 import pytest
 
 
-NOTEBOOK = Path(__file__).resolve().parents[2] / "notebooks" / "03_RAG_CHATBOT.ipynb"
+NOTEBOOK = Path(__file__).resolve().parents[2] / "notebooks" / "03_SMART_POKEDEX.ipynb"
 REQUIRED = {"query_id", "question", "expected_case", "expected_section"}
 
 

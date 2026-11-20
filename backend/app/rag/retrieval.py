@@ -3,6 +3,7 @@ import json
 import re
 import unicodedata
 from pathlib import Path
+import hashlib
 import joblib
 import numpy as np
 from scipy import sparse
@@ -18,14 +19,25 @@ def normalize_plain(text: str) -> str:
 class Retriever:
     def __init__(self, data_dir: Path):
         root = Path(data_dir)
-        doc_path = root / "processed" / "pokemon_rag_documents.jsonl"
-        record_path = root / "processed" / "pokemon_rag_records.jsonl"
+        canonical_docs = root / "rag" / "documents"
+        legacy_docs = root / "processed"
+        docs_dir = canonical_docs if (canonical_docs / "pokemon_rag_documents.jsonl").is_file() else legacy_docs
+        doc_path = docs_dir / "pokemon_rag_documents.jsonl"
+        record_path = docs_dir / "pokemon_rag_records.jsonl"
         artifact = root / "artifacts" / "retrieval"
         if not doc_path.is_file() or not record_path.is_file():
             raise ArtifactError(f"Artefatos ausentes: {doc_path} e {record_path}")
         self.documents = self._jsonl(doc_path)
         self.records = self._jsonl(record_path)
-        self.documents.sort(key=lambda x: (int(x["pokemon_id"]), x["section"], x["document_id"]))
+        manifest_path = artifact / "retrieval_manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.is_file() else None
+        if manifest and manifest.get("document_ids"):
+            by_id = {d["document_id"]: d for d in self.documents}
+            if set(by_id) != set(manifest["document_ids"]):
+                raise ArtifactError("Manifesto e documentos RAG possuem document_id incompatíveis")
+            self.documents = [by_id[document_id] for document_id in manifest["document_ids"]]
+        else:
+            self.documents.sort(key=lambda x: (int(x["pokemon_id"]), x["section"], x["document_id"]))
         self.doc_ids = [d["document_id"] for d in self.documents]
         if len(self.doc_ids) != len(set(self.doc_ids)):
             raise ArtifactError("Documentos duplicados")
@@ -38,6 +50,10 @@ class Retriever:
             raise ArtifactError("Índice TF-IDF ausente ou incompatível") from exc
         if self.matrix.shape[0] != len(self.documents):
             raise ArtifactError("Matriz TF-IDF não corresponde aos documentos")
+        if manifest and manifest.get("source_document_sha256"):
+            digest = hashlib.sha256(doc_path.read_bytes()).hexdigest()
+            if digest != manifest["source_document_sha256"]:
+                raise ArtifactError("Hash dos documentos RAG não corresponde ao manifesto")
         rules_path = artifact / "query_normalization_rules.json"
         rules = json.loads(rules_path.read_text(encoding="utf-8")) if rules_path.is_file() else {"rules": []}
         self.rules = sorted([(x["from"], x["to"]) for x in rules.get("rules", [])], key=lambda x: (-len(x[0].split()), -len(x[0])))

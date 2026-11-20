@@ -6,10 +6,8 @@ scipy<2,>=1.13
 joblib<2,>=1.4
 httpx<1,>=0.27
 
-[flan]
-transformers<5,>=4.44
-sentencepiece>=0.2
-torch>=2.2
+[gemini]
+google-genai<2,>=1.0
 
 [notebooks]
 jupyter>=1.0

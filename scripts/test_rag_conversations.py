@@ -54,7 +54,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--generate",
         action="store_true",
-        help="Também executa a geração local com FLAN-T5-small; pode ser lento em CPU.",
+        help="Também executa a geração Gemini; exige GEMINI_API_KEY e pode consumir cota.",
     )
     parser.add_argument(
         "--data-dir",

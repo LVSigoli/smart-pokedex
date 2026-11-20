@@ -1,102 +1,44 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { chat, createSession, listPokemon } from './services/api';
+import { chat, createSession, deleteSession, getPokemon, listPokemon } from './services/api';
 import type { ChatResponse, PokemonRecord } from './types/api';
 import './styles.css';
 
-type View = 'chat' | 'lab';
-type Message = { role: 'user' | 'assistant'; content: string; response?: ChatResponse; context?: boolean };
-type LabTurn = Message & { turn: number; error?: string };
+type Message = { role: 'user' | 'assistant'; content: string; response?: ChatResponse };
+const titleCase = (value: string) => value.replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+const statValue = (pokemon: PokemonRecord, key: string) => String(pokemon.stats_gen3?.[key] ?? '—');
 
-const FALLBACK_QUESTIONS = ['Como evoluir Charmander?', 'Onde encontro o Eevee?', 'Qual é a velocidade do Pikachu?'];
-const STATUS_LABELS: Record<string, string> = {
-  answered: 'respondida', retrieval_only: 'RAG extrativo', clarification_required: 'precisa esclarecer',
-  insufficient_evidence: 'evidência insuficiente', out_of_scope: 'fora do escopo', provider_unavailable: 'modelo indisponível',
-};
-
-function labelStatus(status?: string) { return STATUS_LABELS[status ?? ''] ?? status ?? 'sem status'; }
-function delay(milliseconds: number) { return new Promise((resolve) => window.setTimeout(resolve, milliseconds)); }
-
-function Sources({ response }: { response?: ChatResponse }) {
-  if (!response) return null;
-  const names = response.source_documents.map((source) => source.pokemon_name).filter((name, index, all) => all.indexOf(name) === index);
-  return <div className="message-meta"><span className={`status-dot status-${response.status}`} /><span>{labelStatus(response.status)}</span>{response.answer_mode && <span className="mode-chip">{response.answer_mode.replace('_', ' ')}</span>}{names.length > 0 && <span>{names.join(' · ')}</span>}</div>;
+function SourceChips({ response }: { response?: ChatResponse }) {
+  if (!response || response.source_documents.length === 0) return null;
+  return <div className="sources"><span className="source-label">FONTES</span>{response.source_documents.map((source) => <span className="source-badge" key={source.document_id}>{source.document_id}</span>)}</div>;
 }
 
-function ChatPanel() {
-  const [session, setSession] = useState('');
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [busy, setBusy] = useState(false);
-
-  async function typeAnswer(text: string, response?: ChatResponse) {
-    setMessages((current) => [...current, { role: 'assistant', content: '', response }]);
-    for (let index = 1; index <= text.length; index += 1) {
-      await delay(10);
-      setMessages((current) => { const next = [...current]; const last = next[next.length - 1]; next[next.length - 1] = { ...last, content: text.slice(0, index) }; return next; });
-    }
-  }
-
-  async function send() {
-    const question = message.trim();
-    if (!question || busy) return;
-    setMessage(''); setMessages((current) => [...current, { role: 'user', content: question }]); setBusy(true);
-    try {
-      const currentSession = session || await createSession(); setSession(currentSession);
-      const response = await chat(currentSession, question, true);
-      await typeAnswer(response.answer || 'Não foi possível gerar uma resposta.', response);
-    } catch (error) { await typeAnswer(error instanceof Error ? error.message : 'Erro ao consultar o backend.'); }
-    finally { setBusy(false); }
-  }
-
-  return <section className="panel chat-panel">
-    <div className="panel-heading"><div><span className="eyebrow">conversa livre</span><h2>Converse com a Pokédex</h2><p>Faça perguntas e acompanhe as fontes que fundamentaram cada resposta.</p></div><span className="live-pill"><span /> API online</span></div>
-    <div className="chat-window">
-      {messages.length === 0 && <div className="empty-chat"><div className="empty-orbit">✦</div><strong>Comece uma conversa</strong><span>Experimente perguntar sobre evolução, localização ou atributos.</span><div className="suggestion-row">{FALLBACK_QUESTIONS.map((question) => <button key={question} onClick={() => setMessage(question)}>{question}</button>)}</div></div>}
-      {messages.map((item, index) => <div className={`message-row ${item.role}`} key={`${item.role}-${index}`}><div className={`avatar ${item.role}`}>{item.role === 'user' ? 'Você' : 'RAG'}</div><div className="message-stack"><div className="message-bubble">{item.content || (busy && item.role === 'assistant' ? <span className="typing"><i /><i /><i /></span> : '')}</div>{item.role === 'assistant' && <Sources response={item.response} />}</div></div>)}
-    </div>
-    <form className="composer" onSubmit={(event) => { event.preventDefault(); void send(); }}><input value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Como evoluir Charmander?" disabled={busy} /><button className="primary-button" type="submit" disabled={busy || !message.trim()}>{busy ? 'Consultando' : 'Enviar'} <span>↗</span></button></form>
-    <div className="panel-footnote">Sessão {session ? `${session.slice(0, 8)}…` : 'ainda não iniciada'} · FLAN-T5 local + TF-IDF</div>
+function PokemonDisplay({ pokemon, records, onChange }: { pokemon: PokemonRecord; records: PokemonRecord[]; onChange: (id: number) => void }) {
+  const types = pokemon.types_gen3 ?? [];
+  const sprite = pokemon.sprites?.firered_front_default ?? pokemon.sprites?.current_front_default;
+  return <section className="left-column"><div className="left-bezel"><div className="display">
+    <div className="display-top"><span>REGISTRO ATIVO</span><label className="display-select"><span className="sr-only">Selecionar Pokémon</span><select value={pokemon.id} onChange={(event) => onChange(Number(event.target.value))}>{records.map((item) => <option value={item.id} key={item.id}>Nº {String(item.id).padStart(3, '0')} / 151 · {item.name}</option>)}</select></label></div>
+    <div className="pokemon-art">{sprite ? <img src={sprite} alt={`Sprite de ${pokemon.name}`} /> : <span className="art-placeholder">?</span>}</div>
+    <div className="pokemon-meta"><div><div className="poke-name">{pokemon.name}</div><div className="poke-number">POKÉMON · #{String(pokemon.id).padStart(3, '0')}</div></div><div className="type-pill">✦ {titleCase(types[0] ?? 'desconhecido')}</div></div>
+  </div><div className="unit-grid"><div className="unit"><small>ATAQUE</small><strong>{statValue(pokemon, 'attack')}</strong><span>base stat</span></div><div className="unit"><small>VELOCIDADE</small><strong>{statValue(pokemon, 'speed')}</strong><span>base stat</span></div><div className="unit"><small>ALTURA</small><strong>{String(pokemon.height_m ?? '—').replace('.', ',')}<em> m</em></strong><span>registro</span></div></div></div>
+    <div className="left-controls"><div className="control-cross"><i className="cross-v" /><i className="cross-h" /><i className="cross-center" /></div><div className="action-buttons"><button type="button" aria-label="Voltar" className="round-button">B</button><button type="button" aria-label="Confirmar" className="round-button last">A</button></div></div><div className="left-footer"><span>● POKÉDEX DATABASE / ONLINE</span><span className="vent"><i /><i /><i /></span></div>
   </section>;
 }
 
-function PokemonSelect({ label, value, records, onChange }: { label: string; value: number; records: PokemonRecord[]; onChange: (value: number) => void }) {
-  return <label className="select-field"><span>{label}</span><select value={value} onChange={(event) => onChange(Number(event.target.value))}>{records.map((pokemon) => <option key={pokemon.id} value={pokemon.id}>#{String(pokemon.id).padStart(3, '0')} · {pokemon.name}</option>)}</select></label>;
-}
-
-function LabPanel() {
-  const [records, setRecords] = useState<PokemonRecord[]>([]); const [loadingRecords, setLoadingRecords] = useState(true); const [loadError, setLoadError] = useState('');
-  const [firstId, setFirstId] = useState(25); const [secondId, setSecondId] = useState(133); const [scenario, setScenario] = useState<'individual' | 'pair'>('individual');
-  const [running, setRunning] = useState(false); const [progress, setProgress] = useState(0); const [turns, setTurns] = useState<LabTurn[]>([]); const [runError, setRunError] = useState('');
-
-  useEffect(() => { let mounted = true; listPokemon().then((items) => { if (!mounted) return; setRecords(items); if (!items.some((item) => item.id === 25)) setFirstId(items[0]?.id ?? 1); if (!items.some((item) => item.id === 133)) setSecondId(items[1]?.id ?? 2); setLoadingRecords(false); }).catch((error) => { if (!mounted) return; setLoadError(error instanceof Error ? error.message : 'Não foi possível carregar os Pokémon.'); setLoadingRecords(false); }); return () => { mounted = false; }; }, []);
-
-  const names = useMemo(() => new Map(records.map((pokemon) => [pokemon.id, pokemon.name])), [records]); const firstName = names.get(firstId) ?? 'Pikachu'; const secondName = names.get(secondId) ?? 'Eevee';
-  const prompts = scenario === 'individual' ? [
-    { text: `Fale sobre o Pokémon ${firstName}`, contextual: false }, { text: `Qual é o ataque base de ${firstName}?`, contextual: false }, { text: `Onde encontro ${firstName}?`, contextual: false }, { text: 'Como evolui ele', contextual: true }, { text: 'Onde encontro ele', contextual: true },
-  ] : [
-    { text: `Quais são os tipos de ${firstName} e ${secondName}?`, contextual: false }, { text: 'Qual dos dois tem maior velocidade?', contextual: true }, { text: 'Onde encontro eles', contextual: true }, { text: `Onde encontro ${firstName} e ${secondName}?`, contextual: false }, { text: `Agora fale sobre ${secondName}`, contextual: false }, { text: 'Onde encontro ele', contextual: true },
-  ];
-
-  async function run() {
-    if (running || loadingRecords || !records.length) return; setRunning(true); setTurns([]); setRunError(''); setProgress(0);
-    try { const session = await createSession(); for (let index = 0; index < prompts.length; index += 1) { const prompt = prompts[index]; setTurns((current) => [...current, { role: 'user', content: prompt.text, turn: index + 1, context: prompt.contextual }]); const response = await chat(session, prompt.text, true); setTurns((current) => [...current, { role: 'assistant', content: response.answer || 'Sem resposta textual.', response, turn: index + 1, context: prompt.contextual }]); setProgress(index + 1); } }
-    catch (error) { setRunError(error instanceof Error ? error.message : 'O teste não pôde ser concluído.'); }
-    finally { setRunning(false); }
-  }
-
-  const completedTurns = turns.filter((turn) => turn.role === 'assistant'); const answered = completedTurns.filter((turn) => turn.response?.status === 'answered' || turn.response?.status === 'retrieval_only').length;
-  return <section className="panel lab-panel">
-    <div className="panel-heading lab-heading"><div><span className="eyebrow">laboratório conversacional</span><h2>Veja o RAG pensando em contexto</h2><p>Execute uma conversa controlada pela API e acompanhe fontes, status e troca de Pokémon turno a turno.</p></div><div className="lab-mark">RAG<br /><small>LAB</small></div></div>
-    <div className="lab-controls"><div className="scenario-tabs"><button className={scenario === 'individual' ? 'selected' : ''} onClick={() => setScenario('individual')} disabled={running}>Um Pokémon</button><button className={scenario === 'pair' ? 'selected' : ''} onClick={() => setScenario('pair')} disabled={running}>Comparar dois</button></div><div className="select-grid"><PokemonSelect label="Pokémon principal" value={firstId} records={records} onChange={setFirstId} />{scenario === 'pair' && <PokemonSelect label="Segundo Pokémon" value={secondId} records={records} onChange={setSecondId} />}</div><div className="run-options"><span className="toggle-label">FLAN-T5 local sempre ativo</span><button className="primary-button run-button" onClick={() => void run()} disabled={running || loadingRecords || Boolean(loadError)}>{running ? `Executando ${progress}/${prompts.length}` : 'Executar conversa'} <span>▶</span></button></div>{loadingRecords && <p className="inline-note">Carregando os 151 Pokémon…</p>}{loadError && <p className="error-note">{loadError}</p>}</div>
-    {runError && <div className="error-banner">{runError}</div>}
-    {turns.length === 0 ? <div className="lab-empty"><div className="lab-empty-icon">◎</div><strong>Escolha um cenário e execute</strong><span>O laboratório vai criar uma nova sessão e enviar cada turno na ordem, como o chatbot real.</span></div> : <div className="lab-conversation"><div className="run-summary"><span><b>{completedTurns.length}</b>/{prompts.length} turnos</span><span><b>{answered}</b> respostas com fonte</span><span>FLAN-T5 habilitado</span></div>{turns.map((turn, index) => <div className={`lab-turn ${turn.role}`} key={`${turn.turn}-${turn.role}-${index}`}><div className="turn-index">{String(turn.turn).padStart(2, '0')}</div><div className="turn-content"><div className="turn-label">{turn.role === 'user' ? 'pergunta' : 'resposta'} {turn.context && <span className="context-chip">↳ contexto ativo</span>}</div><div className="turn-text">{turn.content}</div>{turn.role === 'assistant' && <Sources response={turn.response} />}{turn.role === 'assistant' && turn.response?.source_documents.length > 0 && <details className="source-details"><summary>Ver documentos recuperados ({turn.response.source_documents.length})</summary><div>{turn.response.source_documents.map((source) => <span key={source.document_id} className="source-chip">{source.document_id} · {source.section}</span>)}</div></details>}</div></div>)}</div>}
-  </section>;
+function ChatPanel({ activePokemon }: { activePokemon: PokemonRecord }) {
+  const [session, setSession] = useState(''); const [question, setQuestion] = useState(''); const [messages, setMessages] = useState<Message[]>([]); const [busy, setBusy] = useState(false); const [error, setError] = useState('');
+  const ask = async (value: string) => { const text = value.trim(); if (!text || busy) return; setQuestion(''); setError(''); setMessages((current) => [...current, { role: 'user', content: text }]); setBusy(true); try { const activeSession = session || await createSession(); setSession(activeSession); const response = await chat(activeSession, text, true); setMessages((current) => [...current, { role: 'assistant', content: response.answer || 'Não foi possível gerar uma resposta.', response }]); } catch (reason) { setError(reason instanceof Error ? reason.message : 'Erro ao consultar a API.'); } finally { setBusy(false); } };
+  const reset = async () => { if (session) await deleteSession(session).catch(() => undefined); setSession(''); setMessages([]); setError(''); };
+  return <section className="right-column"><div className="right-screen"><div className="screen-top"><div className="screen-title"><div className="assistant-ico">⌁</div><div><strong>Assistente Pokédex</strong><p>Pergunte sobre Pokémon, atributos e evoluções</p></div></div><div className="screen-status"><span /> GEMINI ONLINE</div></div>
+    <div className="messages" aria-live="polite">{messages.length === 0 && <><span className="tiny-time">NOVA CONVERSA · KANTO / FIRE RED</span><div className="empty-message">Selecione uma pergunta abaixo para consultar o RAG sobre <strong>{activePokemon.name}</strong>.</div></>}{messages.map((message, index) => <div className={`message ${message.role}`} key={`${message.role}-${index}`}>{message.role === 'assistant' && <div className="small-ico">✦</div>}<div className="message-content"><div className="message-bubble">{message.content}</div>{message.role === 'assistant' && <SourceChips response={message.response} />}</div></div>)}{busy && <div className="message assistant"><div className="small-ico">✦</div><div className="message-bubble typing"><i /><i /><i /></div></div>}{error && <div className="api-error" role="alert">{error}</div>}</div>
+    <form className="message-form" onSubmit={(event) => { event.preventDefault(); void ask(question); }}><div className="suggestions"><button type="button" onClick={() => void ask(`Como evolui ${activePokemon.name}?`)}>Como evoluir?</button><button type="button" onClick={() => void ask(`Quais são os atributos de ${activePokemon.name}?`)}>Atributos</button><button type="button" onClick={() => void ask(`Onde encontro ${activePokemon.name} no FireRed?`)}>Onde encontro?</button><button type="button" onClick={() => void reset()}>Nova conversa ↻</button></div><div className="input-line"><input value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="Pergunte algo à sua Pokédex..." disabled={busy} /><button type="submit" disabled={busy || !question.trim()}>Enviar ↗</button></div></form>
+  </div><div className="screen-foot"><span><span className="foot-led" /> RECUPERAÇÃO TF-IDF + GERAÇÃO GEMINI</span><span>SMART DEVICE / 01</span></div></section>;
 }
 
 function App() {
-  const [view, setView] = useState<View>('chat');
-  return <div className="app-shell"><header className="topbar"><div className="brand"><div className="brand-icon">✦</div><div><strong>Pokédex</strong><span>INTELIGENTE</span></div></div><nav className="main-nav"><button className={view === 'chat' ? 'active' : ''} onClick={() => setView('chat')}>Chat</button><button className={view === 'lab' ? 'active' : ''} onClick={() => setView('lab')}>Teste RAG <span className="new-badge">LAB</span></button></nav><div className="scope-label"><span /> KANTO · 151</div></header><main className="app-content">{view === 'chat' ? <ChatPanel /> : <LabPanel />}</main><footer className="app-footer">TF-IDF + FLAN-T5 local <span>·</span> Evidência antes da geração</footer></div>;
+  const [records, setRecords] = useState<PokemonRecord[]>([]); const [active, setActive] = useState<PokemonRecord | null>(null); const [error, setError] = useState('');
+  useEffect(() => { listPokemon().then((items) => { setRecords(items); const initial = items.find((item) => item.id === 25) ?? items[0]; if (initial) return getPokemon(initial.id).then(setActive); }).catch((reason) => setError(reason instanceof Error ? reason.message : 'Não foi possível carregar os Pokémon.')); }, []);
+  return <div className="stage"><div className="stage-top"><div><div className="mark">✧</div><div><div className="stage-title">Smart Pokédex</div><div className="stage-sub">Conceito de interface · dispositivo clássico + experiência conversacional</div></div></div><div className="stage-chip">WEB EXPERIENCE / CONCEPT 01</div></div><div className="device"><div className="chrome-head"><div className="lights"><div className="lens" /><i className="led r" /><i className="led y" /><i className="led g" /></div><div className="device-brand"><b>SMART POKÉDEX</b><small>KANTO REGION · GEN III</small></div></div>{error ? <div className="loading-error" role="alert">{error}</div> : !active ? <div className="loading-state">Carregando dados do corpus…</div> : <div className="main-grid"><PokemonDisplay pokemon={active} records={records} onChange={(id) => { void getPokemon(id).then(setActive); }} /><div className="hinge" /><ChatPanel activePokemon={active} /></div>}<div className="device-foot"><span>● {records.length || 151} REGISTROS VALIDADOS / ONLINE</span><span>TF-IDF + EVIDÊNCIAS</span></div></div></div>;
 }
 
 createRoot(document.getElementById('root')!).render(<App />);

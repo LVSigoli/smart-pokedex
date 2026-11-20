@@ -13,6 +13,7 @@ app/core/__init__.py
 app/core/config.py
 app/core/exceptions.py
 app/pipeline/__init__.py
+app/pipeline/translation.py
 app/rag/__init__.py
 app/rag/engine.py
 app/rag/generation.py
@@ -25,3 +26,4 @@ smart_pokedex_backend.egg-info/dependency_links.txt
 smart_pokedex_backend.egg-info/requires.txt
 smart_pokedex_backend.egg-info/top_level.txt
 tests/test_notebook_academic_contracts.py
+tests/test_notebook_generation_csv_schema.py

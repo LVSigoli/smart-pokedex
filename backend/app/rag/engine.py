@@ -2,7 +2,7 @@ import difflib
 import re
 from datetime import datetime, timezone
 from .retrieval import normalize_plain
-from .generation import FlanT5Generator
+from .generation import GeminiGenerator
 
 REFUSAL = "Não encontrei informações suficientes no corpus de Kanto/FireRed para responder com segurança."
 class RAGEngine:
@@ -11,11 +11,12 @@ class RAGEngine:
         self.settings = settings
         self.name_to_id = {normalize_plain(r.get("api_name") or r.get("name")): int(r["id"]) for r in retriever.records}
         self.known_names = sorted(self.name_to_id, key=len, reverse=True)
-        self.generator = FlanT5Generator(
-            getattr(settings, "flan_model", "google/flan-t5-small"),
-            max_input_tokens=getattr(settings, "flan_max_input_tokens", 384),
-            max_new_tokens=getattr(settings, "flan_max_new_tokens", 64),
-            num_beams=getattr(settings, "flan_num_beams", 1),
+        self.generator = GeminiGenerator(
+            getattr(settings, "gemini_api_key", ""),
+            model_name=getattr(settings, "gemini_model_name", "gemini-3.5-flash-lite"),
+            max_input_tokens=getattr(settings, "gemini_max_input_tokens", 8192),
+            max_output_tokens=getattr(settings, "gemini_max_output_tokens", 768),
+            temperature=getattr(settings, "gemini_temperature", 0.1),
         )
 
     def canonicalize(self, question):
@@ -905,4 +906,68 @@ class RAGEngine:
                 "answer_mode": "generative",
                 "supporting_excerpts": excerpts,
                 "generation_metadata": generation_metadata}
+
+    def answer_notebook_03(self, question, generate=True):
+        """Contrato do Notebook 03: Gemini é o único autor do texto final."""
+        if not isinstance(question, str) or not question.strip():
+            raise ValueError("Pergunta vazia")
+        canonical, corrections = self.canonicalize(question)
+        retrieved, gate = self.select_evidence(canonical, self.settings.rag_top_k)
+        base = {
+            "status": "retrieval_only" if not generate else "generation_pending",
+            "answer": None,
+            "answer_mode": None,
+            "source_documents": [] if not generate else [],
+            "supporting_excerpts": [],
+            "spelling_corrections": corrections,
+            "gate_reason": gate,
+        }
+        if not generate:
+            base["source_documents"] = [
+                {key: row.get(key) for key in ("document_id", "pokemon_id", "pokemon_name", "section", "score")}
+                for row in retrieved
+            ]
+            return base
+
+        used = []
+        context = ""
+        try:
+            if gate == "ready":
+                context, used = self.build_context(
+                    retrieved, question=canonical, token_budget=self.generator.max_input_tokens
+                )
+            if gate == "needs_comparison_criterion":
+                instruction = "Peça em uma pergunta curta qual atributo comparar: ataque, defesa, velocidade ou HP. Não dê resultados."
+            elif gate in {"out_of_scope", "outside_kanto_dex"}:
+                instruction = "Explique brevemente que as fontes da Pokédex não permitem confirmar esse pedido. Não invente fatos."
+            elif not used:
+                instruction = "Informe em português que não há informação verificada suficiente nas fontes para responder. Não invente fatos."
+            else:
+                instruction = "Responda em português somente com base nas fontes. Não invente fatos e seja natural e direto."
+            prompt_context = f"INSTRUÇÃO DE CONTROLE: {instruction}\n{context}"
+            payload = self.generator(question, prompt_context)
+            answer = str(payload.get("answer", "")).strip()
+            if not answer:
+                raise ValueError("Gemini não retornou conteúdo")
+        except Exception as exc:
+            return {**base, "status": "provider_unavailable", "generation_error": type(exc).__name__}
+
+        metadata = {key: value for key, value in payload.items() if key != "answer"}
+        metadata.update(response_mode="llm_only", documents_in_prompt=[row["document_id"] for row in used])
+        return {
+            **base,
+            "status": "clarification_needed" if gate == "needs_comparison_criterion" else "needs_manual_validation",
+            "answer": answer,
+            "answer_mode": "llm_generated",
+            "final_answer_origin": "model",
+            "source_documents": [
+                {key: row.get(key) for key in ("document_id", "pokemon_id", "pokemon_name", "section", "score")}
+                for row in used
+            ],
+            "supporting_excerpts": [{"document_id": row["document_id"], "quote": row["content"]} for row in used],
+            "generation_metadata": metadata,
+        }
+
+    def answer(self, question, generate=False):
+        return self.answer_notebook_03(question, generate=generate)
 
