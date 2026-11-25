@@ -2,9 +2,55 @@
 
 Migração local do trabalho acadêmico de PLN para um monorepo com FastAPI e cliente React/Vite. O corpus é restrito aos 151 Pokémon de Kanto, com referência FireRed conforme os notebooks.
 
+## Variáveis de ambiente
+
+As variáveis do backend ficam no arquivo `backend/.env`. O projeto não lê um `.env` na raiz. Para criar o arquivo local, execute na raiz do projeto:
+
+```powershell
+Copy-Item backend/.env.example backend/.env
+notepad backend/.env
+```
+
+O conteúdo de `backend/.env.example` é:
+
+```dotenv
+RAG_DATA_DIR=../application_data
+GEMINI_API_KEY=
+GEMINI_MODEL_NAME=gemini-3.5-flash-lite
+GEMINI_MAX_INPUT_TOKENS=8192
+GEMINI_MAX_OUTPUT_TOKENS=768
+GEMINI_TEMPERATURE=0.1
+ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+SESSION_TTL_SECONDS=1800
+MAX_MESSAGE_CHARS=1000
+RAG_TOP_K=5
+RAG_MIN_SCORE=0.15
+```
+
+Preencha `GEMINI_API_KEY` com a chave do Gemini para habilitar a geração de respostas. As demais variáveis já possuem valores padrão adequados para o ambiente local; mantenha `RAG_DATA_DIR=../application_data` quando a API for executada a partir de `backend`. Nunca versione `backend/.env` nem envie a chave para o frontend.
+
+## Dados gerados pelos notebooks
+
+Os notebooks gravam os dados na pasta `application_data/`, na raiz do projeto:
+
+| Etapa | Diretório | Conteúdo |
+| --- | --- | --- |
+| Notebook 00 | `application_data/corpus/raw_data` | JSON brutos extraídos da PokéAPI, um arquivo por Pokémon. |
+| Notebook 00 | `application_data/corpus/processed_data/txt` | Textos processados do corpus. |
+| Notebook 00 | `application_data/corpus/metadata` | Metadados, CSV/JSON e relatório de qualidade. |
+| Notebook 00 | `application_data/corpus/artifacts` | Artefatos de representação, como BoW e sua matriz. |
+| Notebook 01 | `application_data/rag/documents` | `pokemon_rag_records.jsonl`, `pokemon_rag_documents.jsonl` e metadados dos documentos. |
+| Notebook 01 | `application_data/rag/reference` | Aliases e referências de tradução. |
+| Notebook 02 | `application_data/artifacts/retrieval` | Vetorizadores, matrizes TF-IDF, manifesto e regras de normalização. |
+| Notebooks 02 e 03 | `application_data/evaluation` | Consultas, métricas, rankings e resultados de avaliação. |
+| Notebooks 01, 02 e 03 | `application_data/reports` | Relatórios de qualidade, recuperação e geração. |
+| Todos | `application_data/logs` | Logs das execuções. |
+
+Ao executar `python scripts/run_notebooks.py`, as cópias executadas dos arquivos `.ipynb` ficam em `data/executed_notebooks/`. No Google Colab, defina `POKEDEX_PROJECT_DIR` ou use a pasta `SmartPokedex` no Google Drive; nesse caso, a mesma estrutura é criada em `SmartPokedex/application_data/`.
+
 ## Execução
 
-1. Copie `backend/.env.example` para `backend/.env` e ajuste `RAG_DATA_DIR`.
+1. Crie e configure `backend/.env` conforme a seção [Variáveis de ambiente](#variáveis-de-ambiente).
 2. Crie um ambiente virtual e instale as dependências:
 
    ```powershell
@@ -72,7 +118,7 @@ O projeto segue o mesmo fluxo didático do notebook `S017_LLM_RAG.ipynb`:
 
 O cliente Gemini é inicializado sob demanda. Configure `GEMINI_MODEL_NAME`, `GEMINI_MAX_INPUT_TOKENS`, `GEMINI_MAX_OUTPUT_TOKENS` e `GEMINI_TEMPERATURE` no `backend/.env`. A chave deve permanecer somente no ambiente do backend.
 
-Para executar o Notebook 03 diretamente no VS Code ou Jupyter, abra a pasta `notebooks` e rode as células em ordem. Ele detecta o monorepo e lê `data/processed` e `data/artifacts/retrieval`; `PLN_AVALIACAO_DIR` pode apontar explicitamente para a raiz.
+Para executar o Notebook 03 diretamente no VS Code ou Jupyter, abra a pasta `notebooks` e rode as células em ordem. Ele detecta o monorepo e lê `application_data/rag/documents` e `application_data/artifacts/retrieval`; `PLN_AVALIACAO_DIR` pode apontar explicitamente para a raiz.
 
 A avaliação real com e sem RAG é opt-in. No PowerShell:
 
